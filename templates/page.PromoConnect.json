@@ -1,0 +1,46 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "PromoConnect",
+      "settings": {}
+    },
+    "1753607502053d7b09": {
+      "type": "apps",
+      "blocks": {
+        "linkly_discount_form_R7Qix8": {
+          "type": "shopify://apps/linkly/blocks/discount-form/a9b715c7-3cfc-4113-a206-e19dff3fa9fb",
+          "settings": {
+            "max_width": 1000,
+            "checkout_title": "Exclusive 20% Off Coupon for Amazon Customers",
+            "checkout_description": "Enter Your Amazon Order ID to unlock your discount",
+            "checkout_info_text": "Please do not share discount codes with others, each code can only be used once.",
+            "get_discount_pop_up_title": "Verified, please enter your email to obtain the discount code",
+            "discount_strength_text": "<p>Please specify the discount amount, scope of application, and validity period, such as</p>",
+            "privacy_policy_link": "",
+            "terms_of_use_link": "",
+            "redirect_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "linkly_discount_form_R7Qix8"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1753607502053d7b09"
+  ]
+}
