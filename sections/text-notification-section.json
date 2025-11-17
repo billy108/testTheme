@@ -1,0 +1,36 @@
+{
+  "name": "文字通知栏",
+  "type": "custom.text_notification",
+  "sections": {
+    "text-notification": {
+      "type": "text-notification",
+      "settings": {
+        "background_color": "#000000",
+        "text_color": "#ffffff",
+        "highlight_color": "#ff0000",
+        "highlight_font_weight": "bold",
+        "highlight_text_transform": "none",
+        "font_size": "14px",
+        "padding": "12px 0",
+        "height": "40px",
+        "animation_speed": 3
+      },
+      "blocks": {
+        "block-1": {
+          "type": "notification",
+          "settings": {
+            "text": "欢迎光临我们的商店！",
+            "highlight_text": false,
+            "effect_type": "none",
+            "link": "",
+            "link_target": "_self",
+            "show_timer": false
+          }
+        }
+      }
+    }
+  },
+  "order": [
+    "text-notification"
+  ]
+}
