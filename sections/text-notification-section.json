@@ -12,14 +12,14 @@
         "highlight_text_transform": "none",
         "font_size": "14px",
         "padding": "12px 0",
-        "height": "40px",
+        "height": 40,
         "animation_speed": 3
       },
       "blocks": {
         "block-1": {
           "type": "notification",
           "settings": {
-            "text": "欢迎光临我们的商店！",
+            "text": "<p>欢迎光临我们的商店！</p>",
             "highlight_text": false,
             "effect_type": "none",
             "link": "",
