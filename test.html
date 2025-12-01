@@ -1,0 +1,139 @@
+<!-- ... existing code ... -->
+<countdown-timer class="countdown__timer heading inline-flex text-center" data-expires="2025-11-30T23:59:59-08:00">
+    <div class="countdown__item">
+        <p>
+            <span class="number">0
+                <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                    <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                    <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                    <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                </svg>
+            </span>
+            <span class="number">4
+                <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                    <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                    <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                    <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                </svg>
+            </span>
+            <span>:</span><!-- 添加冒号 -->
+        </p>
+        <span>DAYS</span>
+    </div>
+    <div class="countdown__item">
+        <p>
+            <span class="number">0
+                <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                    <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                    <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                    <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                </svg>
+            </span>
+            <span class="number">4
+                <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                    <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                    <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                    <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                </svg>
+            </span>
+            <span>:</span><!-- 添加冒号 -->
+        </p>
+        <span>HOURS</span>
+    </div>
+    <div class="countdown__item">
+        <p>
+            <span class="number">0
+                <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                    <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                    <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                    <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                </svg>
+            </span>
+            <span class="number">4
+                <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                    <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                    <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                    <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                </svg>
+            </span>
+            <span>:</span><!-- 添加冒号 -->
+        </p>
+        <span>MINS</span>
+    </div>
+    <div class="countdown__item">
+        <p>
+            <span class="number">0
+                <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                    <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                    <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                    <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                </svg>
+            </span>
+            <span class="number">4
+                <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                    <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                    <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                    <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                </svg>
+            </span>
+            <span></span>
+        </p>
+        <span>SECS</span>
+    </div>
+</countdown-timer>
+
+<style>
+    .countdown__timer {
+        display: flex;
+        background-color: #f95f18;
+        /* 橙色背景 */
+        padding: .5rem 1rem 0;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .countdown__item span:last-child{
+        display: flex;
+        justify-content: center;
+        color: #fff;
+    }
+
+    .countdown-condensed .countdown__item {
+        position: relative;
+        gap: 0.25rem;
+    }
+
+    .countdown__item p {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        line-height: 1;
+        white-space: nowrap;
+        gap: 0.25rem;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .countdown__item p span.number {
+        width: 26px;
+        height: 36px;
+        font-size: 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        color: #f95f18 !important;
+        border-radius: 5px;
+    }
+
+    .countdown__item p span svg {
+        position: absolute;
+        width: 25px;
+    }
+
+    .countdown__item:last-child::before {
+        display: none;
+    }
+</style>
+<!-- ... existing code ... -->

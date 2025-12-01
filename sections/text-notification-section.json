@@ -1,5 +1,5 @@
 {
-  "name": "文字通知栏",
+  "name": "Notification123",
   "type": "custom.text_notification",
   "sections": {
     "text-notification": {
@@ -19,7 +19,7 @@
         "block-1": {
           "type": "notification",
           "settings": {
-            "text": "<p>欢迎光临我们的商店！</p>",
+            "text": "<p>add your text here</p>",
             "highlight_text": false,
             "effect_type": "none",
             "link": "",

@@ -2,29 +2,41 @@
   /* 基础样式 */
   .text-notification {
     background-color: {{ section.settings.background_color }};
-    color: {{ section.settings.text_color }};
+    color: white;
     padding: {{ section.settings.padding }};
     text-align: center;
-    font-size: {{ section.settings.font_size }};
+    font-size: {{ section.settings.font_size }}px;
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* 保持 hidden 用于轮播效果 */
     z-index: 10;
-    /* 确保在编辑器中总是可见 */
-    display: block !important;
+    width: 100%;
+    display: block;
   }
-  
+
+  /* 当启用语言选择器时，允许下拉菜单溢出 */
+  {% if section.settings.enable_language_selector %}
+    .text-notification {
+      overflow: visible;
+    }
+    
+    /* 但保持轮播容器的 overflow hidden */
+    .text-notification__container {
+      overflow: hidden;
+    }
+  {% endif %}
+
   /* Shopify编辑器模式下的特殊处理 */
   body.editor-preview .text-notification,
   body.template-index .text-notification,
   body.template-page .text-notification,
   .shopify-policy__container .text-notification {
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    position: relative !important;
-    height: auto !important;
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+    height: auto;
   }
-  
+
   /* 编辑器中预览的额外样式 */
   @media screen and (max-width: 768px) {
     .text-notification {
@@ -32,7 +44,7 @@
       height: auto !important;
     }
   }
-  
+
   /* 预览元素样式 */
   .text-notification__preview {
     width: 100%;
@@ -41,7 +53,7 @@
     justify-content: center;
     height: 100%;
   }
-  
+
   /* 移动端显示控制 */
   {% if section.settings.show_on_mobile == false %}
     @media screen and (max-width: 768px) {
@@ -51,14 +63,287 @@
     }
   {% endif %}
 
+  /* 移动端隐藏通知内容 */
+  @media screen and (max-width: 768px) {
+    .text-notification__container {
+      display: none !important;
+    }
+  }
+
   .text-notification__container {
-    max-width: 1200px;
     margin: 0 auto;
-    overflow: hidden;
+    overflow: hidden; /* 保持 hidden 用于轮播效果 */
     position: relative;
-    height: {{ section.settings.height }}px;
+    height: auto;
+    min-height: {{ section.settings.height }}px;
     display: flex;
     align-items: center;
+    width: 100%;
+    max-width: 50%; /* 内容占比50% */
+  }
+
+  /* 当启用语言选择器时，调整容器布局 */
+  {% if section.settings.enable_language_selector %}
+    .text-notification__container {
+      padding-left: 100px; /* 为语言选择器留出空间 */
+    }
+  {% endif %}
+
+  /* 语言选择器容器样式 */
+  .text-notification__language-wrapper {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10000; /* 提高 z-index 确保在下拉菜单上方 */
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 0;
+    height: {{ section.settings.height }}px;
+  }
+
+  .text-notification__language-wrapper .localization-form {
+    display: flex;
+    align-items: center;
+  }
+
+  /* 地图图标样式 */
+  .text-notification__language-icon {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .text-notification__language-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: white;
+  }
+
+  /* 语言选择器按钮样式 - 无边框 */
+  .text-notification__language-wrapper .disclosure__button {
+    color: white;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    font-size: 12px;
+    min-height: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+  }
+
+  .text-notification__language-wrapper .disclosure__button:hover {
+    opacity: 0.8;
+  }
+
+  /* 确保按钮可点击 */
+  .text-notification__language-wrapper .disclosure__button,
+  .text-notification__language-wrapper .localization-form__select {
+    pointer-events: auto !important;
+  }
+
+  /* 下拉菜单样式 */
+  .text-notification__language-wrapper .disclosure {
+    position: relative;
+    display: inline-block;
+  }
+
+  .text-notification__language-wrapper .disclosure__list-wrapper {
+    background-color: {{ section.settings.background_color }};
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 4px;
+    min-width: 90px;
+    width: auto;
+    position: fixed; /* 使用 fixed 定位避免被父元素遮挡 */
+    z-index: 10001; /* 更高的 z-index 确保显示在最上层 */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto; /* 让内容决定高度 */
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* 确保下拉菜单在隐藏时不可见 */
+  .text-notification__language-wrapper .disclosure__list-wrapper[hidden] {
+    display: none !important;
+  }
+
+  /* 确保下拉菜单在显示时可见 */
+  .text-notification__language-wrapper .disclosure__list-wrapper:not([hidden]) {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .text-notification__language-wrapper .disclosure__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: block !important;
+    visibility: visible !important;
+    height: auto;
+    overflow: visible;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .text-notification__language-wrapper .disclosure__item {
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .text-notification__language-wrapper .disclosure__item:last-child {
+    border-bottom: none;
+  }
+
+  .text-notification__language-wrapper .disclosure__link {
+    color: white;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .text-notification__language-wrapper .disclosure__link:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  /* 确保下拉菜单内的所有文字都是白色 */
+  .text-notification__language-wrapper .disclosure__list-wrapper {
+    color: white;
+  }
+
+  .text-notification__language-wrapper .disclosure__list-wrapper * {
+    color: white;
+  }
+
+  /* 选中标记图标颜色 */
+  .text-notification__language-wrapper .disclosure__link svg {
+    fill: white;
+  }
+
+  @media (max-width: 1024px) {
+    .text-notification__container {
+      max-width: 100%;
+      padding: 0 32px;
+    }
+
+    .text-notification__slide {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+  }
+
+  /* 箭头按钮样式 */
+  .text-notification__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 1;
+  }
+
+  .text-notification__arrow svg {
+    width: 30px;
+    height: 30px;
+    fill: white;
+  }
+
+  .text-notification__arrow--left {
+    left: 10px;
+  }
+
+  .text-notification__arrow--right {
+    right: 10px;
+  }
+
+  /* 合并移动端适配 */
+  @media (max-width: 767px) {
+    /* 移动端箭头按钮适配 */
+    .text-notification__arrow {
+      width: 24px;
+      height: 24px;
+    }
+
+    .text-notification__arrow--left {
+      left: 5px;
+    }
+
+    .text-notification__arrow--right {
+      right: 5px;
+    }
+
+    .text-notification__arrow svg {
+      width: 16px;
+      height: 16px;
+      fill: white;
+    }
+
+    /* 移动端容器适配 */
+    .text-notification__container {
+      max-width: 100%;
+      padding: 0 40px;
+    }
+
+    /* 移动端语言选择器适配 */
+    .text-notification__language-wrapper {
+      left: 10px;
+      position: absolute;
+      transform: translateY(-50%);
+      top: 50%;
+    }
+
+    .text-notification__language-icon {
+      margin-right: 8px;
+    }
+
+    .text-notification__language-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .text-notification__language-wrapper .disclosure__button {
+      font-size: 11px;
+      padding: 0;
+      min-height: auto;
+      gap: 4px;
+    }
+
+    /* 移动端启用语言选择器时调整容器 */
+    {% if section.settings.enable_language_selector %}
+      .text-notification__container {
+        padding-left: 80px;
+      }
+    {% endif %}
+  }
+
+  /* 小屏幕适配 */
+  @media (max-width: 480px) {
+    .text-notification__container {
+      padding: 0 35px;
+    }
   }
 
   .text-notification__slides {
@@ -69,19 +354,14 @@
     left: 0;
   }
 
-  .text-notification__slide {
-    width: 100%;
-    height: {{ section.settings.height }}px;
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-  }
+  /* 移除重复的slide样式定义，已在后续代码中统一设置 */
 
   .text-notification__link {
     color: inherit;
     text-decoration: none;
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    flex-wrap: wrap;
     cursor: pointer;
     width: 100%;
   }
@@ -91,10 +371,41 @@
   }
 
   .text-notification__text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
     flex: 1;
+    word-wrap: break-word;
+    margin-bottom: 0;
+    color: white;
+    text-wrap: auto;
+    text-align: start;
+    line-height: 1.5rem;
+  }
+
+  .text-notification__text p {
+    margin: 0;
+  }
+
+  /* 按钮样式 */
+  .text-notification__button {
+    background-color: {{ section.settings.button_background_color }};
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    white-space: nowrap;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  .text-notification__button:hover {
+    background-color: #FF8C33;
+    text-decoration: none;
   }
 
   /* 图标样式 */
@@ -104,7 +415,7 @@
     justify-content: center;
     flex-shrink: 0;
   }
-  
+
   .text-notification__icon svg {
     width: 16px;
     height: 16px;
@@ -141,6 +452,20 @@
     animation: shake 0.5s infinite;
   }
 
+  .text-notification__slide {
+    height: auto;
+    min-height: {{ section.settings.height }}px;
+  }
+
+  .text-notification__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 50px;
+    height: {{ section.settings.height }}px;
+    gap: 1rem;
+  }
+
   @keyframes blink {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0.3; }
@@ -166,101 +491,418 @@
   /* 响应式设计 */
   @media (max-width: 767px) {
     .text-notification {
-      font-size: calc({{ section.settings.font_size }} * 0.9);
+      font-size: calc({{ section.settings.font_size }} * 0.9)px;
       padding: calc({{ section.settings.padding }} * 0.8);
     }
-    
+
     .text-notification__text {
       font-size: inherit;
       white-space: normal;
       overflow: visible;
       text-overflow: clip;
+      line-height: 1.4;
     }
-    
+
     .text-notification__container {
       height: auto;
       min-height: {{ section.settings.height }}px;
+      padding: 10px 0;
+      max-width: 100% !important; /* 移动端全宽显示 */
+    }
+
+    .text-notification__slide__container {
+      padding: 0 30px; /* 移动端为箭头留出空间 */
+    }
+
+    /* 确保在小屏幕上内容不会溢出 */
+    .text-notification__link,
+    .text-notification__content {
       padding: 5px 0;
+      height: auto;
+      min-height: {{ section.settings.height }}px;
     }
   }
 
   @media (max-width: 480px) {
     .text-notification {
-      font-size: calc({{ section.settings.font_size }} * 0.8);
+      font-size: calc({{ section.settings.font_size }} * 0.8)px;
       padding: calc({{ section.settings.padding }} * 0.6);
     }
-    
+
     .text-notification__text--slide {
       animation: none;
       white-space: normal;
       transform: none;
     }
-    
+
     .text-notification__timer {
-      display: inline-block !important;
-      margin-left: 10px !important;
+      display: inline-block;
+      margin-left: 10px;
+      margin-top: 0;
+      font-weight: bold;
+      color: #ff0000;
+      font-size: 14px;
+      min-width: 70px;
+      flex-shrink: 0;
+    }
+
+    /* 按钮样式 */
+    .text-notification__button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 5px !important;
       margin-top: 0 !important;
-      font-weight: bold !important;
-      color: #ff0000 !important;
-      font-size: 16px !important;
-      min-width: 80px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    /* 移动端允许内容换行，确保显示完整 */
+    .text-notification__content {
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    /* 移动端文字样式优化 */
+    .text-notification__text {
+      font-size: calc({{ section.settings.font_size }} * 0.9)px;
+      text-align: left;
+    }
+
+    .text-notification__button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 使通知内容和按钮水平排列 */
+    .text-notification__content,
+    .text-notification__link {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px; /* 文本和按钮之间的间距 */
+    }
+
+    /* 确保通知文本具有适当的灵活性 */
+    .text-notification__text {
+      flex: 1;
+      min-width: 0; /* 允许文本在空间不足时换行 */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
+
+  @media (max-width: 360px) {
+    .countdown__timer {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 4px;
+    }
+
+    .countdown__item {
+      flex: 1 1 45%;
+      min-width: 120px;
+    }
+
+    .countdown__item p {
+      gap: 0.1rem;
+    }
+
+    .countdown__item p span.number {
+      width: 22px;
+      font-size: 16px;
+    }
+  }
+
+    /* 在移动设备上优化显示 */
+    @media (max-width: 767px) {
+      .text-notification__content,
+      .text-notification__link {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .text-notification__text {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+      }
+    }
+
+    .countdown__timer {
+        display: flex;
+        /* 橙色背景 */
+        padding: .5rem 0;
+        align-items: center;
+        gap: 5px;
+        height: {{ section.settings.height }}px;
+    }
+
+    .countdown__item span:last-child {
+        display: flex;
+        justify-content: center;
+        color: #fff;
+    }
+
+    .countdown-condensed .countdown__item {
+        position: relative;
+        gap: 0.25rem;
+    }
+
+    .countdown__item p {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        line-height: 1;
+        white-space: nowrap;
+        gap: 0.25rem;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .countdown__item p span.number {
+        width: 26px;
+        height: calc({{ section.settings.height }}px * 0.5);;
+        font-size: 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        border-radius: 5px;
+    }
+
+    .countdown__item p span svg {
+        position: absolute;
+        width: 25px;
+    }
+
+    .countdown__item:last-child::before {
+        display: none;
+    }
 {%- endstyle -%}
 
-<!-- 文字通知栏组件 - 添加了Shopify编辑器支持 -->
-<div class="text-notification" data-section-type="text-notification">
-  <!-- Shopify编辑器预览占位内容 -->
-  {% comment %} {% if content_for_header contains 'admin/preview' or request.design_mode %}  
-    <div class="text-notification__container">
-      <div class="text-notification__preview">
-        <span class="text-notification__text">
-          {% if section.blocks.size > 0 %}
-            {{ section.blocks.first.settings.text | raw }}
-          {% else %}
-            预览通知内容
-          {% endif %}
-        </span>
-      </div>
+<!-- 文字通知栏组件 - 优化版 -->
+<section class="text-notification" data-section-type="text-notification">
+  <!-- 语言选择器 - 左侧 -->
+  {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+    <div class="text-notification__language-wrapper">
+      <!-- 地图图标 -->
+      <span class="text-notification__language-icon">
+        {{ 'icon-map-pin.svg' | inline_asset_content }}
+      </span>
+      <localization-form>
+        {%- form 'localization', id: 'TextNotificationLanguageForm', class: 'localization-form' -%}
+          <div>
+            <h2 class="visually-hidden" id="TextNotificationLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+            {%- render 'language-localization', localPosition: 'TextNotificationLanguage' -%}
+          </div>
+        {%- endform -%}
+      </localization-form>
     </div>
-  {% endif %} {% endcomment %}
-  
+  {%- endif -%}
   <!-- 正常显示内容 -->
-  <div class="text-notification__container">
-    <div class="text-notification__slides" data-notification-slides data-animation-speed="{{ section.settings.animation_speed }}">
+  <div class="text-notification__container" data-notification-slide>
+    <!-- 仅当有多个通知项时显示箭头按钮 -->
+    {% if section.blocks.size > 1 and section.settings.show_navigation %}
+      <!-- 左箭头按钮 -->
+      <button
+        class="text-notification__arrow text-notification__arrow--left"
+        data-arrow-direction="left"
+        aria-label="上一条通知"
+      >
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z"/>
+        </svg>
+      </button>
+      <!-- 右箭头按钮 -->
+      <button
+        class="text-notification__arrow text-notification__arrow--right"
+        data-arrow-direction="right"
+        aria-label="下一条通知"
+      >
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+        </svg>
+      </button>
+    {% endif %}
+    <div
+      class="text-notification__slides"
+      data-notification-slides
+      data-slide-height="{{ section.settings.height }}"
+      data-animation-speed="{{ section.settings.animation_speed }}"
+    >
       {% for block in section.blocks %}
-        <div class="text-notification__slide" style="justify-content: {{ block.settings.text_alignment }}; padding: 0 15px;">
+        <div class="text-notification__slide">
           {% if block.settings.link != blank %}
-            <a href="{{ block.settings.link }}" class="text-notification__link" target="{{ block.settings.link_target }}">
+            <a
+              href="{{ block.settings.link }}"
+              class="text-notification__link"
+              target="{{ block.settings.link_target }}"
+            >
           {% else %}
             <div class="text-notification__content">
           {% endif %}
-            
-            <!-- 左侧图标 -->
-            {% if block.settings.icon_position == 'left' %}
-              <span class="text-notification__icon" style="margin-right: {{ block.settings.icon_spacing }}px; color: {{ block.settings.icon_color }};">
-                <img src="{{ 'icon-' | append: block.settings.icon_type | append: '.svg' | asset_url }}" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" style="width: {{ block.settings.icon_size }}px; height: {{ block.settings.icon_size }}px;">
-              </span>
-            {% endif %}
-            
-            <!-- 通知文字 -->
-            <span class="text-notification__text {% if block.settings.highlight_text %}text-notification__text--highlight{% endif %} {% if block.settings.effect_type == 'blink' %}text-notification__text--blink{% endif %} {% if block.settings.effect_type == 'pulse' %}text-notification__text--pulse{% endif %} {% if block.settings.effect_type == 'slide' %}text-notification__text--slide{% endif %} {% if block.settings.effect_type == 'shake' %}text-notification__text--shake{% endif %}"
-                  style="font-weight: {{ block.settings.custom_font_weight }}; text-transform: {{ block.settings.custom_text_transform }}; {% if block.settings.custom_text_color != blank %}color: {{ block.settings.custom_text_color }};{% endif %}">
-              {{ block.settings.text | raw }}
+
+          <!-- 左侧图标 -->
+          {% if block.settings.icon_position == 'left' %}
+            <span
+              class="text-notification__icon"
+              style="margin-right: {{ block.settings.icon_spacing }}px; color: {{ block.settings.icon_color }};"
+            >
+              <img
+                src="{{ block.settings.icon_type | append: '.svg' | asset_url }}"
+                width="{{ block.settings.icon_size }}"
+                height="{{ block.settings.icon_size }}"
+                alt="{{ block.settings.icon_type }}"
+                loading="lazy"
+              >
             </span>
-            
-            <!-- 右侧图标 -->
-            {% if block.settings.icon_position == 'right' %}
-              <span class="text-notification__icon" style="margin-left: {{ block.settings.icon_spacing }}px; color: {{ block.settings.icon_color }};">
-                <img src="{{ 'icon-' | append: block.settings.icon_type | append: '.svg' | asset_url }}" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" style="width: {{ block.settings.icon_size }}px; height: {{ block.settings.icon_size }}px;">
-              </span>
-            {% endif %}
-            
-            <!-- 倒计时 -->
-            {% if block.settings.show_timer %}
-              <span class="text-notification__timer" data-countdown-timer data-end-date="{{ block.settings.timer_end_date }}">加载中...</span>
-            {% endif %}
-            
+          {% endif %}
+
+          <!-- 倒计时组件 -->
+          {% if block.settings.show_timer %}
+            <countdown-timer
+              class="countdown__timer heading inline-flex text-center text-notification__timer"
+              data-expires="{{ block.settings.timer_end_date | default: '2025-12-31T23:59:59' }}"
+              style="background-color: {{ block.settings.countdown_text_color }};"
+            >
+              <div class="countdown__item" data-countdown-unit="days">
+                <p>
+                  <span class="number" style="color: {{ block.settings.countdown_text_color }};">
+                    0
+                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                      <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                      <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                      <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                    </svg>
+                  </span>
+                  <span class="number" style="color: {{ block.settings.countdown_text_color }};">
+                    0
+                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                      <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                      <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                      <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                    </svg>
+                  </span>
+                  <span>:</span>
+                  <!-- 添加冒号 -->
+                </p>
+                <span>DAYS</span>
+              </div>
+              <div class="countdown__item" data-countdown-unit="hours">
+                <p>
+                  <span class="number" style="color: {{ block.settings.countdown_text_color }};">
+                    0
+                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                      <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                      <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                      <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                    </svg>
+                  </span>
+                  <span class="number" style="color: {{ block.settings.countdown_text_color }};">
+                    0
+                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                      <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                      <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                      <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                    </svg>
+                  </span>
+                  <span>:</span>
+                  <!-- 添加冒号 -->
+                </p>
+                <span>HOURS</span>
+              </div>
+              <div class="countdown__item" data-countdown-unit="minutes">
+                <p>
+                  <span class="number" style="color: {{ block.settings.countdown_text_color }};">
+                    0
+                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                      <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                      <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                      <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                    </svg>
+                  </span>
+                  <span class="number" style="color: {{ block.settings.countdown_text_color }};">
+                    0
+                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                      <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                      <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                      <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                    </svg>
+                  </span>
+                  <span>:</span>
+                  <!-- 添加冒号 -->
+                </p>
+                <span>MINS</span>
+              </div>
+              <div class="countdown__item" data-countdown-unit="seconds">
+                <p>
+                  <span class="number" style="color: {{ block.settings.countdown_text_color }};">
+                    0
+                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                      <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                      <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                      <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                    </svg>
+                  </span>
+                  <span class="number" style="color: {{ block.settings.countdown_text_color }};">
+                    0
+                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="6" viewBox="0 0 57 6" fill="none">
+                      <rect x="0.5" y="2" width="56" height="2" fill="currentColor"></rect>
+                      <rect x="0.5" width="3" height="6" fill="currentColor"></rect>
+                      <rect x="53.5" width="3" height="6" fill="currentColor"></rect>
+                    </svg>
+                  </span>
+                  <span></span>
+                </p>
+                <span>SECS</span>
+              </div>
+            </countdown-timer>
+          {% endif %}
+
+          <!-- 通知文字 -->
+          <span class="text-notification__text">
+            {{ block.settings.text }}
+          </span>
+
+          <!-- 右侧图标 -->
+          {% if block.settings.icon_position == 'right' %}
+            <span
+              class="text-notification__icon"
+              style="margin-left: {{ block.settings.icon_spacing }}px; color: {{ block.settings.icon_color }};"
+            >
+              <img
+                src="{{ block.settings.icon_type | append: '.svg' | asset_url }}"
+                width="{{ block.settings.icon_size }}"
+                height="{{ block.settings.icon_size }}"
+                alt="{{ block.settings.icon_type }}"
+                loading="lazy"
+              >
+            </span>
+          {% endif %}
+
+          <!-- 自定义按钮 -->
+          {% if block.settings.show_button and block.settings.button_url != blank %}
+            <a
+              href="{{ block.settings.button_url }}"
+              class="text-notification__button"
+              target="{{ block.settings.button_target }}"
+              style="background-color: {{ block.settings.button_background_color }}; color: {{ block.settings.button_text_color }}; border-style: {{ block.settings.button_border_style }}; border-color: {{ block.settings.button_border_color }}; border-radius: {{ block.settings.button_border_radius }}px; padding: {{ block.settings.button_padding_top }}px {{ block.settings.button_padding_right }}px {{ block.settings.button_padding_bottom }}px {{ block.settings.button_padding_left }}px;"
+            >
+              {{ block.settings.button_text }}
+            </a>
+          {% endif %}
+
           {% if block.settings.link != blank %}
             </a>
           {% else %}
@@ -270,202 +912,611 @@
       {% endfor %}
     </div>
   </div>
-</div>
+</section>
 
 {%- javascript -%}
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
+    // 创建清理函数集合，用于统一管理和清理所有资源
+    const cleanupFunctions = [];
+
     // 垂直滚动功能
-    const slidesContainer = document.querySelector('.text-notification__slides');
+    // 获取包含箭头和轮播内容的容器
+    const slideContainer = document.querySelector('[data-notification-slide]');
+    // 获取轮播内容容器
+    const slidesContainer = slideContainer ? slideContainer.querySelector('.text-notification__slides') : null;
     if (slidesContainer) {
       const slides = Array.from(slidesContainer.querySelectorAll('.text-notification__slide'));
-      
       // 确保至少有一个slide
       if (slides.length > 0) {
-        // 获取第一个slide的实际高度
-        let slideHeight = slides[0].offsetHeight;
-        
+        // 使用配置的高度，确保一致性
+        let slideHeight = parseInt(slidesContainer.dataset.slideHeight || '40', 10);
+
         // 确保slideHeight至少有一个合理的值
-        if (!slideHeight || slideHeight === 0) {
-          slideHeight = 50; // 默认高度
+        if (!slideHeight || slideHeight <= 0) {
+          slideHeight = 40; // 默认高度
         }
-        
-        const animationSpeed = parseFloat(slidesContainer.dataset.animationSpeed) * 1000 || 3000;
+
+        // 使用配置的动画速度
+        const animationSpeed = parseInt(slidesContainer.dataset.animationSpeed || '3', 10) * 1000;
         let currentSlide = 0;
-        
+        let autoScrollInterval;
+        let leftArrowClickHandler;
+        let rightArrowClickHandler;
+
         // 重要：设置容器的基础样式
         slidesContainer.style.position = 'relative';
         slidesContainer.style.height = slideHeight + 'px';
         slidesContainer.style.overflow = 'hidden';
         slidesContainer.style.display = 'block';
-        
+
         // 重置所有slide的样式，确保它们正确叠加
         slides.forEach((slide, index) => {
-          // 清除可能存在的内联样式
-          slide.style.cssText = '';
-          
-          // 设置必要的样式
+          // 保留重要的内联样式
+          const preservedStyles = {
+            backgroundColor: slide.style.backgroundColor,
+            backgroundImage: slide.style.backgroundImage,
+            backgroundRepeat: slide.style.backgroundRepeat,
+            backgroundPosition: slide.style.backgroundPosition,
+          };
+
+          // 不要完全清除所有内联样式，只设置必要的布局样式
+
+          // 设置必要的布局样式，但保留用户定义的其他样式
           slide.style.position = 'absolute';
           slide.style.top = '0';
           slide.style.left = '0';
           slide.style.width = '100%';
-          slide.style.height = slideHeight + 'px';
+          // 使用auto高度让内容决定高度
+          slide.style.height = 'auto';
+          slide.style.minHeight = slideHeight + 'px';
           slide.style.boxSizing = 'border-box';
-          slide.style.padding = '0 15px';
-          slide.style.display = 'flex';
-          slide.style.justifyContent = 'center'; // 默认居中
-          slide.style.alignItems = 'center';
-          
+          // 保留现有的display设置
+          if (!slide.style.display || slide.style.display === 'none') {
+            slide.style.display = 'flex';
+          }
+          // 保留现有的对齐设置
+          if (!slide.style.justifyContent) {
+            slide.style.justifyContent = 'center';
+          }
+          if (!slide.style.alignItems) {
+            slide.style.alignItems = 'center';
+          }
+
           // 初始位置：第一个显示，其余在下方
           slide.style.transform = `translateY(${index === 0 ? 0 : slideHeight}px)`;
         });
-        
-        // 自动滚动函数
-        function autoScroll() {
+
+        // 滚动到指定slide的函数 - 优化版
+        function goToSlide(index) {
+          console.log('goToSlide', index);
           // 隐藏当前slide
           slides[currentSlide].style.transition = 'transform 0.5s ease-in-out';
           slides[currentSlide].style.transform = `translateY(-${slideHeight}px)`;
-          
-          // 计算下一个slide索引
-          currentSlide = (currentSlide + 1) % slides.length;
-          
-          // 显示下一个slide
+
+          // 设置新的当前slide索引
+          currentSlide = index;
+
+          // 显示目标slide
           slides[currentSlide].style.transition = 'none'; // 先无过渡定位
           slides[currentSlide].style.transform = `translateY(${slideHeight}px)`;
-          
+
           // 强制重排
           void slides[currentSlide].offsetWidth;
-          
+
           // 添加过渡并移动到位
           slides[currentSlide].style.transition = 'transform 0.5s ease-in-out';
           slides[currentSlide].style.transform = 'translateY(0)';
+
+          // 当用户通过箭头按钮切换slide时重置计时器
+          // 但避免在自动滚动调用时重置，防止循环重置
         }
-        
-        // 只有当通知数量大于1时才启动自动滚动
+
+        // 自动滚动函数 - 确保在多条通知时正常工作
+        function autoScroll() {
+          // 确保在DOM中仍然存在slides且有至少两条通知
+          if (slides.length > 1 && document.body.contains(slidesContainer)) {
+            // 使用requestAnimationFrame确保平滑滚动
+            requestAnimationFrame(() => {
+              goToSlide((currentSlide + 1) % slides.length);
+            });
+          }
+        }
+
+        // 优化的重置自动滚动函数
+        function resetAutoScroll() {
+          // 只有在有多个幻灯片时才设置自动滚动
+          if (slides.length <= 1) {
+            return;
+          }
+
+          // 清除现有的定时器
+          if (autoScrollInterval) {
+            clearInterval(autoScrollInterval);
+            autoScrollInterval = null;
+          }
+
+          // 只有在元素仍在DOM中时才启动自动滚动
+          if (document.body.contains(slidesContainer)) {
+            // 创建新的定时器
+            autoScrollInterval = setInterval(() => {
+              // 检查元素是否可见，只有可见时才执行滚动
+              if (isElementVisible) {
+                // 使用requestAnimationFrame确保平滑滚动
+                requestAnimationFrame(autoScroll);
+              }
+            }, animationSpeed);
+          }
+        }
+
+        // 确保只添加一次清理函数到数组
+        cleanupFunctions.push(() => {
+          if (autoScrollInterval) {
+            clearInterval(autoScrollInterval);
+            autoScrollInterval = null;
+          }
+        });
+        // 初始化当前slide索引
+        // 立即初始化自动滚动（在DOMContentLoaded中）
         if (slides.length > 1) {
-          setInterval(autoScroll, animationSpeed);
+          // 确保DOM完全渲染
+          setTimeout(() => {
+            if (document.body.contains(slidesContainer)) {
+              // 自动滚动初始化
+              resetAutoScroll();
+            }
+          }, 200); // 增加延迟以确保DOM完全渲染
+        }
+
+        // 箭头按钮功能 - 从slideContainer中查找
+        const leftArrow = slideContainer ? slideContainer.querySelector('.text-notification__arrow--left') : null;
+        const rightArrow = slideContainer ? slideContainer.querySelector('.text-notification__arrow--right') : null;
+
+        if (leftArrow && rightArrow) {
+          // 左箭头点击事件 - 上一个通知
+          leftArrowClickHandler = function () {
+            const prevSlide = (currentSlide - 1 + slides.length) % slides.length;
+            goToSlide(prevSlide);
+            // 用户交互后重置自动滚动计时器
+            resetAutoScroll();
+          };
+          leftArrow.addEventListener('click', leftArrowClickHandler);
+
+          // 右箭头点击事件 - 下一个通知
+          rightArrowClickHandler = function () {
+            const nextSlide = (currentSlide + 1) % slides.length;
+            goToSlide(nextSlide);
+            // 用户交互后重置自动滚动计时器
+            resetAutoScroll();
+          };
+          rightArrow.addEventListener('click', rightArrowClickHandler);
+
+          // 添加事件监听器清理函数
+          cleanupFunctions.push(() => {
+            leftArrow.removeEventListener('click', leftArrowClickHandler);
+            rightArrow.removeEventListener('click', rightArrowClickHandler);
+          });
+        }
+
+        // 触摸滑动支持，便于移动端操作
+        if ('ontouchstart' in window && slides.length > 1 && slideContainer) {
+          let touchStartY = null;
+          let touchDeltaY = 0;
+          const touchThreshold = 30;
+
+          const handleTouchStart = (event) => {
+            if (!event.touches || event.touches.length === 0) {
+              return;
+            }
+            touchStartY = event.touches[0].clientY;
+            touchDeltaY = 0;
+          };
+
+          const handleTouchMove = (event) => {
+            if (touchStartY === null || !event.touches || event.touches.length === 0) {
+              return;
+            }
+            touchDeltaY = event.touches[0].clientY - touchStartY;
+          };
+
+          const handleTouchEnd = () => {
+            if (touchStartY === null) {
+              return;
+            }
+
+            if (Math.abs(touchDeltaY) > touchThreshold) {
+              if (touchDeltaY > 0) {
+                const prevSlide = (currentSlide - 1 + slides.length) % slides.length;
+                goToSlide(prevSlide);
+              } else {
+                const nextSlide = (currentSlide + 1) % slides.length;
+                goToSlide(nextSlide);
+              }
+              resetAutoScroll();
+            }
+
+            touchStartY = null;
+            touchDeltaY = 0;
+          };
+
+          slideContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+          slideContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+          slideContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+          cleanupFunctions.push(() => {
+            slideContainer.removeEventListener('touchstart', handleTouchStart);
+            slideContainer.removeEventListener('touchmove', handleTouchMove);
+            slideContainer.removeEventListener('touchend', handleTouchEnd);
+          });
+        }
+
+        // 添加自动滚动定时器清理函数
+        cleanupFunctions.push(() => {
+          if (autoScrollInterval) {
+            clearInterval(autoScrollInterval);
+            autoScrollInterval = null;
+          }
+        });
+
+        // 已经在DOMContentLoaded中初始化了自动滚动，这里不再重复初始化
+
+        // 添加IntersectionObserver检测元素可见性
+        let isElementVisible = false;
+        let visibilityObserver;
+
+        function setupVisibilityObserver() {
+          if ('IntersectionObserver' in window) {
+            visibilityObserver = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  isElementVisible = entry.isIntersecting;
+                  if (isElementVisible && slides.length > 1) {
+                    resetAutoScroll(); // 可见时启动自动滚动
+                  } else {
+                    // 不可见时暂停自动滚动
+                    if (autoScrollInterval) {
+                      clearInterval(autoScrollInterval);
+                      autoScrollInterval = null;
+                    }
+                  }
+                });
+              },
+              { threshold: 0.1 } // 当10%的元素可见时触发
+            );
+            visibilityObserver.observe(slideContainer);
+
+            // 添加观察者清理函数
+            cleanupFunctions.push(() => {
+              visibilityObserver.disconnect();
+            });
+          }
+        }
+
+        // 初始化可见性检测
+        setupVisibilityObserver();
+
+        // 添加Resize事件处理，但保持使用配置的高度以确保一致性
+        function handleResize() {
+          if (slides.length > 0) {
+            // 保存当前slide索引
+            const currentSlideIndex = currentSlide;
+
+            // 确保使用配置的高度
+            slideHeight = parseInt(slidesContainer.dataset.slideHeight || '40', 10);
+            if (!slideHeight || slideHeight <= 0) {
+              slideHeight = 40; // 默认高度
+            }
+
+            // 更新容器和所有slide的高度
+            slidesContainer.style.height = slideHeight + 'px';
+            slides.forEach((slide) => {
+              slide.style.height = slideHeight + 'px';
+            });
+
+            // 重新定位当前显示的slide
+            slides.forEach((slide, index) => {
+              if (index === currentSlideIndex) {
+                slide.style.transform = 'translateY(0)';
+              } else {
+                slide.style.transform = `translateY(${slideHeight}px)`;
+              }
+            });
+          }
+        }
+
+        // 添加resize事件监听
+        window.addEventListener('resize', handleResize, { passive: true });
+
+        // 添加resize事件监听器清理函数
+        cleanupFunctions.push(() => {
+          window.removeEventListener('resize', handleResize);
+        });
+      }
+    }
+
+    // 根据 data-expires 属性动态更新倒计时（不改动原有样式）
+    function initializeExpiresCountdowns() {
+      const timers = document.querySelectorAll('countdown-timer[data-expires]');
+
+      timers.forEach((timer) => {
+        if (timer.dataset.countdownInitialized === 'true') {
+          return;
+        }
+        timer.dataset.countdownInitialized = 'true';
+
+        const expiresAttr = timer.dataset.expires || timer.getAttribute('data-expires');
+        let expiresAt = Date.parse(expiresAttr);
+
+        if (Number.isNaN(expiresAt)) {
+          const fallbackDate = new Date();
+          fallbackDate.setDate(fallbackDate.getDate() + 7);
+          expiresAt = fallbackDate.getTime();
+        }
+
+        const unitDigitsMap = {};
+        timer.querySelectorAll('.countdown__item[data-countdown-unit]').forEach((item) => {
+          const unit = item.dataset.countdownUnit;
+          if (!unit) {
+            return;
+          }
+          const digits = Array.from(item.querySelectorAll('.number'));
+          if (digits.length === 0) {
+            return;
+          }
+          unitDigitsMap[unit] = digits;
+        });
+
+        const TEXT_NODE = typeof Node !== 'undefined' ? Node.TEXT_NODE : 3;
+
+        const ensureTextNode = (element) => {
+          const nodes = Array.from(element.childNodes);
+          const textNode = nodes.find((child) => child.nodeType === TEXT_NODE);
+          if (textNode) {
+            return textNode;
+          }
+          const created = document.createTextNode('');
+          element.insertBefore(created, element.firstChild);
+          return created;
+        };
+
+        const updateDigits = (unit, value) => {
+          const digitNodes = unitDigitsMap[unit];
+          if (!digitNodes || digitNodes.length === 0) {
+            return;
+          }
+          const paddedValue = value
+            .toString()
+            .padStart(digitNodes.length, '0')
+            .slice(-digitNodes.length);
+          digitNodes.forEach((digitNode, index) => {
+            const char = paddedValue.charAt(index) || '0';
+            ensureTextNode(digitNode).textContent = char;
+          });
+        };
+
+        const dayMs = 1000 * 60 * 60 * 24;
+        const hourMs = 1000 * 60 * 60;
+        const minuteMs = 1000 * 60;
+        let intervalId;
+
+        const updateCountdown = () => {
+          const now = Date.now();
+          let distance = expiresAt - now;
+
+          if (distance <= 0) {
+            distance = 0;
+          }
+
+          const days = Math.floor(distance / dayMs);
+          const hours = Math.floor((distance % dayMs) / hourMs);
+          const minutes = Math.floor((distance % hourMs) / minuteMs);
+          const seconds = Math.floor((distance % minuteMs) / 1000);
+
+          updateDigits('days', days);
+          updateDigits('hours', hours);
+          updateDigits('minutes', minutes);
+          updateDigits('seconds', seconds);
+
+          if (distance === 0 && intervalId) {
+            clearInterval(intervalId);
+          }
+        };
+
+        updateCountdown();
+        intervalId = setInterval(updateCountdown, 1000);
+
+        cleanupFunctions.push(() => {
+          if (intervalId) {
+            clearInterval(intervalId);
+          }
+          delete timer.dataset.countdownInitialized;
+        });
+      });
+    }
+
+    // 初始化倒计时
+    initializeExpiresCountdowns();
+
+    // 确保语言选择器正常工作
+    function ensureLanguageSelectorWorks() {
+      const languageForm = document.querySelector('#TextNotificationLanguageForm');
+      if (languageForm) {
+        const localizationForm = languageForm.closest('localization-form');
+        if (localizationForm) {
+          const button = localizationForm.querySelector('button.localization-form__select');
+          if (button) {
+            // 确保按钮可点击
+            button.style.pointerEvents = 'auto';
+            button.style.cursor = 'pointer';
+            
+            // 确保下拉菜单的定位正确
+            const panel = localizationForm.querySelector('.disclosure__list-wrapper');
+            if (panel) {
+              // 计算语言选择器容器位置并设置下拉菜单位置
+              function updatePanelPosition() {
+                if (!panel.hasAttribute('hidden')) {
+                  // 获取整个语言选择器容器的位置（包括地图图标和文字）
+                  const languageWrapper = button.closest('.text-notification__language-wrapper');
+                  const wrapperRect = languageWrapper ? languageWrapper.getBoundingClientRect() : button.getBoundingClientRect();
+                  
+                  // 强制显示
+                  panel.removeAttribute('hidden');
+                  panel.style.position = 'absolute';
+                  // 在语言选择器容器正下方显示，紧贴底部，添加4px间距
+                  panel.style.top = wrapperRect.height + 'px';
+                  panel.style.left = wrapperRect.left + 'px';
+                  panel.style.zIndex = '10001';
+                  panel.style.setProperty('display', 'block', 'important');
+                  panel.style.visibility = 'visible';
+                  panel.style.opacity = '1';
+                  panel.style.height = 'auto';
+                  panel.style.minHeight = 'auto';
+                  panel.style.maxHeight = 'none';
+                  panel.style.width = 'auto';
+                  panel.style.overflow = 'visible';
+                  
+                  // 确保内容可见
+                  const list = panel.querySelector('.disclosure__list');
+                  if (list) {
+                    list.style.display = 'block';
+                    list.style.visibility = 'visible';
+                  }
+                }
+              }
+              
+              // 监听 hidden 属性变化
+              const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                  if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
+                    if (panel.hasAttribute('hidden')) {
+                      panel.style.display = 'none';
+                      panel.style.visibility = 'hidden';
+                    } else {
+                      // 延迟更新位置，确保按钮位置已更新
+                      setTimeout(function() {
+                        updatePanelPosition();
+                        // 再次确保显示
+                        requestAnimationFrame(function() {
+                          updatePanelPosition();
+                        });
+                      }, 10);
+                    }
+                  }
+                });
+              });
+              observer.observe(panel, {
+                attributes: true,
+                attributeFilter: ['hidden']
+              });
+              
+              // 也监听按钮的点击事件，确保下拉菜单显示
+              button.addEventListener('click', function() {
+                setTimeout(function() {
+                  if (!panel.hasAttribute('hidden')) {
+                    updatePanelPosition();
+                  }
+                }, 50);
+              });
+              
+              // 监听窗口滚动和调整大小
+              const updateOnScroll = function() {
+                if (!panel.hasAttribute('hidden')) {
+                  updatePanelPosition();
+                }
+              };
+              window.addEventListener('scroll', updateOnScroll, { passive: true });
+              window.addEventListener('resize', updateOnScroll, { passive: true });
+              
+              cleanupFunctions.push(() => {
+                observer.disconnect();
+                window.removeEventListener('scroll', updateOnScroll);
+                window.removeEventListener('resize', updateOnScroll);
+              });
+            }
+
+            // 添加点击事件监听器（如果组件还没有初始化）
+            if (!button.hasAttribute('data-listener-added')) {
+              button.addEventListener('click', function(e) {
+                // 确保事件不被阻止
+                e.stopPropagation();
+              });
+              button.setAttribute('data-listener-added', 'true');
+            }
+          }
         }
       }
     }
+
+    // 延迟执行以确保组件已加载
+    setTimeout(ensureLanguageSelectorWorks, 100);
+    setTimeout(ensureLanguageSelectorWorks, 500);
     
-    // 倒计时功能 - 优化版，避免无限循环和内存泄漏
-    function initializeCountdowns() {
-      // 强制显示所有倒计时元素（不依赖CSS）
-      const allTimers = document.querySelectorAll('.text-notification__timer');
-      allTimers.forEach(timer => {
-        timer.style.display = 'inline-block';
-        timer.style.color = '#ff0000';
-        timer.style.fontWeight = 'bold';
-        timer.style.marginLeft = '10px';
-        timer.style.minWidth = '80px';
-        timer.style.zIndex = '9999';
+    // 监听 DOM 变化，确保在动态加载时也能工作
+    if (typeof MutationObserver !== 'undefined') {
+      const observer = new MutationObserver(function(mutations) {
+        ensureLanguageSelectorWorks();
       });
-      
-      // 主要倒计时逻辑
-      const slides = document.querySelectorAll('.text-notification__slide');
-      
-      slides.forEach((slide) => {
-        const countdownElement = slide.querySelector('[data-countdown-timer]');
-        
-        if (countdownElement && !countdownElement.dataset.initialized) {
-          // 标记为已初始化，防止重复初始化
-          countdownElement.dataset.initialized = 'true';
-          
-          // 获取并处理结束日期
-          let endDate = countdownElement.dataset.endDate;
-          
-          // 如果日期无效或过期，设置一个默认的未来日期（7天后）
-          let endDateTime;
-          try {
-            endDateTime = new Date(endDate).getTime();
-            
-            // 如果日期已过期，设置为7天后
-            if (endDateTime <= new Date().getTime()) {
-              endDateTime = new Date();
-              endDateTime.setDate(endDateTime.getDate() + 7);
-            }
-          } catch (e) {
-            // 如果日期格式无效，设置为7天后
-            endDateTime = new Date();
-            endDateTime.setDate(endDateTime.getDate() + 7);
-          }
-          
-          // 独立的更新函数
-          function updateCountdown() {
-            try {
-              // 检查元素是否仍在DOM中
-              if (!document.body.contains(countdownElement)) {
-                clearInterval(timer);
-                return;
-              }
-              
-              const now = new Date().getTime();
-              const distance = endDateTime - now;
-              
-              if (distance <= 0) {
-                countdownElement.textContent = '剩余: 00:00:00';
-                countdownElement.style.color = '#999';
-                clearInterval(timer);
-                return;
-              }
-              
-              // 计算剩余天数、小时、分钟和秒数
-              const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-              const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-              const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-              const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-              
-              // 格式化显示，添加前缀"剩余: "
-              let displayText = '剩余: ';
-              if (days > 0) displayText += days + '天 ';
-              displayText += hours.toString().padStart(2, '0') + ':' +
-                            minutes.toString().padStart(2, '0') + ':' +
-                            seconds.toString().padStart(2, '0');
-              
-              countdownElement.textContent = displayText;
-            } catch (error) {
-              // 错误处理，防止崩溃
-              console.error('倒计时更新错误:', error);
-              clearInterval(timer);
-            }
-          }
-          
-          // 启动倒计时并保存定时器ID
-          const timer = setInterval(updateCountdown, 1000);
-          countdownElement.dataset.timerId = timer;
-          
-          // 为元素添加清理函数，在元素被移除时清理定时器
-          countdownElement._cleanupTimer = () => {
-            clearInterval(timer);
-          };
-          
-          // 立即执行一次
-          updateCountdown();
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      cleanupFunctions.push(() => observer.disconnect());
+    }
+
+    // 添加页面卸载清理，防止内存泄漏
+    function cleanupAllResources() {
+      // 执行所有注册的清理函数
+      cleanupFunctions.forEach((cleanup) => {
+        try {
+          cleanup();
+        } catch (error) {
+          // 静默处理错误
+        }
+      });
+
+      // 清空清理函数数组
+      cleanupFunctions.length = 0;
+    }
+
+    // 页面卸载时清理所有资源
+    window.addEventListener('beforeunload', cleanupAllResources);
+
+    // 在Shopify主题编辑器环境中，添加额外的清理机制
+    if (window.Shopify && window.Shopify.designMode) {
+      // 监听section卸载事件
+      document.addEventListener('shopify:section:unload', function (e) {
+        if (e.detail && e.detail.sectionId && document.querySelector(`[data-section-id="${e.detail.sectionId}"]`)) {
+          cleanupAllResources();
         }
       });
     }
-    
-    // 初始化倒计时
-    initializeCountdowns();
-    
-    // 添加页面卸载清理，防止内存泄漏
-    window.addEventListener('beforeunload', () => {
-      const countdownElements = document.querySelectorAll('[data-countdown-timer]');
-      countdownElements.forEach(element => {
-        if (element._cleanupTimer) {
-          element._cleanupTimer();
-        }
-        const timerId = element.dataset.timerId;
-        if (timerId) {
-          clearInterval(timerId);
+
+    // 添加MutationObserver以检测DOM变化，当容器被移除时清理资源
+    if (slidesContainer) {
+      const observer = new MutationObserver(function (mutations) {
+        // 检查容器是否仍然在DOM中
+        if (!document.body.contains(slidesContainer)) {
+          cleanupAllResources();
+          observer.disconnect();
         }
       });
-    });
+
+      // 监视整个文档的变化
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+
+      // 添加观察者清理函数
+      cleanupFunctions.push(() => {
+        observer.disconnect();
+      });
+    }
   });
 {%- endjavascript -%}
 
 {% schema %}
 {
-  "name": "文字通知栏",
+  "name": "Notification Text",
   "tag": "section",
   "class": "text-notification-section",
   "settings": [
@@ -476,81 +1527,24 @@
       "default": "#000000"
     },
     {
-      "type": "color",
-      "id": "text_color",
-      "label": "文字颜色",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "highlight_color",
-      "label": "强调文字颜色",
-      "default": "#ff0000"
-    },
-    {
-      "type": "select",
-      "id": "highlight_font_weight",
-      "label": "强调文字字重",
-      "options": [
-        { "value": "normal", "label": "正常" },
-        { "value": "bold", "label": "粗体" },
-        { "value": "600", "label": "半粗体" }
-      ],
-      "default": "bold"
-    },
-    {
-      "type": "select",
-      "id": "highlight_text_transform",
-      "label": "强调文字转换",
-      "options": [
-        { "value": "none", "label": "无" },
-        { "value": "uppercase", "label": "大写" },
-        { "value": "lowercase", "label": "小写" },
-        { "value": "capitalize", "label": "首字母大写" }
-      ],
-      "default": "none"
-    },
-    {
-      "type": "select",
-      "id": "font_size",
-      "label": "文字大小",
-      "options": [
-        { "value": "12px", "label": "12px" },
-        { "value": "14px", "label": "14px" },
-        { "value": "16px", "label": "16px" },
-        { "value": "18px", "label": "18px" }
-      ],
-      "default": "14px"
-    },
-    {
-      "type": "select",
-      "id": "padding",
-      "label": "内边距",
-      "options": [
-        { "value": "8px 0", "label": "小" },
-        { "value": "12px 0", "label": "中" },
-        { "value": "16px 0", "label": "大" }
-      ],
-      "default": "12px 0"
-    },
-    {
       "type": "range",
       "id": "height",
       "label": "高度 (像素)",
       "min": 20,
       "max": 100,
       "step": 5,
-      "default": 40,
+      "default": 60,
       "unit": "px"
     },
-    {      
+    {
       "type": "range",
       "id": "animation_speed",
       "label": "动画速度(秒)",
       "min": 1,
       "max": 10,
       "step": 0.5,
-      "default": 3
+      "default": 3,
+      "unit": "s"
     },
     {
       "type": "checkbox",
@@ -563,18 +1557,67 @@
       "id": "show_in_editor",
       "label": "在编辑器中显示",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "显示导航",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "箭头颜色",
+      "default": "#333333"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_selector",
+      "label": "启用语言选择器",
+      "default": false,
+      "info": "在通知栏左侧显示语言选择器（带地图图标）"
     }
   ],
   "blocks": [
     {
       "type": "notification",
-      "name": "通知",
+      "name": "a notification",
       "settings": [
         {
           "type": "richtext",
           "id": "text",
           "label": "通知文字",
-          "default": "<p>欢迎光临我们的商店！</p>"
+          "default": "<p>欢迎光临我们的商店!</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "背景图片"
+        },
+        {
+          "type": "select",
+          "id": "background_repeat",
+          "label": "背景图片重复",
+          "options": [
+            { "value": "no-repeat", "label": "不重复" },
+            { "value": "repeat", "label": "重复" },
+            { "value": "repeat-x", "label": "水平重复" },
+            { "value": "repeat-y", "label": "垂直重复" }
+          ],
+          "default": "no-repeat"
+        },
+        {
+          "type": "select",
+          "id": "background_position",
+          "label": "背景图片位置",
+          "options": [
+            { "value": "center", "label": "居中" },
+            { "value": "top left", "label": "左上" },
+            { "value": "top right", "label": "右上" },
+            { "value": "bottom left", "label": "左下" },
+            { "value": "bottom right", "label": "右下" }
+          ],
+          "default": "center"
         },
         {
           "type": "select",
@@ -591,7 +1634,7 @@
           "type": "color",
           "id": "custom_text_color",
           "label": "自定义文字颜色",
-          "default": "#000000"
+          "default": "#ffffffff"
         },
         {
           "type": "select",
@@ -706,21 +1749,136 @@
           "type": "checkbox",
           "id": "show_timer",
           "label": "显示倒计时",
-          "default": true
+          "default": false
         },
         {
           "type": "text",
           "id": "timer_end_date",
           "label": "倒计时结束日期",
           "default": "2025-12-31T23:59:59"
+        },
+        {
+          "type": "color",
+          "id": "countdown_text_color",
+          "label": "倒计时主颜色",
+          "default": "#000000"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_button",
+          "label": "显示按钮",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "按钮文字",
+          "default": "Try Now >",
+          "info": "按钮上显示的文字内容"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "按钮链接",
+          "info": "点击按钮后跳转的URL地址"
+        },
+        {
+          "type": "select",
+          "id": "button_target",
+          "label": "打开方式",
+          "options": [
+            { "value": "_self", "label": "当前窗口" },
+            { "value": "_blank", "label": "新窗口" }
+          ],
+          "default": "_self"
+        },
+        {
+          "type": "color",
+          "id": "button_background_color",
+          "label": "按钮背景颜色",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "按钮文字颜色",
+          "default": "#000000"
+        },
+        {
+          "type": "select",
+          "id": "button_border_style",
+          "label": "边框样式",
+          "options": [
+            { "value": "none", "label": "无边框" },
+            { "value": "solid", "label": "实线" },
+            { "value": "dashed", "label": "虚线" },
+            { "value": "dotted", "label": "点线" }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "color",
+          "id": "button_border_color",
+          "label": "边框颜色",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "button_border_radius",
+          "label": "圆角大小 (px)",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 4,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "button_padding_top",
+          "label": "顶部内边距 (px)",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 2,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "button_padding_right",
+          "label": "右侧内边距 (px)",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 12,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "button_padding_bottom",
+          "label": "底部内边距 (px)",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 2,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "button_padding_left",
+          "label": "左侧内边距 (px)",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 12,
+          "unit": "px"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "文字通知栏",
-      "category": "通知"
+      "name": "Notification",
+      "category": "Notification Group"
     }
   ]
 }
