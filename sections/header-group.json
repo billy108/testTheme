@@ -128,7 +128,7 @@
         "show_in_editor": true,
         "show_navigation": true,
         "arrow_color": "#333333",
-        "enable_language_selector": false
+        "enable_language_selector": true
       }
     }
   },
