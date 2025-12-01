@@ -74,11 +74,68 @@
       "settings": {
         "include_margins": true
       }
+    },
+    "text_notification_kh3r8d": {
+      "type": "text-notification",
+      "blocks": {
+        "notification_93yjpJ": {
+          "type": "notification",
+          "settings": {
+            "text": "<p>Black Friday is Here! Act Now or Wait 'Til Next Year.</p>",
+            "background_repeat": "no-repeat",
+            "background_position": "center",
+            "text_alignment": "center",
+            "custom_text_color": "#ffffffff",
+            "custom_font_weight": "normal",
+            "custom_text_transform": "none",
+            "highlight_text": false,
+            "effect_type": "none",
+            "icon_position": "none",
+            "icon_type": "star",
+            "icon_color": "#000000",
+            "icon_size": 16,
+            "icon_spacing": 8,
+            "link": "",
+            "link_target": "_self",
+            "show_timer": true,
+            "timer_end_date": "2025-12-31T23:59:59",
+            "countdown_text_color": "#f95f18",
+            "show_button": true,
+            "button_text": "Try Now >",
+            "button_url": "shopify://pages/contact",
+            "button_target": "_self",
+            "button_background_color": "#ffffff",
+            "button_text_color": "#f95f18",
+            "button_border_style": "none",
+            "button_border_color": "#ffffff",
+            "button_border_radius": 4,
+            "button_padding_top": 2,
+            "button_padding_right": 12,
+            "button_padding_bottom": 2,
+            "button_padding_left": 12
+          }
+        }
+      },
+      "block_order": [
+        "notification_93yjpJ"
+      ],
+      "name": "Notification",
+      "settings": {
+        "background_color": "#f95f18",
+        "height": 75,
+        "animation_speed": 3,
+        "show_on_mobile": true,
+        "show_in_editor": true,
+        "show_navigation": true,
+        "arrow_color": "#333333",
+        "enable_language_selector": false
+      }
     }
   },
   "order": [
     "announcement-bar",
     "header",
-    "17372931364f090939"
+    "17372931364f090939",
+    "text_notification_kh3r8d"
   ]
 }
