@@ -1,0 +1,718 @@
+{% comment %}
+  IP Geolocation Banner Section
+  Purpose: Display a full-width banner based on user's IP geolocation
+  Features: IP detection, multi-language support, responsive design, GDPR compliance
+{% endcomment %}
+
+<!-- Theme Editor Compatibility: Ensure component renders in editor -->
+{% assign is_editor = false %}
+{% if content_for_header contains 'admin.shopify.com' or request.path contains '/admin/' %}
+  {% assign is_editor = true %}
+{% endif %}
+
+<link rel="stylesheet" href="{{ 'component-ip-geolocation-banner.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<style>
+  .ip-geolocation-banner {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  .ip-geolocation-banner__content {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: auto;
+    gap: 1rem;
+  }
+
+  .ip-geolocation-banner__text {
+    margin: 0;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ip-geolocation-banner__actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  /* Visit link styles - text with underline */
+  .ip-geolocation-banner__link {
+    text-decoration: underline;
+    padding: 0 !important;
+    font-size: inherit !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: none !important;
+    color: inherit !important;
+    font-weight: normal !important;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    display: inline !important;
+    margin: 0 !important;
+  }
+
+  .ip-geolocation-banner__link:hover {
+    opacity: 0.8;
+  }
+
+  /* Close button styles - plain text, no button appearance */
+  .ip-geolocation-banner__dismiss {
+    background: none !important;
+    border: none !important;
+    font-size: 1rem !important;
+    cursor: pointer;
+    padding: 0 0 0 0.5rem !important;
+    line-height: 1 !important;
+    color: inherit !important;
+    font-weight: normal !important;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    margin-left: auto !important;
+  }
+
+  .ip-geolocation-banner__dismiss:hover {
+    opacity: 1;
+  }
+
+  /* Remove arrow icon */
+  .ip-geolocation-banner__link:after {
+    content: none;
+  }
+
+  /* Ensure close button is at the end */
+  .ip-geolocation-banner__actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  /* Responsive adjustments */
+  @media screen and (max-width: 749px) {
+    .ip-geolocation-banner__content {
+      flex-wrap: wrap;
+      padding: 0.5rem 1rem;
+      gap: 0.5rem;
+    }
+
+    .ip-geolocation-banner__text {
+      white-space: normal;
+      text-align: center;
+      width: 100%;
+      font-size: 0.8125rem;
+    }
+
+    .ip-geolocation-banner__actions {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+{% javascript %}
+  class IpGeolocationBanner extends HTMLElement {
+    constructor() {
+      super();
+      this.isVisible = false;
+      this.ipCache = null;
+      this.cacheExpiry = null;
+      this.observer = null;
+    }
+
+    connectedCallback() {
+      this.initializeBanner();
+      this.setupRealTimePreview();
+      this.setupDismissButton();
+    }
+
+    disconnectedCallback() {
+      // Clean up event listeners and observers
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+      
+      const dismissButton = this.querySelector('.ip-geolocation-banner__dismiss');
+      if (dismissButton) {
+        dismissButton.removeEventListener('click', this.handleDismiss.bind(this));
+      }
+    }
+
+    async initializeBanner() {
+      // Check if banner should be displayed based on settings
+      const shouldDisplay = this.getAttribute('data-display') === 'true';
+      if (!shouldDisplay) {
+        console.log('IP Geolocation Banner: Disabled in settings');
+        this.style.display = 'none';
+        return;
+      }
+      
+      // Check if user has dismissed the banner in the last 24 hours
+      const dismissed = this.hasUserDismissed();
+      if (dismissed) {
+        console.log('IP Geolocation Banner: User dismissed recently');
+        this.style.display = 'none';
+        return;
+      }
+
+      // Get user IP and geolocation
+      const geolocationData = await this.getUserGeolocation();
+      
+      // Don't show banner if geolocation fails
+      if (!geolocationData) {
+        console.log('IP Geolocation Banner: Geolocation failed');
+        this.style.display = 'none';
+        return;
+      }
+
+      // Get site country and check if user is in the same country
+      const siteCountry = this.getAttribute('data-site-country') || '';
+      const countryCode = geolocationData.country_code?.toUpperCase() || '';
+      console.log(`IP Geolocation Banner: Site Country: ${siteCountry}, User Country: ${countryCode}`);
+      
+      // Don't show banner if user is in the same country as the site
+      if (countryCode === siteCountry.toUpperCase()) {
+        console.log('IP Geolocation Banner: Same country as site, hiding');
+        this.style.display = 'none';
+        return;
+      }
+      
+      // Check if user is in a supported region with translations
+      const isSupported = this.isSupportedRegion(countryCode.toLowerCase());
+      console.log(`IP Geolocation Banner: Supported region: ${isSupported}`);
+      
+      // Only show banner if user is in a supported region with translations
+      if (!isSupported) {
+        console.log('IP Geolocation Banner: Not supported region, hiding');
+        this.style.display = 'none';
+        return;
+      }
+      
+      // Update banner content based on geolocation
+      this.updateBannerContent(geolocationData);
+      this.isVisible = true;
+      this.style.display = 'block';
+      console.log('IP Geolocation Banner: Banner displayed');
+    }
+
+    async getUserGeolocation() {
+      // Check cache first - use both memory cache and localStorage for persistence
+      const cachedData = this.getCachedGeolocation();
+      if (cachedData) {
+        if (cachedData.ip) {
+          console.log('IP Geolocation Banner: Using cached IP:', cachedData.ip);
+        }
+        return cachedData;
+      }
+
+      try {
+        // Use Shopify's built-in geolocation if available (most reliable and GDPR compliant)
+        if (window.Shopify && window.Shopify.country) {
+          const data = {
+            country_code: window.Shopify.country,
+            country_name: window.Shopify.country_name || '',
+            ip: 'Shopify Internal'
+          };
+          console.log('IP Geolocation Banner: Using Shopify geolocation service');
+          this.cacheGeolocation(data);
+          return data;
+        }
+
+        // Get API key if provided (for premium services like ipstack)
+        const apiKey = this.getAttribute('data-api-key') || '';
+        
+        // List of IP geolocation services to try (in order of preference)
+        const ipServices = [];
+        
+        // Add premium service if API key is provided
+        if (apiKey) {
+          ipServices.push({ name: 'ipstack', url: `https://api.ipstack.com/check?access_key=${apiKey}&format=1`, ipField: 'ip' });
+        }
+        
+        // Add free services with good reliability - prioritize ipinfo.io
+        ipServices.push(
+          { name: 'ipinfo.io', url: 'https://ipinfo.io/json', ipField: 'ip' },
+          { name: 'ipapi.co', url: 'https://api.ipapi.co/json/', ipField: 'ip' },
+          { name: 'ip-api.com', url: 'https://ip-api.com/json', ipField: 'query' }
+        );
+
+        // Try each service in order until one works
+        for (const service of ipServices) {
+          try {
+            // Fetch with timeout and retry logic
+            console.log(`IP Geolocation Banner: Trying ${service.name}...`);
+            const response = await this.fetchWithTimeout(service.url, 5000);
+            
+            if (!response.ok) {
+              throw new Error(`Status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Extract IP address using service-specific field name, with fallbacks
+            const ipAddress = data[service.ipField] || data.ip || data.query || data.ip_address || 'Unknown';
+            
+            // Extract country information - different services use different field names
+            let countryCode = '';
+            let countryName = '';
+            
+            // Handle different API response formats
+            if (data.country_code) {
+              countryCode = data.country_code;
+              countryName = data.country_name;
+            } else if (data.country) {
+              if (service.name === 'ip-api.com') {
+                countryCode = data.countryCode;
+                countryName = data.country;
+              } else {
+                countryCode = data.country;
+                countryName = data.country_name || data.country;
+              }
+            } else if (service.name === 'ipinfo.io' && data.loc) {
+              // ipinfo.io uses short country codes in the 'country' field
+              countryCode = data.country;
+            }
+            
+            console.log(`IP Geolocation Banner: ${service.name} - Detected: IP=${ipAddress}, Country=${countryCode}`);
+            
+            // Normalize data
+            const normalizedData = {
+              ip: ipAddress,
+              country_code: countryCode,
+              country_name: countryName
+            };
+            
+            if (normalizedData.country_code) {
+              this.cacheGeolocation(normalizedData);
+              return normalizedData;
+            }
+          } catch (serviceError) {
+            console.warn(`IP Geolocation Banner: ${service.name} failed - ${serviceError.message}, trying next service`);
+            // Continue to next service if this one fails
+          }
+        }
+        
+        // All services failed
+        console.warn('IP Geolocation Banner: All IP services failed, banner will not display');
+        return null;
+      } catch (error) {
+        console.warn('IP Geolocation Banner: Unexpected error -', error.message);
+        return null;
+      }
+    }
+
+    // Helper method for fetch with timeout
+    async fetchWithTimeout(url, timeout) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(id);
+        return response;
+      } catch (error) {
+        clearTimeout(id);
+        throw error;
+      }
+    }
+
+    // Get geolocation from cache (memory + localStorage)
+    getCachedGeolocation() {
+      // Check memory cache first
+      if (this.ipCache && this.cacheExpiry && Date.now() < this.cacheExpiry) {
+        return this.ipCache;
+      }
+      
+      // Check localStorage for persistent cache
+      try {
+        const storedData = localStorage.getItem('ipGeolocationData');
+        if (storedData) {
+          const { data, expiry } = JSON.parse(storedData);
+          if (Date.now() < expiry) {
+            // Update memory cache
+            this.ipCache = data;
+            this.cacheExpiry = expiry;
+            return data;
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to read from localStorage:', error);
+      }
+      
+      return null;
+    }
+
+    // Cache geolocation data (memory + localStorage)
+    cacheGeolocation(data) {
+      // Set memory cache for 24 hours
+      this.ipCache = data;
+      this.cacheExpiry = Date.now() + (24 * 60 * 60 * 1000);
+      
+      // Set localStorage for persistence across sessions
+      try {
+        const cacheData = {
+          data: data,
+          expiry: this.cacheExpiry
+        };
+        localStorage.setItem('ipGeolocationData', JSON.stringify(cacheData));
+      } catch (error) {
+        console.warn('Failed to write to localStorage:', error);
+      }
+    }
+
+    updateBannerContent(geolocationData) {
+      const userCountryCode = geolocationData.country_code || '';
+      const siteCountry = this.getAttribute('data-site-country') || '';
+      let translations = this.getTranslations();
+      
+      // Process translations (simplified - only uses configured translations)
+      translations = this.extendTranslations(translations);
+      
+      // Get user country code in lowercase for comparison
+      const userCountryCodeLower = userCountryCode.toLowerCase();
+      
+      // Check if there's a specific translation for this user country
+      let translation = translations[userCountryCodeLower];
+      
+      // If no specific translation, use default content
+      if (!translation) {
+        translation = {
+          text: this.getAttribute('data-default-text') || 'We noticed you\'re visiting from a different region. Would you like to visit our local site?',
+          button_text: this.getAttribute('data-default-button-text') || 'Visit Local Site',
+          url: this.getAttribute('data-default-url') || '/'
+        };
+      }
+      
+      console.log('IP Geolocation Banner: updateBannerContent - userCountry:', userCountryCode, 'siteCountry:', siteCountry, 'translation:', translation);
+      
+      if (translation) {
+        const textElement = this.querySelector('.ip-geolocation-banner__text');
+        const linkElement = this.querySelector('.ip-geolocation-banner__link');
+        
+        if (textElement) {
+          textElement.innerHTML = translation.text;
+        }
+        
+        if (linkElement) {
+          linkElement.textContent = translation.button_text;
+          linkElement.href = translation.url;
+        }
+      }
+    }
+
+    // Check if region is supported (has translations)
+    isSupportedRegion(countryCode) {
+      const translations = this.getTranslations();
+      
+      // Only support regions that have explicit translations configured
+      // This ensures banner only shows to users from regions we've set up
+      const hasExplicitTranslation = translations[countryCode] !== undefined;
+      
+      console.log('IP Geolocation Banner: isSupportedRegion - countryCode:', countryCode, 'hasExplicitTranslation:', hasExplicitTranslation);
+      
+      return hasExplicitTranslation;
+    }
+    
+    // Extend translations (simplified to only use configured translations)
+    extendTranslations(baseTranslations) {
+      // Only use the translations that are explicitly configured
+      // No additional language mappings - only what's configured in the theme editor
+      return { ...baseTranslations };
+    }
+
+    getTranslations() {
+      // Get translations from individual data attributes and blocks
+      const translations = {};
+      
+      // Add default translation from settings
+      const defaultText = this.getAttribute('data-default-text') || 'We noticed you\'re visiting from a different region. Would you like to visit our local site?';
+      const defaultButtonText = this.getAttribute('data-default-button-text') || 'Visit Local Site';
+      const defaultUrl = this.getAttribute('data-default-url') || '/';
+      
+      console.log("IP Geolocation Banner: getTranslations - initial translations:", translations);
+      
+      // Get all data attributes
+      const attributes = this.attributes;
+      const countryCodes = [];
+      
+      // Extract country codes from data attributes
+      for (let i = 0; i < attributes.length; i++) {
+        const attrName = attributes[i].name;
+        if (attrName.startsWith('data-') && attrName.endsWith('-text')) {
+          const countryCode = attrName.substring(5, attrName.length - 5);
+          countryCodes.push(countryCode);
+        }
+      }
+      
+      console.log("IP Geolocation Banner: getTranslations - found country codes:", countryCodes);
+      
+      // Add translations for each country code
+      countryCodes.forEach(countryCode => {
+        const text = this.getAttribute(`data-${countryCode}-text`);
+        const buttonText = this.getAttribute(`data-${countryCode}-button-text`);
+        const url = this.getAttribute(`data-${countryCode}-url`);
+        
+        if (text && buttonText && url) {
+          translations[countryCode] = {
+            text: text,
+            button_text: buttonText,
+            url: url
+          };
+          console.log(`IP Geolocation Banner: getTranslations - added ${countryCode} translation:`, translations[countryCode]);
+        }
+      });
+      
+      // Process translations (simplified - only uses configured translations)
+      return this.extendTranslations(translations);
+    }
+
+    // Set up real-time preview for theme editor
+    setupRealTimePreview() {
+      // Only run in Shopify theme editor
+      if (!window.Shopify || !window.Shopify.designMode) {
+        return;
+      }
+
+      // Create a MutationObserver to watch for changes in data attributes
+      this.observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName.startsWith('data-')) {
+            this.handleAttributeChange();
+          }
+        });
+      });
+
+      // Observe changes to all data attributes
+      this.observer.observe(this, {
+        attributes: true,
+        attributeFilter: ['data-display', 'data-excluded-regions', 'data-api-key', 
+                         'data-default-text', 'data-default-button-text', 'data-default-url',
+                         'data-site-country']
+      });
+    }
+
+    // Handle changes to data attributes for real-time preview
+    async handleAttributeChange() {
+      // Invalidate cache to get fresh data
+      this.ipCache = null;
+      this.cacheExpiry = null;
+      
+      // Re-initialize the banner with new settings
+      await this.initializeBanner();
+    }
+
+    // Set up dismiss button functionality
+    setupDismissButton() {
+      const dismissButton = this.querySelector('.ip-geolocation-banner__dismiss');
+      if (dismissButton) {
+        dismissButton.addEventListener('click', this.handleDismiss.bind(this));
+      }
+    }
+
+    // Handle dismiss button click
+    handleDismiss() {
+      // Hide the banner with animation
+      this.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      this.style.opacity = '0';
+      this.style.transform = 'translateY(-100%)';
+      
+      // Remove the banner from DOM after animation completes
+      setTimeout(() => {
+        this.style.display = 'none';
+      }, 300);
+      
+      // Set a cookie to remember the dismissal for 24 hours
+      try {
+        const expiryDate = new Date();
+        expiryDate.setTime(expiryDate.getTime() + (24 * 60 * 60 * 1000));
+        const cookieValue = encodeURIComponent('ip_geolocation_banner_dismissed') + '=' + encodeURIComponent('true') + ';' +
+                           'expires=' + expiryDate.toUTCString() + ';' +
+                           'path=/' + ';' +
+                           'SameSite=Lax';
+        document.cookie = cookieValue;
+      } catch (error) {
+        console.warn('Failed to set dismissal cookie:', error);
+      }
+    }
+
+    // Check if user has dismissed the banner in the last 24 hours
+    hasUserDismissed() {
+      try {
+        const cookieName = 'ip_geolocation_banner_dismissed';
+        const cookieValue = document.cookie
+          .split(';')
+          .map(cookie => cookie.trim())
+          .find(cookie => cookie.startsWith(cookieName + '='))
+          ?.split('=')[1];
+        
+        return cookieValue === 'true';
+      } catch (error) {
+        console.warn('Failed to read dismissal cookie:', error);
+        return false;
+      }
+    }
+  }
+
+  customElements.define('ip-geolocation-banner', IpGeolocationBanner);
+{% endjavascript %}
+
+{% comment %} Check if banner should be displayed based on settings {% endcomment %}
+{% assign display_banner = false %}
+{% assign excluded_regions = '' %}
+
+{% if section.settings.enabled %}
+  {% assign display_banner = true %}
+  {% assign excluded_regions = section.settings.excluded_regions %}
+{% endif %}
+
+{% comment %} Create data attributes for each block translation {% endcomment %}
+{% for block in section.blocks %}
+  {% if block.settings.country_code != blank %}
+    {% assign country_code = block.settings.country_code | downcase %}
+    {% assign block_text = block.settings.text | strip_html %}
+    {% capture block_data_attrs %}{{ block_data_attrs }} data-{{ country_code }}-text="{{ block_text | escape }}" data-{{ country_code }}-button-text="{{ block.settings.button_text | escape }}" data-{{ country_code }}-url="{{ block.settings.url | escape }}"{% endcapture %}
+  {% endif %}
+{% endfor %}
+
+{% comment %} Render different markup for theme editor vs live site {% endcomment %}
+{% if is_editor %}
+  <!-- Static preview for theme editor -->
+  <div class="ip-geolocation-banner color-{{ section.settings.color_scheme }} gradient" data-display="true">
+    <div class="ip-geolocation-banner__content">
+      <div class="ip-geolocation-banner__text">
+        IP Geolocation Banner Preview
+      </div>
+      <div class="ip-geolocation-banner__actions">
+        <a href="/" class="ip-geolocation-banner__link" target="_blank" rel="noopener noreferrer">
+          Visit Local Site
+        </a>
+        <button class="ip-geolocation-banner__dismiss" aria-label="Dismiss banner" title="Dismiss banner">
+          ×
+        </button>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <!-- Dynamic Web Component for live site -->
+  <ip-geolocation-banner 
+    class="ip-geolocation-banner color-{{ section.settings.color_scheme }} gradient"
+    data-display="{{ display_banner }}"
+    data-site-country="{{ section.settings.site_country }}"
+    data-api-key="{{ section.settings.api_key }}"
+    data-default-text="{{ section.settings.text_default | escape }}"
+    data-default-button-text="{{ section.settings.button_text_default | escape }}"
+    data-default-url="{{ section.settings.url_default | escape }}"
+    {{ block_data_attrs }}>
+    <div class="ip-geolocation-banner__content">
+      <div class="ip-geolocation-banner__text">
+        {{ section.settings.text_default }}
+      </div>
+      <div class="ip-geolocation-banner__actions">
+        <a href="{{ section.settings.url_default }}" class="ip-geolocation-banner__link" target="_blank" rel="noopener noreferrer">
+          {{ section.settings.button_text_default }}
+        </a>
+        <button class="ip-geolocation-banner__dismiss" aria-label="Dismiss banner" title="Dismiss banner">
+          ×
+        </button>
+      </div>
+    </div>
+  </ip-geolocation-banner>
+{% endif %}
+
+{% schema %}
+{
+  "name": "IP Geolocation Banner",
+  "tag": "section",
+  "class": "ip-geolocation-banner-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "IP Geolocation Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable IP Geolocation Banner",
+      "default": true,
+      "info": "Display a banner based on user's IP geolocation"
+    },
+    {
+      "type": "text",
+      "id": "site_country",
+      "label": "Site Country Code",
+      "default": "US",
+      "placeholder": "e.g., US, GB, DE",
+      "info": "Enter the country code for this site (ISO 3166-1 alpha-2 format)"
+    },
+    {
+      "type": "text",
+      "id": "api_key",
+      "label": "IP Geolocation API Key",
+      "placeholder": "Enter your API key (optional)",
+      "info": "API key for ipstack or similar services (optional, uses free fallback if not provided)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "region",
+      "name": "Region",
+      "settings": [
+        {
+          "type": "text",
+          "id": "country_code",
+          "label": "Country Code",
+          "default": "US",
+          "placeholder": "e.g., US, GB, DE, FR",
+          "info": "Enter the country code (ISO 3166-1 alpha-2 format)"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Banner Text",
+          "default": "<p>We noticed you're visiting from [Country]. Would you like to visit our local site?</p>",
+          "info": "Text displayed for users from this country"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Visit Local Site",
+          "info": "Button text displayed for users from this country"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Destination URL",
+          "default": "/",
+          "info": "URL to redirect users from this country to"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "IP Geolocation Banner",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}
