@@ -1,0 +1,576 @@
+{{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign mobile_aspect_ratio = section.blocks.first.settings.image_desktop.aspect_ratio
+  if section.blocks.first.settings.image_mobile != blank
+    assign mobile_aspect_ratio = section.blocks.first.settings.image_mobile.aspect_ratio
+  endif
+  assign desktop_aspect_ratio = section.blocks.first.settings.image_desktop.aspect_ratio
+-%}
+{%- style -%}
+  /* Ensure proper height for all slide height modes */
+  #Slider-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Always use adaptive height based on image */
+  {%- if section.blocks.first.settings.image_desktop != blank -%}
+    @media screen and (max-width: 749px) {
+      #Slider-{{ section.id }}::before,
+      #Slider-{{ section.id }} .media::before {
+        padding-bottom: {{ 1 | divided_by: mobile_aspect_ratio | times: 100 }}%;
+        content: '';
+        display: block;
+      }
+    }
+
+    @media screen and (min-width: 750px) {
+      #Slider-{{ section.id }}::before,
+      #Slider-{{ section.id }} .media::before {
+        padding-bottom: {{ 1 | divided_by: desktop_aspect_ratio | times: 100 }}%;
+        content: '';
+        display: block;
+      }
+    }
+  {%- endif -%}
+  
+  /* Ensure media elements fill container */
+  #Slider-{{ section.id }} .media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Ensure images fill container */
+  #Slider-{{ section.id }} img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Default minimum height for placeholder slides */
+  #Slider-{{ section.id }} .placeholder {
+    min-height: 300px;
+  }
+  
+  /* Mobile adjustment for placeholder slides */
+  @media screen and (max-width: 749px) {
+    #Slider-{{ section.id }} .placeholder {
+      min-height: 200px;
+    }
+  }
+{%- endstyle -%}
+
+<style>
+  .banner-carousel {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    display: block;
+  }
+  
+  /* Ensure slider container has proper height */
+  .banner-carousel .slider {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Ensure slides are properly positioned */
+  .banner-carousel__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Ensure slider has proper height for mobile */
+  .banner-carousel .slideshow {
+    position: relative;
+    min-height: 500px;
+  }
+  
+  
+  
+  .banner-carousel__indicators {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 2;
+  }
+  
+  .banner-carousel__indicator {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .indicator-container {
+    width: 2rem;
+    height: 0.5rem;
+    border-radius: 0.25rem;
+    background: rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .indicator-fill {
+    height: 100%;
+    width: 0;
+    background: #FF6B00;
+    border-radius: 0.25rem;
+    transition: width 0s ease;
+    will-change: width;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  .banner-carousel__indicator.active .indicator-container {
+    background: rgba(255, 255, 255, 0.5);
+  }
+  
+  .banner-carousel__indicator.active .indicator-fill {
+    animation: fillProgress linear forwards;
+  }
+  
+  .banner-carousel__indicator:not(.active):hover .indicator-container {
+    background: rgba(255, 255, 255, 0.5);
+  }
+  
+  .banner-carousel__slide {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+  
+  .banner-carousel__slide.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .banner-carousel .slideshow__controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+  }
+  
+  @keyframes fillProgress {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  
+  .banner-carousel .slider-buttons {
+    justify-content: space-between;
+    background: transparent;
+  }
+  
+  .banner-carousel .slider-button {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+</style>
+
+<div class="banner-carousel">
+    <div
+      class="slideshow banner grid grid--1-col slider slider--everywhere"
+      id="Slider-{{ section.id }}"
+      aria-live="polite"
+      aria-atomic="true"
+      data-autoplay="{{ section.settings.auto_rotate }}"
+      data-speed="{{ section.settings.change_slides_speed }}"
+    >
+      {%- for block in section.blocks -%}
+        <style>
+          #Slide-{{ section.id }}-{{ forloop.index }} .banner__media::after {
+            opacity: {{ block.settings.image_overlay_opacity | divided_by: 100.0 }};
+          }
+        </style>
+        <div
+          class="slideshow__slide grid__item grid--1-col slider__slide banner-carousel__slide {% if forloop.first %}active{% endif %}"
+          id="Slide-{{ section.id }}-{{ forloop.index }}"
+          {{ block.shopify_attributes }}
+          role="group"
+          aria-roledescription="{{ 'sections.slideshow.slide' | t }}"
+          aria-label="{{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
+          tabindex="-1"
+        >
+          {%- if block.settings.slide_link != blank -%}
+            <a href="{{ block.settings.slide_link }}" class="slideshow__media-link banner__media-link" style="display: block; width: 100%; height: 100%;">
+          {%- endif -%}
+          <div class="slideshow__media banner__media media{% if block.settings.image_desktop == blank %} placeholder{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}">
+            {%- if block.settings.image_desktop -%}
+              {%- liquid
+                assign height = block.settings.image_desktop.width | divided_by: block.settings.image_desktop.aspect_ratio | round
+                assign sizes = '100vw'
+                assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+                assign fetch_priority = 'auto'
+                if section.index == 1
+                  assign fetch_priority = 'high'
+                endif
+              -%}
+              {%- liquid
+          assign mobile_image = block.settings.image_mobile
+          if mobile_image == blank
+            assign mobile_image = block.settings.image_desktop
+          endif
+        -%}
+        {%- if forloop.first %}
+          <!-- Desktop Image -->
+          <picture>
+            <source
+              media="(min-width: 750px)"
+              srcset="{{ block.settings.image_desktop | image_url: width: 3840 }}"
+              sizes="{{ sizes }}"
+            >
+            <!-- Mobile Image -->
+            <source
+              media="(max-width: 749px)"
+              srcset="{{ mobile_image | image_url: width: 1920 }}"
+              sizes="{{ sizes }}"
+            >
+            {{ block.settings.image_desktop | image_url: width: 3840 | image_tag: height: height, sizes: sizes, widths: widths, fetchpriority: fetch_priority }}
+          </picture>
+        {%- else -%}
+          <!-- Desktop Image -->
+          <picture>
+            <source
+              media="(min-width: 750px)"
+              srcset="{{ block.settings.image_desktop | image_url: width: 3840 }}"
+              sizes="{{ sizes }}"
+            >
+            <!-- Mobile Image -->
+            <source
+              media="(max-width: 749px)"
+              srcset="{{ mobile_image | image_url: width: 1920 }}"
+              sizes="{{ sizes }}"
+            >
+            {{ block.settings.image_desktop | image_url: width: 3840 | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths }}
+          </picture>
+        {%- endif -%}
+            {%- else -%}
+              {%- assign placeholder_slide = forloop.index | modulo: 2 -%}
+              {%- if placeholder_slide == 1 -%}
+                {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- else -%}
+                {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+          {%- if block.settings.slide_link != blank -%}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.blocks.size > 1 -%}
+      <div class="slideshow__controls slider-buttons">
+        <button
+          type="button"
+          class="slider-button slider-button--prev"
+          name="previous"
+          aria-label="{{ 'sections.slideshow.previous_slideshow' | t }}"
+          aria-controls="Slider-{{ section.id }}"
+        >
+          <span class="svg-wrapper">
+            {{- 'icon-caret.svg' | inline_asset_content -}}
+          </span>
+        </button>
+        <button
+          type="button"
+          class="slider-button slider-button--next"
+          name="next"
+          aria-label="{{ 'sections.slideshow.next_slideshow' | t }}"
+          aria-controls="Slider-{{ section.id }}"
+        >
+          <span class="svg-wrapper">
+            {{- 'icon-caret.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      </div>
+    {%- endif -%}
+  
+  <!-- Dots Indicator -->
+  {%- if section.blocks.size > 1 -%}
+    <div class="banner-carousel__indicators">
+      {%- for block in section.blocks -%}
+        <button
+          class="banner-carousel__indicator {% if forloop.first %}active{% endif %}"
+          aria-label="{{ 'sections.slideshow.load_slide' | t }} {{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
+          aria-controls="Slider-{{ section.id }}"
+          data-slide-index="{{ forloop.index0 }}"
+        >
+          <span class="indicator-container">
+            <span class="indicator-fill"></span>
+          </span>
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{%- if request.design_mode -%}
+  <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sectionId = '{{ section.id }}';
+    const slider = document.getElementById('Slider-' + sectionId);
+    const slides = slider.querySelectorAll('.banner-carousel__slide');
+    const indicators = document.querySelectorAll('.banner-carousel__indicator');
+    const prevBtn = document.querySelector('.slider-button--prev');
+    const nextBtn = document.querySelector('.slider-button--next');
+    const autoRotate = {{ section.settings.auto_rotate | json }};
+    const speed = {{ section.settings.change_slides_speed }} * 1000;
+    
+    let currentSlide = 0;
+    let slideInterval;
+    
+    // Set animation duration for all indicators
+    indicators.forEach(indicator => {
+      const fill = indicator.querySelector('.indicator-fill');
+      if (fill) {
+        fill.style.animationDuration = `${speed}ms`;
+      }
+    });
+    
+    function resetIndicatorAnimations() {
+      indicators.forEach(indicator => {
+        const fill = indicator.querySelector('.indicator-fill');
+        if (fill) {
+          // Reset animation for all indicators
+          fill.style.animation = 'none';
+          // Force reflow to reset animation
+          fill.offsetHeight;
+        }
+      });
+    }
+    
+    function goToSlide(index) {
+      // Update slides
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      
+      // Update indicators - first remove active class from all
+      indicators.forEach(indicator => {
+        indicator.classList.remove('active');
+      });
+      
+      // Reset all indicator animations
+      resetIndicatorAnimations();
+      
+      // Then add active class to the current indicator
+      indicators[index].classList.add('active');
+      
+      // Set animation for the active indicator
+      const activeFill = indicators[index].querySelector('.indicator-fill');
+      if (activeFill) {
+        activeFill.style.animation = `fillProgress linear forwards ${speed}ms`;
+      }
+      
+      currentSlide = index;
+      
+      // Restart auto rotation if enabled
+      if (autoRotate) {
+        resetAutoRotation();
+      }
+    }
+    
+    function nextSlide() {
+      const nextIndex = (currentSlide + 1) % slides.length;
+      goToSlide(nextIndex);
+    }
+    
+    function prevSlide() {
+      const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+      goToSlide(prevIndex);
+    }
+    
+    function startAutoRotation() {
+      slideInterval = setInterval(nextSlide, speed);
+    }
+    
+    function resetAutoRotation() {
+      if (slideInterval) clearInterval(slideInterval);
+      startAutoRotation();
+    }
+    
+    // Event listeners
+    if (prevBtn) {
+      prevBtn.addEventListener('click', prevSlide);
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', nextSlide);
+    }
+    
+    // Add event listeners for indicators
+    indicators.forEach(indicator => {
+      indicator.addEventListener('click', () => {
+        const index = parseInt(indicator.dataset.slideIndex);
+        goToSlide(index);
+      });
+    });
+    
+    // Start auto rotation if enabled
+    if (autoRotate) {
+      startAutoRotation();
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Banner Carousel",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Auto rotate slides",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "change_slides_speed",
+      "min": 3,
+      "max": 90,
+      "step": 1,
+      "unit": "s",
+      "label": "Change slides every",
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "image_behavior",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "ambient",
+          "label": "Ambient"
+        }
+      ],
+      "default": "none",
+      "label": "Image behavior"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_info",
+      "label": "Accessibility label",
+      "info": "Used by screen readers to describe the slideshow.",
+      "default": "Banner carousel"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "text",
+          "id": "slide_name",
+          "label": "Slide name",
+          "info": "Enter a descriptive name for this slide",
+          "default": "Slide"
+        },
+        {
+          "type": "url",
+          "id": "slide_link",
+          "label": "Slide link",
+          "info": "Enter the URL to redirect when this slide is clicked"
+        },
+        {
+          "type": "header",
+          "content": "Desktop Image"
+        },
+        {
+          "type": "paragraph",
+          "content": "Recommended: 1920 x 1080px (16:9) | Min: 1600 x 900px | Max: 3840 x 2160px | Formats: JPG, PNG, WEBP | Max size: 2MB"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "Desktop image",
+          "info": "For screens wider than 749px"
+        },
+        {
+          "type": "header",
+          "content": "Mobile Image"
+        },
+        {
+          "type": "paragraph",
+          "content": "Recommended: 750 x 1000px (3:4) | Min: 600 x 800px | Max: 1920 x 2560px | Formats: JPG, PNG, WEBP | Max size: 2MB"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image",
+          "info": "For screens 749px and narrower"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity",
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "unit": "%",
+          "label": "Image overlay opacity",
+          "default": 0
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner Carousel",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
