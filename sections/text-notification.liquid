@@ -3,7 +3,7 @@
   .text-notification {
     background-color: {{ section.settings.background_color }};
     color: white;
-    padding: {{ section.settings.padding }};
+    padding: 1rem 0;
     text-align: center;
     font-size: {{ section.settings.font_size }}px;
     position: relative;
@@ -66,22 +66,16 @@
     }
   {% endif %}
 
-  /* 移动端隐藏通知内容 */
-  @media screen and (max-width: 768px) {
-    .text-notification__container {
-      display: none !important;
-    }
-  }
+  
 
   .text-notification__container {
     margin: 0 auto;
     overflow: hidden; /* 保持 hidden 用于轮播效果 */
     position: relative;
     height: auto;
-    min-height: {{ section.settings.height }}px;
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 70%;
   }
 
   /* 当启用语言选择器时，调整容器布局 */
@@ -102,7 +96,6 @@
     align-items: center;
     flex-shrink: 0;
     gap: 0;
-    height: {{ section.settings.height }}px;
   }
 
   .text-notification__language-wrapper .localization-form {
@@ -241,7 +234,7 @@
   @media (max-width: 1024px) {
     .text-notification__container {
       max-width: 100%;
-      padding: 0 32px;
+      padding: 0;
     }
 
     .text-notification__slide {
@@ -306,7 +299,7 @@
     /* 移动端容器适配 */
     .text-notification__container {
       max-width: 100%;
-      padding: 0 40px;
+      padding: 0;
     }
 
     /* 移动端语言选择器适配 */
@@ -344,7 +337,19 @@
   /* 小屏幕适配 */
   @media (max-width: 480px) {
     .text-notification__container {
-      padding: 0 35px;
+      padding: 0;
+    }
+  }
+
+  /* 移动端隐藏语言选择器 */
+  @media (max-width: 767px) {
+    .text-notification__language-wrapper {
+      display: none !important;
+    }
+    
+    /* 移除语言选择器占用的左侧内边距 */
+    .text-notification__container {
+      padding-left: 0 !important;
     }
   }
 
@@ -354,6 +359,25 @@
     position: absolute;
     top: 0;
     left: 0;
+    height: 100%;
+  }
+
+  /* 为幻灯片添加初始CSS样式，确保页面加载时只显示第一张 */
+  .text-notification__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(100%);
+  }
+
+  /* 只显示第一张幻灯片 */
+  .text-notification__slide:first-child {
+    transform: translateY(0);
   }
 
   /* 移除重复的slide样式定义，已在后续代码中统一设置 */
@@ -383,6 +407,8 @@
     text-wrap: auto;
     text-align: start;
     line-height: 1.5rem;
+    display: flex;
+    align-items: center;
   }
 
   .text-notification__text p {
@@ -456,7 +482,6 @@
 
   .text-notification__slide {
     height: auto;
-    min-height: {{ section.settings.height }}px;
   }
 
   .text-notification__content {
@@ -464,7 +489,6 @@
     align-items: center;
     justify-content: center;
     padding: 0 50px;
-    height: {{ section.settings.height }}px;
     gap: 1rem;
   }
 
@@ -508,7 +532,7 @@
     .text-notification__container {
       height: auto;
       min-height: {{ section.settings.height }}px;
-      padding: 10px 0;
+      padding: 0;
       max-width: 100% !important; /* 移动端全宽显示 */
     }
 
@@ -539,8 +563,8 @@
 
     .text-notification__timer {
       display: inline-block;
-      margin-left: 10px;
-      margin-top: 0;
+      margin-left: 0;
+      margin-top: 8px;
       font-weight: bold;
       color: #ff0000;
       font-size: 14px;
@@ -553,29 +577,32 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      margin-left: 5px !important;
-      margin-top: 0 !important;
-      padding: 2px 6px;
+      margin-left: 0 !important;
+      margin-top: 8px !important;
+      padding: 4px 10px;
       border-radius: 4px;
       font-weight: 600;
       text-decoration: none;
       transition: all 0.3s ease;
       cursor: pointer;
       border: 1px solid transparent;
-      font-size: 10px;
+      font-size: 11px;
       white-space: nowrap;
     }
 
     /* 移动端允许内容换行，确保显示完整 */
     .text-notification__content {
-      flex-wrap: wrap;
-      gap: 5px;
+      flex-direction: column;
+      gap: 0;
     }
 
     /* 移动端文字样式优化 */
     .text-notification__text {
       font-size: calc({{ section.settings.font_size }} * 0.9)px;
-      text-align: left;
+      text-align: center;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
     }
 
     .text-notification__button:hover {
@@ -583,22 +610,19 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    /* 使通知内容和按钮水平排列 */
+    /* 使通知内容和按钮垂直排列 */
     .text-notification__content,
     .text-notification__link {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 12px; /* 文本和按钮之间的间距 */
+      justify-content: center;
     }
 
     /* 确保通知文本具有适当的灵活性 */
     .text-notification__text {
       flex: 1;
       min-width: 0; /* 允许文本在空间不足时换行 */
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
   }
 
@@ -607,6 +631,7 @@
       flex-wrap: wrap;
       justify-content: flex-start;
       gap: 4px;
+      padding-top: 0 !important;
     }
 
     .countdown__item {
@@ -629,24 +654,45 @@
       .text-notification__content,
       .text-notification__link {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        align-items: center;
+        justify-content: center;
       }
 
       .text-notification__text {
         white-space: normal;
         overflow: visible;
         text-overflow: unset;
+        text-align: center;
+      }
+
+      /* 确保倒计时组件在移动端也垂直排列 */
+      .countdown__timer {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        padding-top: 0 !important;
+      }
+
+      /* 确保倒计时项也垂直排列 */
+      .countdown__item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* 确保按钮在移动端居中显示 */
+      .text-notification__button {
+        margin-left: 0;
+        margin-top: 8px;
       }
     }
 
     .countdown__timer {
         display: flex;
         /* 橙色背景 */
-        padding: .5rem 0;
         align-items: center;
-        gap: 5px;
-        height: {{ section.settings.height }}px;
+        gap: 3px;
+        padding-top: 1.6rem;
     }
 
     .countdown__item span:last-child {
@@ -674,7 +720,7 @@
 
     .countdown__item p span.number {
         width: 26px;
-        height: calc({{ section.settings.height }}px * 0.5);;
+        height: 34px;
         font-size: 22px;
         display: flex;
         justify-content: center;
@@ -930,13 +976,8 @@
       const slides = Array.from(slidesContainer.querySelectorAll('.text-notification__slide'));
       // 确保至少有一个slide
       if (slides.length > 0) {
-        // 使用配置的高度，确保一致性
-        let slideHeight = parseInt(slidesContainer.dataset.slideHeight || '40', 10);
-
-        // 确保slideHeight至少有一个合理的值
-        if (!slideHeight || slideHeight <= 0) {
-          slideHeight = 40; // 默认高度
-        }
+        // 使用自适应高度，不再设置固定高度
+        let slideHeight = 0;
 
         // 使用配置的动画速度
         const animationSpeed = parseInt(slidesContainer.dataset.animationSpeed || '3', 10) * 1000;
@@ -947,7 +988,7 @@
 
         // 重要：设置容器的基础样式
         slidesContainer.style.position = 'relative';
-        slidesContainer.style.height = slideHeight + 'px';
+        slidesContainer.style.height = 'auto';
         slidesContainer.style.overflow = 'hidden';
         slidesContainer.style.display = 'block';
 
@@ -970,7 +1011,6 @@
           slide.style.width = '100%';
           // 使用auto高度让内容决定高度
           slide.style.height = 'auto';
-          slide.style.minHeight = slideHeight + 'px';
           slide.style.boxSizing = 'border-box';
           // 保留现有的display设置
           if (!slide.style.display || slide.style.display === 'none') {
@@ -985,22 +1025,70 @@
           }
 
           // 初始位置：第一个显示，其余在下方
-          slide.style.transform = `translateY(${index === 0 ? 0 : slideHeight}px)`;
+          slide.style.transform = `translateY(${index === 0 ? 0 : '100%'}px)`;
         });
+
+        // 计算所有幻灯片的高度，找出最高的幻灯片高度
+          function calculateMaxSlideHeight() {
+            let maxHeight = 0;
+            
+            // 移除所有幻灯片的transform，以便正确测量高度
+            const tempTransforms = slides.map(slide => slide.style.transform);
+            slides.forEach(slide => {
+              slide.style.transform = 'none';
+              slide.style.position = 'static';
+            });
+            
+            // 测量每个幻灯片的实际高度
+            slides.forEach(slide => {
+              const slideHeight = slide.offsetHeight;
+              if (slideHeight > maxHeight) {
+                maxHeight = slideHeight;
+              }
+            });
+            
+            // 恢复所有幻灯片的transform和position
+            slides.forEach((slide, index) => {
+              slide.style.position = 'absolute';
+              slide.style.transform = tempTransforms[index];
+            });
+            
+            return maxHeight;
+          }
+
+          // 初始化时计算最高幻灯片高度并固定容器高度
+          const maxSlideHeight = calculateMaxSlideHeight();
+          
+          // 设置容器高度为最高幻灯片高度
+          slidesContainer.style.height = maxSlideHeight + 'px';
+          
+          // 更新所有幻灯片的min-height，确保内容居中显示
+          slides.forEach(slide => {
+            slide.style.minHeight = maxSlideHeight + 'px';
+          });
+
+          // 更新容器高度的函数 - 现在只在初始化时调用一次
+          function updateContainerHeight() {
+            // 容器高度已经固定为最高幻灯片高度，不再动态改变
+            // 这里保留函数，确保现有代码逻辑继续工作
+          }
+
+          // 初始化时调用一次，设置最高高度
+          updateContainerHeight();
 
         // 滚动到指定slide的函数 - 优化版
         function goToSlide(index) {
           console.log('goToSlide', index);
           // 隐藏当前slide
           slides[currentSlide].style.transition = 'transform 0.5s ease-in-out';
-          slides[currentSlide].style.transform = `translateY(-${slideHeight}px)`;
+          slides[currentSlide].style.transform = 'translateY(-100%)';
 
           // 设置新的当前slide索引
           currentSlide = index;
 
           // 显示目标slide
           slides[currentSlide].style.transition = 'none'; // 先无过渡定位
-          slides[currentSlide].style.transform = `translateY(${slideHeight}px)`;
+          slides[currentSlide].style.transform = 'translateY(100%)';
 
           // 强制重排
           void slides[currentSlide].offsetWidth;
@@ -1196,34 +1284,33 @@
         // 初始化可见性检测
         setupVisibilityObserver();
 
-        // 添加Resize事件处理，但保持使用配置的高度以确保一致性
-        function handleResize() {
-          if (slides.length > 0) {
-            // 保存当前slide索引
-            const currentSlideIndex = currentSlide;
+        // 添加Resize事件处理，重新计算最高幻灯片高度并固定容器高度
+          function handleResize() {
+            if (slides.length > 0) {
+              // 保存当前slide索引
+              const currentSlideIndex = currentSlide;
 
-            // 确保使用配置的高度
-            slideHeight = parseInt(slidesContainer.dataset.slideHeight || '40', 10);
-            if (!slideHeight || slideHeight <= 0) {
-              slideHeight = 40; // 默认高度
+              // 重新计算最高幻灯片高度
+              const newMaxHeight = calculateMaxSlideHeight();
+              
+              // 更新容器高度
+              slidesContainer.style.height = newMaxHeight + 'px';
+              
+              // 更新所有幻灯片的min-height
+              slides.forEach(slide => {
+                slide.style.minHeight = newMaxHeight + 'px';
+              });
+
+              // 重新定位所有slide
+              slides.forEach((slide, index) => {
+                if (index === currentSlideIndex) {
+                  slide.style.transform = 'translateY(0)';
+                } else {
+                  slide.style.transform = 'translateY(100%)';
+                }
+              });
             }
-
-            // 更新容器和所有slide的高度
-            slidesContainer.style.height = slideHeight + 'px';
-            slides.forEach((slide) => {
-              slide.style.height = slideHeight + 'px';
-            });
-
-            // 重新定位当前显示的slide
-            slides.forEach((slide, index) => {
-              if (index === currentSlideIndex) {
-                slide.style.transform = 'translateY(0)';
-              } else {
-                slide.style.transform = `translateY(${slideHeight}px)`;
-              }
-            });
           }
-        }
 
         // 添加resize事件监听
         window.addEventListener('resize', handleResize, { passive: true });
