@@ -1,0 +1,347 @@
+{%- liquid
+  assign products = section.settings.products
+  assign products_per_row = section.settings.products_per_row | default: 3
+  assign show_price = section.settings.show_price | default: true
+  assign enable_videos = section.settings.enable_videos | default: true
+  assign first_video_play_mode = section.settings.first_video_play_mode | default: 'scroll'
+  assign title_type = section.settings.title_type | default: 'text'
+  assign description_type = section.settings.description_type | default: 'text'
+  assign learn_more_text_color = section.settings.learn_more_text_color | default: '#ffffff'
+  assign learn_more_background_color = section.settings.learn_more_background_color | default: '#ff5c00'
+  assign learn_more_border_color = section.settings.learn_more_border_color | default: '#ff5c00'
+-%}
+
+{{ 'section-featured-products-display.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .featured-products-display {
+    --learn-more-text-color: {{ learn_more_text_color }};
+    --learn-more-background-color: {{ learn_more_background_color }};
+    --learn-more-border-color: {{ learn_more_border_color }};
+  }
+{%- endstyle -%}
+
+<section class="featured-products-display" data-section-id="{{ section.id }}" data-enable-videos="{{ enable_videos }}" data-first-video-play-mode="{{ first_video_play_mode }}">
+  <div class="page-width">
+    <!-- 标题区域 -->
+    <div class="featured-products-display__header">
+      {% if title_type == 'text' %}
+        <h2 class="featured-products-display__title">{{ section.settings.title }}</h2>
+      {% else %}
+        {% if section.settings.title_image %}
+          <img src="{{ section.settings.title_image | image_url: width: 1200 }}" alt="{{ section.settings.title_image.alt | escape }}" width="1200" height="{{ section.settings.title_image.height | times: 1200 | divided_by: section.settings.title_image.width }}" class="featured-products-display__title-image">
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <!-- 产品网格 -->
+    <div class="featured-products-display__grid" style="--products-per-row: {{ products_per_row }}">
+      {% for product in products %}
+        {% assign product_index = forloop.index0 %}
+        {% assign has_video = false %}
+        {% assign media_src = product.featured_media | image_url: width: 1000 %}
+        {% assign media_alt = '' %}
+        {% assign media_width = 1000 %}
+        {% assign media_height = 1000 %}
+        {% assign video_src = '' %}
+        {% assign video_type = '' %}
+        <!-- 从metafield获取媒体资源 -->
+        {% if product.metafields.custom.featured_display_media %}
+          {% assign display_media = product.metafields.custom.featured_display_media %}
+          
+          <!-- 解析display_media字符串，获取图片和视频URL -->
+          {% assign media_urls = display_media | split: ',' %}
+          {% assign image_url = media_urls[0] | strip %}
+          {% assign video_url = '' %}
+          {% if media_urls.size > 1 %}
+            {% assign video_url = media_urls[1] | strip %}
+          {% endif %}
+          <!-- 设置图片资源 -->
+          {% assign trimmed_image_url = image_url | strip %}
+          {% if trimmed_image_url != '' %}
+            {% assign media_src = trimmed_image_url %}
+            {% assign media_alt = '' %}
+          {% else %}
+            {% assign media_src = product.featured_media | image_url: width: 1000 %}
+            {% assign media_alt = product.featured_media.alt | escape %}
+            {% assign media_height = product.featured_media.height | times: 1000 | divided_by: product.featured_media.width %}
+          {% endif %}
+          
+          <!-- 检查是否有视频 -->
+          {% if enable_videos and video_url != '' %}
+            {% assign has_video = true %}
+            {% assign video_src = video_url %}
+            {% assign video_type = 'video/mp4' %}
+          {% endif %}
+        {% else %}
+          <!-- 使用产品默认媒体 -->
+          {% assign media_src = product.featured_media | image_url: width: 1000 %}
+          {% assign media_alt = product.featured_media.alt | escape %}
+          {% assign media_height = product.featured_media.height | times: 1000 | divided_by: product.featured_media.width %}
+          
+          <!-- 检查是否为视频 -->
+          {% if enable_videos and product.featured_media.media_type == 'video' %}
+            {% assign has_video = true %}
+            {% assign video_src = product.featured_media | file_url %}
+            {% assign video_type = product.featured_media.mime_type %}
+          {% endif %}
+        {% endif %}
+
+        <!-- 产品卡片 -->
+        <div class="featured-products-display__card" data-product-id="{{ product.id }}" data-index="{{ product_index }}" data-has-video="{{ has_video }}">
+          <a href="{{ product.url }}" class="featured-products-display__card-link">
+            <!-- 产品媒体区域 -->
+            <div class="featured-products-display__media">
+              {% if has_video and video_src != '' %}
+                <!-- 视频封面图 -->
+                <img src="{{ media_src }}" alt="{{ media_alt }}" width="{{ media_width }}" height="{{ media_height }}" class="featured-products-display__image">
+                <!-- 视频元素 -->
+                <video class="featured-products-display__video" preload="none" muted playsinline loop width="{{ media_width }}" height="{{ media_height }}">
+                  <source src="{{ video_src }}" type="{{ video_type }}">
+                </video>
+              {% else %}
+                <!-- 仅图片 -->
+                <img src="{{ media_src }}" alt="{{ media_alt }}" width="{{ media_width }}" height="{{ media_height }}" class="featured-products-display__image">
+              {% endif %}
+            </div>
+
+            <!-- 产品信息 -->
+            <div class="featured-products-display__info">
+              <!-- 产品标题 -->
+              <h3 class="featured-products-display__product-title">{{ product.title }}</h3>
+              
+              <!-- 星级评分 -->
+              {% if product.rating != blank %}
+                {% liquid
+                  assign rating_decimal = 0
+                  assign decimal = product.rating | modulo: 1
+                  if decimal >= 0.3 and decimal <= 0.7
+                    assign rating_decimal = 0.5
+                  elsif decimal > 0.7
+                    assign rating_decimal = 1
+                  endif
+                %}
+                <div
+                  class="rating"
+                  role="img"
+                  aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.rating, rating_max: 5 }}"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="rating-star"
+                    style="--rating: {{ product.rating | floor }}; --rating-max: 5; --rating-decimal: {{ rating_decimal }};"
+                  ></span>
+                </div>
+                <p class="rating-text caption">
+                  <span aria-hidden="true">
+                    {{- product.rating }} / 5
+                  </span>
+                  {% if product.rating_count > 0 %}
+                    <span class="visually-hidden">
+                      ({{- product.rating_count }} {{ product.rating_count | pluralize: 'review', 'reviews' -}})
+                    </span>
+                  {% endif %}
+                </p>
+              {% endif %}
+              
+              <!-- 产品价格 -->
+              {% if show_price %}
+                <div class="featured-products-display__price">
+                  {% render 'price', product: product, price_class: '', show_compare_at_price: true %}
+                </div>
+              {% else %}
+                <div class="featured-products-display__price" style="display: none;">
+                  {% render 'price', product: product, price_class: '', show_compare_at_price: true %}
+                </div>
+              {% endif %}
+            </div>
+          </a>
+
+          <!-- 推荐语和Learn More按钮 -->
+          <div class="featured-products-display__description">
+            {% if description_type == 'text' %}
+              <p class="featured-products-display__description-text">{{ section.settings.description }}</p>
+            {% else %}
+              {% if section.settings.description_image %}
+                <img src="{{ section.settings.description_image | image_url: width: 600 }}" alt="{{ section.settings.description_image.alt | escape }}" width="600" height="{{ section.settings.description_image.height | times: 600 | divided_by: section.settings.description_image.width }}" class="featured-products-display__description-image">
+              {% endif %}
+            {% endif %}
+            <a href="{{ product.url }}" class="featured-products-display__learn-more">{{ section.settings.learn_more_text }}</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'featured-products-display.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Featured Products Display",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Settings"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "info": "Select and reorder products to display"
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "options": [
+        {
+          "value": "2",
+          "label": "2 products"
+        },
+        {
+          "value": "3",
+          "label": "3 products"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Video Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_videos",
+      "label": "Enable product videos",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "first_video_play_mode",
+      "label": "First video play mode",
+      "options": [
+        {
+          "value": "scroll",
+          "label": "Auto play when scrolled into view"
+        },
+        {
+          "value": "hover",
+          "label": "Play on hover"
+        }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "Title Settings"
+    },
+    {
+      "type": "select",
+      "id": "title_type",
+      "label": "Title type",
+      "options": [
+        {
+          "value": "text",
+          "label": "Text"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Featured Products"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image",
+      "label": "Title image"
+    },
+    {
+      "type": "header",
+      "content": "Description Settings"
+    },
+    {
+      "type": "select",
+      "id": "description_type",
+      "label": "Description type",
+      "options": [
+        {
+          "value": "text",
+          "label": "Text"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Check out our featured products"
+    },
+    {
+      "type": "image_picker",
+      "id": "description_image",
+      "label": "Description image"
+    },
+    {
+      "type": "header",
+      "content": "Learn More Button Settings"
+    },
+    {
+      "type": "text",
+      "id": "learn_more_text",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "color",
+      "id": "learn_more_text_color",
+      "label": "Button text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "learn_more_background_color",
+      "label": "Button background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "learn_more_border_color",
+      "label": "Button border color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products Display",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
