@@ -24,7 +24,12 @@
   }
 {%- endstyle -%}
 
-<section class="featured-products-display" data-section-id="{{ section.id }}" data-enable-videos="{{ enable_videos }}" data-first-video-play-mode="{{ first_video_play_mode }}">
+<section
+  class="featured-products-display"
+  data-section-id="{{ section.id }}"
+  data-enable-videos="{{ enable_videos }}"
+  data-first-video-play-mode="{{ first_video_play_mode }}"
+>
   <div class="page-width">
     <!-- 标题区域 -->
     <div class="featured-products-display__header">
@@ -32,7 +37,13 @@
         <h2 class="featured-products-display__title">{{ section.settings.title }}</h2>
       {% else %}
         {% if section.settings.title_image %}
-          <img src="{{ section.settings.title_image | image_url: width: 1200 }}" alt="{{ section.settings.title_image.alt | escape }}" width="1200" height="{{ section.settings.title_image.height | times: 1200 | divided_by: section.settings.title_image.width }}" class="featured-products-display__title-image">
+          <img
+            src="{{ section.settings.title_image | image_url: width: 1200 }}"
+            alt="{{ section.settings.title_image.alt | escape }}"
+            width="1200"
+            height="{{ section.settings.title_image.height | times: 1200 | divided_by: section.settings.title_image.width }}"
+            class="featured-products-display__title-image"
+          >
         {% endif %}
       {% endif %}
     </div>
@@ -51,7 +62,7 @@
         <!-- 从metafield获取媒体资源 -->
         {% if product.metafields.custom.featured_display_media %}
           {% assign display_media = product.metafields.custom.featured_display_media %}
-          
+
           <!-- 解析display_media字符串，获取图片和视频URL -->
           {% assign media_urls = display_media | split: ',' %}
           {% assign image_url = media_urls[0] | strip %}
@@ -67,9 +78,12 @@
           {% else %}
             {% assign media_src = product.featured_media | image_url: width: 1000 %}
             {% assign media_alt = product.featured_media.alt | escape %}
-            {% assign media_height = product.featured_media.height | times: 1000 | divided_by: product.featured_media.width %}
+            {% assign media_height = product.featured_media.height
+              | times: 1000
+              | divided_by: product.featured_media.width
+            %}
           {% endif %}
-          
+
           <!-- 检查是否有视频 -->
           {% if enable_videos and video_url != '' %}
             {% assign has_video = true %}
@@ -80,8 +94,11 @@
           <!-- 使用产品默认媒体 -->
           {% assign media_src = product.featured_media | image_url: width: 1000 %}
           {% assign media_alt = product.featured_media.alt | escape %}
-          {% assign media_height = product.featured_media.height | times: 1000 | divided_by: product.featured_media.width %}
-          
+          {% assign media_height = product.featured_media.height
+            | times: 1000
+            | divided_by: product.featured_media.width
+          %}
+
           <!-- 检查是否为视频 -->
           {% if enable_videos and product.featured_media.media_type == 'video' %}
             {% assign has_video = true %}
@@ -91,28 +108,18 @@
         {% endif %}
 
         <!-- 产品卡片 -->
-        <div class="featured-products-display__card" data-product-id="{{ product.id }}" data-index="{{ product_index }}" data-has-video="{{ has_video }}">
+        <div
+          class="featured-products-display__card"
+          data-product-id="{{ product.id }}"
+          data-index="{{ product_index }}"
+          data-has-video="{{ has_video }}"
+         >
           <a href="{{ product.url }}" class="featured-products-display__card-link">
-            <!-- 产品媒体区域 -->
-            <div class="featured-products-display__media">
-              {% if has_video and video_src != '' %}
-                <!-- 视频封面图 -->
-                <img src="{{ media_src }}" alt="{{ media_alt }}" width="{{ media_width }}" height="{{ media_height }}" class="featured-products-display__image">
-                <!-- 视频元素 -->
-                <video class="featured-products-display__video" preload="none" muted playsinline loop width="{{ media_width }}" height="{{ media_height }}">
-                  <source src="{{ video_src }}" type="{{ video_type }}">
-                </video>
-              {% else %}
-                <!-- 仅图片 -->
-                <img src="{{ media_src }}" alt="{{ media_alt }}" width="{{ media_width }}" height="{{ media_height }}" class="featured-products-display__image">
-              {% endif %}
-            </div>
-
             <!-- 产品信息 -->
             <div class="featured-products-display__info">
               <!-- 产品标题 -->
-              <h3 class="featured-products-display__product-title">{{ product.title }}</h3>
-              
+              <h2 class="featured-products-display__product-title">{{ product.title }}</h2>
+
               <!-- 星级评分 -->
               {% if product.rating != blank %}
                 {% liquid
@@ -136,41 +143,82 @@
                   ></span>
                 </div>
                 <p class="rating-text caption">
-                  <span aria-hidden="true">
-                    {{- product.rating }} / 5
-                  </span>
+                  <span aria-hidden="true">{{- product.rating }} / 5 </span>
                   {% if product.rating_count > 0 %}
                     <span class="visually-hidden">
-                      ({{- product.rating_count }} {{ product.rating_count | pluralize: 'review', 'reviews' -}})
+                      (
+                      {{- product.rating_count }}
+                      {{ product.rating_count | pluralize: 'review', 'reviews' -}}
+                      )
                     </span>
                   {% endif %}
                 </p>
               {% endif %}
-              
+
               <!-- 产品价格 -->
               {% if show_price %}
                 <div class="featured-products-display__price">
                   {% render 'price', product: product, price_class: '', show_compare_at_price: true %}
                 </div>
-              {% else %}
-                <div class="featured-products-display__price" style="display: none;">
-                  {% render 'price', product: product, price_class: '', show_compare_at_price: true %}
-                </div>
               {% endif %}
             </div>
-          </a>
 
-          <!-- 推荐语和Learn More按钮 -->
-          <div class="featured-products-display__description">
-            {% if description_type == 'text' %}
-              <p class="featured-products-display__description-text">{{ section.settings.description }}</p>
-            {% else %}
-              {% if section.settings.description_image %}
-                <img src="{{ section.settings.description_image | image_url: width: 600 }}" alt="{{ section.settings.description_image.alt | escape }}" width="600" height="{{ section.settings.description_image.height | times: 600 | divided_by: section.settings.description_image.width }}" class="featured-products-display__description-image">
+            <!-- 产品媒体区域 -->
+            <div class="featured-products-display__media">
+              {% if has_video and video_src != '' %}
+              {% else %}
+                <!-- 仅图片 -->
+                <img
+                  src="{{ media_src }}"
+                  alt="{{ media_alt }}"
+                  width="{{ media_width }}"
+                  height="{{ media_height }}"
+                  class="featured-products-display__image"
+                >
               {% endif %}
+            </div>
+            {% if has_video and video_src != '' %}
+              <!-- 视频封面图 -->
+              <img
+                src="{{ media_src }}"
+                alt="{{ media_alt }}"
+                width="{{ media_width }}"
+                height="{{ media_height }}"
+                class="featured-products-display__image"
+              >
+              <!-- 视频元素 -->
+              <video
+                class="featured-products-display__video"
+                preload="none"
+                muted
+                playsinline
+                loop
+                width="{{ media_width }}"
+                height="{{ media_height }}"
+              >
+                <source src="{{ video_src }}" type="{{ video_type }}">
+              </video>
             {% endif %}
-            <a href="{{ product.url }}" class="featured-products-display__learn-more">{{ section.settings.learn_more_text }}</a>
-          </div>
+            <!-- 推荐语和Learn More按钮 -->
+            <div class="featured-products-display__description">
+              {% if description_type == 'text' %}
+                <p class="featured-products-display__description-text">{{ section.settings.description }}</p>
+              {% else %}
+                {% if section.settings.description_image %}
+                  <img
+                    src="{{ section.settings.description_image | image_url: width: 600 }}"
+                    alt="{{ section.settings.description_image.alt | escape }}"
+                    width="600"
+                    height="{{ section.settings.description_image.height | times: 600 | divided_by: section.settings.description_image.width }}"
+                    class="featured-products-display__description-image"
+                  >
+                {% endif %}
+              {% endif %}
+              <a href="{{ product.url }}" class="featured-products-display__learn-more">
+                {{- section.settings.learn_more_text -}}
+              </a>
+            </div>
+          </a>
         </div>
       {% endfor %}
     </div>
@@ -322,19 +370,19 @@
       "type": "color",
       "id": "learn_more_text_color",
       "label": "Button text color",
-      "default": "#000000"
+      "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "learn_more_background_color",
       "label": "Button background color",
-      "default": "#ffffff"
+      "default": "#ff6900"
     },
     {
       "type": "color",
       "id": "learn_more_border_color",
       "label": "Button border color",
-      "default": "#000000"
+      "default": "#ff6900"
     }
   ],
   "presets": [

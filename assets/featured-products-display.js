@@ -39,6 +39,9 @@ function initFeaturedProductsDisplay() {
         }
         // 如果是hover模式，则不需要初始化，由hover事件处理
       }
+      
+      // 添加组件可见性监听，离开时恢复到产品图片
+      initSectionVisibility(section, cards);
     }
   });
 }
@@ -70,48 +73,53 @@ function initScrollPlay(card, video) {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !hasPlayed) {
-        // 延迟3秒后播放视频
-        setTimeout(() => {
-          playVideo(video, card);
-          hasPlayed = true;
-        }, 3000);
+        // 立即播放视频，移除3秒延迟
+        playVideo(video, card);
+        hasPlayed = true;
         
         // 停止观察，因为只需要播放一次
         observer.unobserve(card);
       }
     });
   }, {
-    threshold: 0.5, // 当卡片50%可见时触发
-    rootMargin: '0px 0px -100px 0px' // 调整触发位置
+    threshold: 0.1, // 降低阈值，当卡片10%可见时触发
+    rootMargin: '0px 0px -50px 0px' // 调整触发位置，减少负边距
   });
   
   observer.observe(card);
 }
 
 function playVideo(video, card) {
-  // 播放视频
-  video.play().catch(error => {
-    console.error('Error playing video:', error);
-    // 尝试手动加载并播放
-    video.load();
-    video.play().catch(error => {
-      console.error('Error replaying video:', error);
-    });
-  });
-  
-  // 添加播放状态类
+  // 直接更新UI状态，不依赖play() Promise的完成
   card.dataset.playing = 'true';
+  
+  // 播放视频，正确处理Promise
+  const playPromise = video.play();
+  
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      // 播放成功，确保状态正确
+      card.dataset.playing = 'true';
+    }).catch(error => {
+      // 完全忽略AbortError，这是预期行为
+      if (error.name !== 'AbortError') {
+        // 其他错误才需要处理，但不影响UI状态
+        // 保持UI显示为播放状态，因为视频可能已经开始播放
+        console.error('Error playing video:', error);
+      }
+    });
+  }
 }
 
 function pauseVideo(video, card) {
+  // 直接更新UI状态
+  delete card.dataset.playing;
+  
   // 暂停视频
   video.pause();
   
   // 重置视频到开始位置
   video.currentTime = 0;
-  
-  // 移除播放状态类
-  delete card.dataset.playing;
 }
 
 function resizeVideo(video) {
@@ -173,6 +181,40 @@ function initLazyLoading() {
   lazyVideos.forEach(video => {
     observer.observe(video);
   });
+}
+
+// 监听组件可见性，离开时恢复到产品图片
+function initSectionVisibility(section, cards) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // 组件可见，确保视频可以播放
+        cards.forEach(card => {
+          const video = card.querySelector('.featured-products-display__video');
+          if (video && card.dataset.hasVideo === 'true') {
+            // 可以在这里添加可见时的逻辑
+          }
+        });
+      } else {
+        // 组件不可见，恢复到产品图片
+        cards.forEach(card => {
+          const video = card.querySelector('.featured-products-display__video');
+          if (video && card.dataset.hasVideo === 'true') {
+            // 暂停视频
+            video.pause();
+            // 重置视频到开始位置
+            video.currentTime = 0;
+            // 移除播放状态
+            delete card.dataset.playing;
+          }
+        });
+      }
+    });
+  }, {
+    threshold: 0.1 // 当组件10%可见时触发
+  });
+  
+  observer.observe(section);
 }
 
 // 页面加载完成后初始化懒加载
