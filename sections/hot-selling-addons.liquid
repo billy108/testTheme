@@ -1,0 +1,310 @@
+{%- liquid
+  assign show_buttons = true
+  assign products_per_view = 3
+  assign autoplay = section.settings.autoplay | default: false
+  assign autoplay_speed = section.settings.autoplay_speed | default: 5000
+  assign transition_speed = section.settings.transition_speed | default: 500
+  assign enable_videos = section.settings.enable_videos | default: true
+  assign video_play_mode = section.settings.video_play_mode | default: 'hover'
+  assign title = section.settings.title | default: 'Hot-Selling Add-ons'
+-%}
+
+{{ 'section-hot-selling-addons.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="hot-selling-addons"
+  data-section-id="{{ section.id }}"
+  data-products-per-view="{{ products_per_view }}"
+  data-autoplay="{{ autoplay }}"
+  data-autoplay-speed="{{ autoplay_speed }}"
+  data-transition-speed="{{ transition_speed }}"
+  data-enable-videos="{{ enable_videos }}"
+  data-video-play-mode="{{ video_play_mode }}"
+>
+  <div class="page-width">
+    <!-- 标题区域 -->
+    <div class="hot-selling-addons__header">
+      <h2 class="hot-selling-addons__title">{{ title }}</h2>
+      <!-- 轮播控制按钮 -->
+      {% if show_buttons %}
+        <div class="hot-selling-addons__controls">
+          <button
+            class="hot-selling-addons__control hot-selling-addons__control--prev"
+            aria-label="Previous"
+            data-slider-control="prev"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button
+            class="hot-selling-addons__control hot-selling-addons__control--next"
+            aria-label="Next"
+            data-slider-control="next"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- 产品轮播容器 -->
+    <div class="hot-selling-addons__slider-container">
+      <div
+        class="hot-selling-addons__slider"
+        data-slider=""
+        id="Slider-{{ section.id }}"
+      >
+        <div class="hot-selling-addons__slides"
+          data-slider-slides=""
+        >
+          {% for block in section.blocks %}
+            {% assign product = block.settings.product %}
+            {% if product %}
+              {% liquid
+                assign has_video = false
+                assign media_src = product.featured_media | image_url: width: 1000
+                assign media_alt = product.featured_media.alt | escape
+                assign media_width = 1000
+                assign media_height = product.featured_media.height | times: 1000 | divided_by: product.featured_media.width
+                assign video_src = ''
+                assign video_type = ''
+              %}
+              
+              <!-- 检查产品是否有效，以及是否有特色媒体 -->
+              {% if product and product.featured_media %}
+                <!-- 检查是否有视频 -->
+                {% if enable_videos and product.featured_media.media_type == 'video' %}
+                  {% assign has_video = true %}
+                  {% assign video_src = product.featured_media | file_url %}
+                  {% assign video_type = product.featured_media.mime_type %}
+                {% endif %}
+                
+                <!-- 从metafield获取视频（如果有） -->
+                {% if enable_videos and product.metafields.custom.product_video %}
+                  {% assign has_video = true %}
+                  {% assign video_src = product.metafields.custom.product_video %}
+                  {% assign video_type = 'video/mp4' %}
+                {% endif %}
+              {% endif %}
+              
+              <!-- 产品卡片 -->
+              <div
+                class="hot-selling-addons__slide"
+                data-slide=""
+                data-product-id="{{ product.id }}"
+                data-has-video="{{ has_video }}"
+              >
+                <div class="hot-selling-addons__card">
+                  <!-- 产品标签 -->
+                  {% if block.settings.tag_type != 'none' %}
+                    <div class="hot-selling-addons__tag hot-selling-addons__tag--{{ block.settings.tag_type }}">
+                      {{ block.settings.tag_type | capitalize | replace: '-', ' ' }}
+                    </div>
+                  {% endif %}
+                  
+                  <!-- 媒体区域 -->
+                  <div class="hot-selling-addons__media">
+                    <!-- 产品图片 -->
+                    <img
+                      src="{{ media_src }}"
+                      alt="{{ media_alt }}"
+                      width="{{ media_width }}"
+                      height="{{ media_height }}"
+                      class="hot-selling-addons__image"
+                      loading="lazy"
+                    >
+                    
+                    <!-- 产品视频 -->
+                    {% if has_video %}
+                      <video
+                        class="hot-selling-addons__video"
+                        preload="none"
+                        muted
+                        playsinline
+                        loop
+                      >
+                        <source src="{{ video_src }}" type="{{ video_type }}">
+                      </video>
+                    {% endif %}
+                  </div>
+                  
+                  <!-- 产品信息 -->
+                  <div class="hot-selling-addons__info">
+                    <!-- 产品名称 -->
+                    <h3 class="hot-selling-addons__product-title">{{ block.settings.product_title | default: product.title }}</h3>
+                    
+                    <!-- 卖点标语 -->
+                    {% if block.settings.product_tagline != blank %}
+                      <p class="hot-selling-addons__product-tagline">{{ block.settings.product_tagline }}</p>
+                    {% endif %}
+                  </div>
+                  
+                  <!-- 操作按钮 -->
+                  <div class="hot-selling-addons__button-container">
+                    <a
+                      href="{{ block.settings.button_link | default: product.url }}"
+                      class="hot-selling-addons__button"
+                      {% if block.settings.button_target == '_blank' %}target="_blank" rel="noopener noreferrer"{% endif %}
+                    >
+                      Learn More<span class="hot-selling-addons__button-arrow">→</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "热销附加组件",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "标题",
+      "default": "Hot-Selling Add-ons"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "自动播放",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "autoplay_speed",
+      "label": "自动播放速度（毫秒）",
+      "default": 5000
+    },
+    {
+      "type": "number",
+      "id": "transition_speed",
+      "label": "过渡速度（毫秒）",
+      "default": 500
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_videos",
+      "label": "启用产品视频",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "video_play_mode",
+      "label": "视频播放模式",
+      "options": [
+        {
+          "value": "hover",
+          "label": "悬停播放"
+        },
+        {
+          "value": "click",
+          "label": "点击播放"
+        }
+      ],
+      "default": "hover"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "产品",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "产品",
+          "info": "选择要显示的产品"
+        },
+        {
+          "type": "select",
+          "id": "tag_type",
+          "label": "产品标签",
+          "options": [
+            {
+              "value": "none",
+              "label": "无"
+            },
+            {
+              "value": "best-seller",
+              "label": "Best Seller"
+            },
+            {
+              "value": "new-arrivals",
+              "label": "New Arrivals"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "text",
+          "id": "product_title",
+          "label": "产品标题",
+          "info": "留空则使用产品默认标题"
+        },
+        {
+          "type": "text",
+          "id": "product_tagline",
+          "label": "卖点标语",
+          "info": "补充产品功能价值说明"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "按钮链接",
+          "info": "留空则使用产品页面链接"
+        },
+        {
+          "type": "select",
+          "id": "button_target",
+          "label": "链接目标",
+          "options": [
+            {
+              "value": "_self",
+              "label": "当前窗口"
+            },
+            {
+              "value": "_blank",
+              "label": "新窗口"
+            }
+          ],
+          "default": "_self"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "热销附加组件",
+      "category": "产品",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<script src="{{ 'hot-selling-addons.js' | asset_url }}" defer="defer"></script>

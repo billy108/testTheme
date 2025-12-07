@@ -1,0 +1,411 @@
+/* 热销附加组件样式 */
+
+/* CSS变量定义 */
+:root {
+  --hot-addons-primary-color: #000000;
+  --hot-addons-secondary-color: #666666;
+  --hot-addons-accent-color: #ff5c00;
+  --hot-addons-best-seller-color: #0066cc;
+  --hot-addons-new-arrivals-color: #ff9900;
+  --hot-addons-background-color: #ffffff;
+  --hot-addons-card-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --hot-addons-button-hover-bg: rgba(255, 92, 0, 0.1);
+  --hot-addons-transition-speed: 0.3s;
+  --hot-addons-border-radius: 4px;
+}
+
+/* 整体容器 */
+.hot-selling-addons {
+  padding: 4rem 0;
+  background-color: var(--hot-addons-background-color);
+  position: relative;
+}
+
+/* 页宽容器 */
+.hot-selling-addons .page-width {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* 标题区域 */
+.hot-selling-addons__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+/* 主标题 */
+.hot-selling-addons__title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--hot-addons-primary-color);
+  text-align: center;
+  margin: 0 auto;
+  flex: 1;
+}
+
+/* 轮播控制按钮容器 */
+.hot-selling-addons__controls {
+  display: flex;
+  gap: 0.5rem;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* 轮播控制按钮 */
+.hot-selling-addons__control {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  color: var(--hot-addons-primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--hot-addons-transition-speed) ease;
+  padding: 0;
+}
+
+.hot-selling-addons__control:hover {
+  background-color: var(--hot-addons-secondary-color);
+  color: white;
+  transform: scale(1.1);
+}
+
+.hot-selling-addons__control:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--hot-addons-accent-color);
+}
+
+/* 轮播容器 */
+.hot-selling-addons__slider-container {
+  overflow: hidden;
+  position: relative;
+}
+
+/* 轮播主体 */
+.hot-selling-addons__slider {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 轮播滑动容器 */
+.hot-selling-addons__slides {
+  display: flex;
+  transition: transform var(--hot-addons-transition-speed) ease;
+  will-change: transform;
+}
+
+/* 单张幻灯片 */
+.hot-selling-addons__slide {
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* 产品卡片 */
+.hot-selling-addons__card {
+  background-color: white;
+  border-radius: var(--hot-addons-border-radius);
+  box-shadow: var(--hot-addons-card-shadow);
+  overflow: hidden;
+  transition: all var(--hot-addons-transition-speed) ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 产品卡片悬停效果 */
+.hot-selling-addons__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 产品标签 */
+.hot-selling-addons__tag {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: white;
+  z-index: 2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hot-selling-addons__tag--best-seller {
+  background-color: var(--hot-addons-best-seller-color);
+}
+
+.hot-selling-addons__tag--new-arrivals {
+  background-color: var(--hot-addons-new-arrivals-color);
+}
+
+/* 媒体区域 */
+.hot-selling-addons__media {
+  position: relative;
+  width: 100%;
+  padding-bottom: 66.666%; /* 2:3 宽高比 */
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+/* 产品图片 */
+.hot-selling-addons__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all var(--hot-addons-transition-speed) ease;
+}
+
+/* 产品视频 */
+.hot-selling-addons__video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--hot-addons-transition-speed) ease;
+  z-index: 1;
+}
+
+/* 卡片悬停时视频显示 */
+.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__video {
+  opacity: 1;
+}
+
+/* 卡片悬停时图片调整 */
+.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__image {
+  opacity: 0.3;
+}
+
+/* 产品信息区域 */
+.hot-selling-addons__info {
+  padding: 1.5rem;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all var(--hot-addons-transition-speed) ease;
+}
+
+/* 产品名称 */
+.hot-selling-addons__product-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--hot-addons-primary-color);
+  margin: 0 0 0.5rem 0;
+  transition: color var(--hot-addons-transition-speed) ease;
+  line-height: 1.2;
+}
+
+/* 卖点标语 */
+.hot-selling-addons__product-tagline {
+  font-size: 1rem;
+  color: var(--hot-addons-secondary-color);
+  margin: 0;
+  transition: all var(--hot-addons-transition-speed) ease;
+  line-height: 1.4;
+}
+
+/* 按钮容器 */
+.hot-selling-addons__button-container {
+  padding: 0 1.5rem 1.5rem;
+  text-align: center;
+}
+
+/* 操作按钮 */
+.hot-selling-addons__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--hot-addons-accent-color);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--hot-addons-border-radius);
+  transition: all var(--hot-addons-transition-speed) ease;
+  background-color: transparent;
+  border: 2px solid transparent;
+}
+
+.hot-selling-addons__button:hover {
+  background-color: var(--hot-addons-button-hover-bg);
+  border-color: var(--hot-addons-accent-color);
+  transform: translateX(5px);
+}
+
+/* 按钮箭头 */
+.hot-selling-addons__button-arrow {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+/* 卡片悬停时的高级交互效果 - 仅适用于有视频的产品 */
+.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__product-title,
+.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__product-tagline {
+  color: white;
+}
+
+/* 卡片悬停时文字颜色变化动画 - 仅适用于有视频的产品 */
+.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__product-title {
+  animation: textColorChange 0.3s ease forwards;
+}
+
+.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__product-tagline {
+  animation: textColorChange 0.3s ease 0.1s forwards;
+}
+
+/* 文字颜色变化动画 */
+@keyframes textColorChange {
+  from {
+    color: var(--hot-addons-primary-color);
+  }
+  to {
+    color: white;
+  }
+}
+
+/* 卡片悬停时标点符号变为实底白字 - 仅适用于有视频的产品 */
+.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__product-title::after,
+.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__product-tagline::after {
+  content: '.';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: white;
+  margin-left: 0.25rem;
+  vertical-align: middle;
+  text-indent: -9999px;
+}
+
+/* 响应式设计 - 平板设备 */
+@media screen and (max-width: 1024px) {
+  .hot-selling-addons__slide {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  
+  .hot-selling-addons__title {
+    font-size: 2rem;
+  }
+  
+  .hot-selling-addons__controls {
+    position: static;
+    transform: none;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .hot-selling-addons__header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* 响应式设计 - 移动设备 */
+@media screen and (max-width: 749px) {
+  .hot-selling-addons {
+    padding: 2rem 0;
+  }
+  
+  .hot-selling-addons__slide {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+  
+  .hot-selling-addons__title {
+    font-size: 1.75rem;
+  }
+  
+  .hot-selling-addons__product-title {
+    font-size: 1.25rem;
+  }
+  
+  .hot-selling-addons__product-tagline {
+    font-size: 0.9rem;
+  }
+  
+  .hot-selling-addons__button {
+    font-size: 0.9rem;
+    padding: 0.625rem 1.25rem;
+  }
+  
+  .hot-selling-addons__control {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .hot-selling-addons__info {
+    padding: 1rem;
+  }
+  
+  .hot-selling-addons__button-container {
+    padding: 0 1rem 1rem;
+  }
+}
+
+/* 触摸设备滑动支持 */
+.hot-selling-addons__slides {
+  touch-action: pan-y;
+  user-select: none;
+}
+
+/* 禁用文字选择 */
+.hot-selling-addons__card {
+  user-select: none;
+}
+
+/* 无障碍支持 */
+@media (prefers-reduced-motion: reduce) {
+  .hot-selling-addons__slides,
+  .hot-selling-addons__card,
+  .hot-selling-addons__control,
+  .hot-selling-addons__button,
+  .hot-selling-addons__video,
+  .hot-selling-addons__image,
+  .hot-selling-addons__product-title,
+  .hot-selling-addons__product-tagline {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .hot-selling-addons__control:hover {
+    transform: none;
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .hot-selling-addons__card {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .hot-selling-addons__control {
+    border: 2px solid currentColor;
+  }
+  
+  .hot-selling-addons__button {
+    border: 2px solid var(--hot-addons-accent-color);
+  }
+}
