@@ -49,7 +49,6 @@ function initFeaturedProductsDisplay() {
 function initCardInteractions(cards, enableVideos) {
   cards.forEach(card => {
     const video = card.querySelector('.featured-products-display__video');
-    
     // 只有启用视频且包含视频的卡片才需要交互
     if (enableVideos && video && card.dataset.hasVideo === 'true') {
       // 鼠标hover事件
@@ -90,6 +89,7 @@ function initScrollPlay(card, video) {
 }
 
 function playVideo(video, card) {
+  console.log('Playing video...card:', card);
   // 直接更新UI状态，不依赖play() Promise的完成
   card.dataset.playing = 'true';
   
@@ -125,13 +125,9 @@ function pauseVideo(video, card) {
 function resizeVideo(video) {
   const card = video.closest('.featured-products-display__card');
   if (card) {
-    const mediaContainer = card.querySelector('.featured-products-display__media');
-    if (mediaContainer) {
-      const containerRect = mediaContainer.getBoundingClientRect();
-      // 确保视频宽高比与容器一致
-      video.style.width = `${containerRect.width}px`;
-      video.style.height = `${containerRect.height}px`;
-    }
+    // 确保视频宽高比与容器一致
+    video.style.width = `${card.width}px`;
+    video.style.height = `${card.height}px`;
   }
 }
 
