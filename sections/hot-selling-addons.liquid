@@ -98,62 +98,65 @@
                 data-product-id="{{ product.id }}"
                 data-has-video="{{ has_video }}"
               >
-                <div class="hot-selling-addons__card">
-                  <!-- 产品标签 -->
-                  {% if block.settings.tag_type != 'none' %}
-                    <div class="hot-selling-addons__tag hot-selling-addons__tag--{{ block.settings.tag_type }}">
-                      {{ block.settings.tag_type | capitalize | replace: '-', ' ' }}
-                    </div>
-                  {% endif %}
-                  
-                  <!-- 媒体区域 -->
-                  <div class="hot-selling-addons__media">
-                    <!-- 产品图片 -->
-                    <img
-                      src="{{ media_src }}"
-                      alt="{{ media_alt }}"
-                      width="{{ media_width }}"
-                      height="{{ media_height }}"
-                      class="hot-selling-addons__image"
-                      loading="lazy"
-                    >
+                <!-- 整个产品卡片可点击 -->
+                <a
+                  href="{{ block.settings.button_link | default: product.url }}"
+                  class="hot-selling-addons__card-link"
+                  {% if block.settings.button_target == '_blank' %}target="_blank" rel="noopener noreferrer"{% endif %}
+                >
+                  <div class="hot-selling-addons__card">
+                    <!-- 产品标签 -->
+                    {% if block.settings.tag_type != 'none' %}
+                      <div class="hot-selling-addons__tag hot-selling-addons__tag--{{ block.settings.tag_type }}">
+                        {{ block.settings.tag_type | capitalize | replace: '-', ' ' }}
+                      </div>
+                    {% endif %}
                     
-                    <!-- 产品视频 -->
-                    {% if has_video %}
-                      <video
-                        class="hot-selling-addons__video"
-                        preload="none"
-                        muted
-                        playsinline
-                        loop
+                    <!-- 媒体区域 -->
+                    <div class="hot-selling-addons__media">
+                      <!-- 产品图片 -->
+                      <img
+                        src="{{ media_src }}"
+                        alt="{{ media_alt }}"
+                        width="{{ media_width }}"
+                        height="{{ media_height }}"
+                        class="hot-selling-addons__image"
+                        loading="lazy"
                       >
-                        <source src="{{ video_src }}" type="{{ video_type }}">
-                      </video>
-                    {% endif %}
-                  </div>
-                  
-                  <!-- 产品信息 -->
-                  <div class="hot-selling-addons__info">
-                    <!-- 产品名称 -->
-                    <h3 class="hot-selling-addons__product-title">{{ block.settings.product_title | default: product.title }}</h3>
+                      </div>
+                      
+                      <!-- 产品视频 -->
+                      {% if has_video %}
+                        <video
+                          class="hot-selling-addons__video"
+                          preload="none"
+                          muted
+                          playsinline
+                          loop
+                        >
+                          <source src="{{ video_src }}" type="{{ video_type }}">
+                        </video>
+                      {% endif %}
                     
-                    <!-- 卖点标语 -->
-                    {% if block.settings.product_tagline != blank %}
-                      <p class="hot-selling-addons__product-tagline">{{ block.settings.product_tagline }}</p>
-                    {% endif %}
+                    <!-- 产品信息 -->
+                    <div class="hot-selling-addons__info">
+                      <!-- 产品名称 -->
+                      <h3 class="hot-selling-addons__product-title">{{ block.settings.product_title | default: product.title }}</h3>
+                      
+                      <!-- 卖点标语 -->
+                      {% if block.settings.product_tagline != blank %}
+                        <p class="hot-selling-addons__product-tagline">{{ block.settings.product_tagline }}</p>
+                      {% endif %}
+                    </div>
+                    
+                    <!-- 操作按钮（视觉元素，不需要单独点击） -->
+                    <div class="hot-selling-addons__button-container">
+                      <span class="hot-selling-addons__button">
+                        Learn More<span class="hot-selling-addons__button-arrow">→</span>
+                      </span>
+                    </div>
                   </div>
-                  
-                  <!-- 操作按钮 -->
-                  <div class="hot-selling-addons__button-container">
-                    <a
-                      href="{{ block.settings.button_link | default: product.url }}"
-                      class="hot-selling-addons__button"
-                      {% if block.settings.button_target == '_blank' %}target="_blank" rel="noopener noreferrer"{% endif %}
-                    >
-                      Learn More<span class="hot-selling-addons__button-arrow">→</span>
-                    </a>
-                  </div>
-                </div>
+                </a>
               </div>
             {% endif %}
           {% endfor %}

@@ -222,7 +222,20 @@ class HotSellingAddons {
   prevSlide() {
     if (this.isTransitioning) return;
     
-    this.currentSlide = Math.max(0, this.currentSlide - 1);
+    this.isTransitioning = true;
+    
+    // 重新获取幻灯片，以支持动态添加/删除
+    this.slides = Array.from(this.container.querySelectorAll('[data-slide]'));
+    
+    if (this.slides.length === 0) return;
+    
+    // 无限循环：如果当前是第一张，就跳到最后一张
+    if (this.currentSlide === 0) {
+      this.currentSlide = Math.max(0, this.slides.length - this.productsPerView);
+    } else {
+      this.currentSlide--;
+    }
+    
     this.updateSliderPosition();
     this.updateControls();
     this.restartAutoplay();
@@ -232,8 +245,22 @@ class HotSellingAddons {
   nextSlide() {
     if (this.isTransitioning) return;
     
+    this.isTransitioning = true;
+    
+    // 重新获取幻灯片，以支持动态添加/删除
+    this.slides = Array.from(this.container.querySelectorAll('[data-slide]'));
+    
+    if (this.slides.length === 0) return;
+    
     const maxSlide = Math.max(0, this.slides.length - this.productsPerView);
-    this.currentSlide = Math.min(maxSlide, this.currentSlide + 1);
+    
+    // 无限循环：如果当前是最后一张，就跳到第一张
+    if (this.currentSlide >= maxSlide) {
+      this.currentSlide = 0;
+    } else {
+      this.currentSlide++;
+    }
+    
     this.updateSliderPosition();
     this.updateControls();
     this.restartAutoplay();

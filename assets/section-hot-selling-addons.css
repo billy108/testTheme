@@ -105,6 +105,8 @@
 
 /* 单张幻灯片 */
 .hot-selling-addons__slide {
+  flex: 0 0 33.333%;
+  max-width: 33.333%;
   padding: 0 1rem;
   box-sizing: border-box;
 }
@@ -122,10 +124,16 @@
   height: 100%;
 }
 
-/* 产品卡片悬停效果 */
-.hot-selling-addons__card:hover {
+/* 产品卡片悬停效果 - 所有产品都有基础hover效果 */
+.hot-selling-addons__card[data-has-video="true"]:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: all var(--hot-addons-transition-speed) ease;
+}
+
+/* 产品卡片基础样式，确保过渡效果平滑 */
+.hot-selling-addons__card {
+  transition: all var(--hot-addons-transition-speed) ease;
 }
 
 /* 产品标签 */
@@ -186,12 +194,12 @@
 }
 
 /* 卡片悬停时视频显示 */
-.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__video {
+.hot-selling-addons__card:hover .hot-selling-addons__video {
   opacity: 1;
 }
 
 /* 卡片悬停时图片调整 */
-.hot-selling-addons__slide[data-has-video="true"] .hot-selling-addons__card:hover .hot-selling-addons__image {
+.hot-selling-addons__card:hover .hot-selling-addons__image {
   opacity: 0.3;
 }
 
@@ -204,6 +212,7 @@
   flex-direction: column;
   justify-content: center;
   transition: all var(--hot-addons-transition-speed) ease;
+  z-index: 2;
 }
 
 /* 产品名称 */
@@ -214,6 +223,7 @@
   margin: 0 0 0.5rem 0;
   transition: color var(--hot-addons-transition-speed) ease;
   line-height: 1.2;
+  z-index: 2;
 }
 
 /* 卖点标语 */
@@ -229,6 +239,7 @@
 .hot-selling-addons__button-container {
   padding: 0 1.5rem 1.5rem;
   text-align: center;
+  z-index: 2;
 }
 
 /* 操作按钮 */
@@ -238,19 +249,30 @@
   gap: 0.5rem;
   font-size: 1rem;
   font-weight: bold;
-  color: var(--hot-addons-accent-color);
+  color: #ffffff;
   text-decoration: none;
   padding: 0.75rem 1.5rem;
   border-radius: var(--hot-addons-border-radius);
   transition: all var(--hot-addons-transition-speed) ease;
-  background-color: transparent;
+  background-color: var(--hot-addons-accent-color);
   border: 2px solid transparent;
 }
 
 .hot-selling-addons__button:hover {
-  background-color: var(--hot-addons-button-hover-bg);
-  border-color: var(--hot-addons-accent-color);
+  background-color: #e65400;
+  border-color: #e65400;
   transform: translateX(5px);
+  color: white;
+}
+
+/* 确保按钮容器不会阻止卡片点击，但允许按钮交互 */
+.hot-selling-addons__button-container {
+  pointer-events: none;
+}
+
+.hot-selling-addons__button {
+  pointer-events: auto;
+  border: 2px solid var(--hot-addons-accent-color);
 }
 
 /* 按钮箭头 */
