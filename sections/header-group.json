@@ -85,7 +85,7 @@
             "background_repeat": "no-repeat",
             "background_position": "center",
             "text_alignment": "center",
-            "custom_text_color": "#ffffffff",
+            "custom_text_color": "#ffffff",
             "custom_font_weight": "normal",
             "custom_text_transform": "none",
             "highlight_text": false,
@@ -130,12 +130,37 @@
         "arrow_color": "#333333",
         "enable_language_selector": true
       }
+    },
+    "ip_geolocation_banner_7EiYnk": {
+      "type": "ip-geolocation-banner",
+      "blocks": {
+        "region_dDrXyr": {
+          "type": "region",
+          "settings": {
+            "country_code": "CN",
+            "text": "<p>We noticed you're visiting from CN. Would you like to visit our CN site?</p>",
+            "button_text": "Visit CN Site",
+            "url": "/"
+          }
+        }
+      },
+      "block_order": [
+        "region_dDrXyr"
+      ],
+      "name": "IP Geolocation Banner",
+      "settings": {
+        "color_scheme": "",
+        "enabled": true,
+        "site_country": "US",
+        "api_key": ""
+      }
     }
   },
   "order": [
     "announcement-bar",
     "header",
     "17372931364f090939",
-    "text_notification_kh3r8d"
+    "text_notification_kh3r8d",
+    "ip_geolocation_banner_7EiYnk"
   ]
 }
