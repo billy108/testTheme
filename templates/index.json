@@ -15,6 +15,116 @@
         "include_margins": true
       }
     },
+    "banner_carousel_NRjkpR": {
+      "type": "banner-carousel",
+      "blocks": {
+        "slide_YLYGwL": {
+          "type": "slide",
+          "settings": {
+            "slide_name": "Slide",
+            "slide_link": "",
+            "image_desktop": "shopify://shop_images/banner2.webp",
+            "image_mobile": "shopify://shop_images/banner2_1.webp",
+            "image_overlay_opacity": 0
+          }
+        },
+        "slide_nFKeQ6": {
+          "type": "slide",
+          "settings": {
+            "slide_name": "Slide",
+            "slide_link": "",
+            "image_desktop": "shopify://shop_images/banner1.webp",
+            "image_mobile": "shopify://shop_images/banner1_1.webp",
+            "image_overlay_opacity": 0
+          }
+        }
+      },
+      "block_order": [
+        "slide_YLYGwL",
+        "slide_nFKeQ6"
+      ],
+      "name": "Banner Carousel",
+      "settings": {
+        "auto_rotate": true,
+        "change_slides_speed": 5,
+        "image_behavior": "none",
+        "accessibility_info": "Banner carousel"
+      }
+    },
+    "featured_products_display_qPr7Cb": {
+      "type": "featured-products-display",
+      "name": "Featured Products Display",
+      "settings": {
+        "products": [
+          "the-3p-fulfilled-snowboard",
+          "the-collection-snowboard-hydrogen"
+        ],
+        "products_per_row": "2",
+        "show_price": true,
+        "enable_videos": true,
+        "first_video_play_mode": "scroll",
+        "title_type": "text",
+        "title": "Main Products",
+        "description_type": "text",
+        "description": "Check out our featured products",
+        "learn_more_text": "Learn More",
+        "learn_more_text_color": "#ffffff",
+        "learn_more_background_color": "#ff6900",
+        "learn_more_border_color": "#ff6900"
+      }
+    },
+    "hot_selling_addons_bk8FLd": {
+      "type": "hot-selling-addons",
+      "blocks": {
+        "product_Un37My": {
+          "type": "product",
+          "settings": {
+            "product": "the-3p-fulfilled-snowboard",
+            "tag_type": "best-seller",
+            "product_title": "",
+            "product_tagline": "",
+            "button_link": "",
+            "button_target": "_self"
+          }
+        },
+        "product_RDEQV4": {
+          "type": "product",
+          "settings": {
+            "product": "the-collection-snowboard-hydrogen",
+            "tag_type": "new-arrivals",
+            "product_title": "",
+            "product_tagline": "",
+            "button_link": "",
+            "button_target": "_self"
+          }
+        },
+        "product_AqXCMx": {
+          "type": "product",
+          "settings": {
+            "product": "the-collection-snowboard-liquid",
+            "tag_type": "none",
+            "product_title": "",
+            "product_tagline": "",
+            "button_link": "",
+            "button_target": "_self"
+          }
+        }
+      },
+      "block_order": [
+        "product_Un37My",
+        "product_RDEQV4",
+        "product_AqXCMx"
+      ],
+      "name": "热销附加组件",
+      "settings": {
+        "title": "Hot-Selling Add-ons",
+        "autoplay": false,
+        "autoplay_speed": 5000,
+        "transition_speed": 500,
+        "enable_videos": true,
+        "video_play_mode": "hover"
+      }
+    },
     "image_banner": {
       "type": "image-banner",
       "blocks": {
@@ -41,6 +151,7 @@
         "heading",
         "button"
       ],
+      "disabled": true,
       "settings": {
         "image_overlay_opacity": 40,
         "image_height": "large",
@@ -56,6 +167,7 @@
     },
     "featured_collection": {
       "type": "featured-collection",
+      "disabled": true,
       "settings": {
         "title": "Featured products",
         "heading_size": "h2",
@@ -85,6 +197,9 @@
   },
   "order": [
     "1737341983b28dcd2c",
+    "banner_carousel_NRjkpR",
+    "featured_products_display_qPr7Cb",
+    "hot_selling_addons_bk8FLd",
     "image_banner",
     "featured_collection"
   ]
