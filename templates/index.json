@@ -108,12 +108,24 @@
             "button_link": "",
             "button_target": "_self"
           }
+        },
+        "product_FH3KhN": {
+          "type": "product",
+          "settings": {
+            "product": "the-collection-snowboard-oxygen",
+            "tag_type": "none",
+            "product_title": "",
+            "product_tagline": "",
+            "button_link": "",
+            "button_target": "_self"
+          }
         }
       },
       "block_order": [
         "product_Un37My",
         "product_RDEQV4",
-        "product_AqXCMx"
+        "product_AqXCMx",
+        "product_FH3KhN"
       ],
       "name": "热销附加组件",
       "settings": {
