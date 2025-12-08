@@ -102,7 +102,7 @@
             "show_timer": false,
             "timer_end_date": "2025-12-31T23:59:59",
             "countdown_text_color": "#000000",
-            "show_button": false,
+            "show_button": true,
             "button_text": "Try Now >",
             "button_url": "shopify://pages/contact",
             "button_target": "_self",
