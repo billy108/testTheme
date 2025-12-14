@@ -1,378 +1,446 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-    "sections": {
-        "main": {
-            "type": "main-product",
-            "blocks": {
-                "vendor": {
-                    "type": "text",
-                    "settings": {
-                        "text": "{{ product.vendor }}",
-                        "text_style": "uppercase"
-                    }
-                },
-                "title": {
-                    "type": "title",
-                    "settings": {}
-                },
-                "price": {
-                    "type": "price",
-                    "settings": {}
-                },
-                "variant_picker": {
-                    "type": "variant_picker",
-                    "settings": {
-                        "picker_type": "button",
-                        "swatch_shape": "circle"
-                    }
-                },
-                "quantity_selector": {
-                    "type": "quantity_selector",
-                    "settings": {}
-                },
-                "buy_buttons": {
-                    "type": "buy_buttons",
-                    "settings": {
-                        "show_dynamic_checkout": true,
-                        "show_gift_card_recipient": true
-                    }
-                },
-                "description": {
-                    "type": "description",
-                    "settings": {}
-                },
-                "share": {
-                    "type": "share",
-                    "settings": {
-                        "share_label": "Share"
-                    }
-                }
-            },
-            "block_order": [
-                "vendor",
-                "title",
-                "price",
-                "variant_picker",
-                "quantity_selector",
-                "buy_buttons",
-                "description",
-                "share"
-            ],
-            "settings": {
-                "enable_sticky_info": true,
-                "color_scheme": "scheme-1",
-                "media_size": "large",
-                "constrain_to_viewport": true,
-                "media_fit": "contain",
-                "gallery_layout": "stacked",
-                "media_position": "left",
-                "image_zoom": "lightbox",
-                "mobile_thumbnails": "hide",
-                "hide_variants": true,
-                "enable_video_looping": false,
-                "padding_top": 36,
-                "padding_bottom": 12
-            }
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
         },
-        "hero_banner": {
-            "type": "image-banner",
-            "blocks": {
-                "heading": {
-                    "type": "heading",
-                    "settings": {
-                        "heading": "Carvera Air: Carve Your Vision",
-                        "heading_size": "h1"
-                    }
-                },
-                "text": {
-                    "type": "text",
-                    "settings": {
-                        "text": "A Smart, Precise, Versatile, and Affordable CNC, Right on Your Desktop",
-                        "text_style": "body"
-                    }
-                },
-                "buttons": {
-                    "type": "buttons",
-                    "settings": {
-                        "button_label_1": "Shop Now",
-                        "button_link_1": "#",
-                        "button_style_secondary_1": false
-                    }
-                }
-            },
-            "block_order": [
-                "heading",
-                "text",
-                "buttons"
-            ],
-            "settings": {
-                "image_height": "medium",
-                "desktop_content_position": "middle-center",
-                "show_text_box": true,
-                "desktop_content_alignment": "center",
-                "color_scheme": "scheme-1",
-                "image_behavior": "none",
-                "mobile_content_alignment": "center",
-                "stack_images_on_mobile": true,
-                "show_text_below": true
-            }
+        "title": {
+          "type": "title",
+          "settings": {}
         },
-        "features_grid": {
-            "type": "multicolumn",
-            "blocks": {
-                "feature_1": {
-                    "type": "column",
-                    "settings": {
-                        "title": "Quick Tool Change",
-                        "text": "<p>Just 10 Seconds. Reduces idle time, enabling smoother and faster transitions.</p>"
-                    }
-                },
-                "feature_2": {
-                    "type": "column",
-                    "settings": {
-                        "title": "Auto Probing & Leveling",
-                        "text": "<p>Accuracy and Efficiency by Automation. Automatically calibrate tools precisely.</p>"
-                    }
-                },
-                "feature_3": {
-                    "type": "column",
-                    "settings": {
-                        "title": "4th Axis",
-                        "text": "<p>One More Axis, Many More Possibilities. Machine cylindrical items and complex 3D shapes.</p>"
-                    }
-                },
-                "feature_4": {
-                    "type": "column",
-                    "settings": {
-                        "title": "Laser Module",
-                        "text": "<p>Unlock New Creative Dimensions. Precise laser engraving and cutting.</p>"
-                    }
-                },
-                "feature_5": {
-                    "type": "column",
-                    "settings": {
-                        "title": "Dust Collection",
-                        "text": "<p>A Clean Machine Is A Happy Machine. Effectively control debris and dust.</p>"
-                    }
-                },
-                "feature_6": {
-                    "type": "column",
-                    "settings": {
-                        "title": "Remote Control",
-                        "text": "<p>Control at Your Fingertips. Cross-platform controller software for seamless operation.</p>"
-                    }
-                }
-            },
-            "block_order": [
-                "feature_1",
-                "feature_2",
-                "feature_3",
-                "feature_4",
-                "feature_5",
-                "feature_6"
-            ],
-            "settings": {
-                "title": "Why Carvera Air?",
-                "heading_size": "h1",
-                "image_width": "full",
-                "image_ratio": "adapt",
-                "columns_desktop": 3,
-                "column_alignment": "center",
-                "background_style": "none",
-                "color_scheme": "scheme-1"
-            }
+        "rating_twJ7qr": {
+          "type": "rating",
+          "settings": {}
         },
-        "quality_section": {
-            "type": "image-with-text",
-            "blocks": {
-                "heading": {
-                    "type": "heading",
-                    "settings": {
-                        "heading": "Crafted with Quality, Delivered with Precision",
-                        "heading_size": "h2"
-                    }
-                },
-                "text": {
-                    "type": "text",
-                    "settings": {
-                        "text": "<p>Robust die-cast frame ensures outstanding sturdiness and reliability. Fully enclosed frame provides a sleek design and user safety.</p>",
-                        "text_style": "body"
-                    }
-                }
-            },
-            "block_order": [
-                "heading",
-                "text"
-            ],
-            "settings": {
-                "height": "medium",
-                "desktop_image_width": "medium",
-                "layout": "image_first",
-                "desktop_content_position": "middle",
-                "desktop_content_alignment": "left",
-                "content_layout": "no_overlap",
-                "color_scheme": "scheme-1"
-            }
+        "price": {
+          "type": "price",
+          "settings": {}
         },
-        "materials_section": {
-            "type": "image-with-text",
-            "blocks": {
-                "heading": {
-                    "type": "heading",
-                    "settings": {
-                        "heading": "Endless Materials",
-                        "heading_size": "h2"
-                    }
-                },
-                "text": {
-                    "type": "text",
-                    "settings": {
-                        "text": "<p>Carvera Air™ isn’t limited to just wood and plastic; its powerful capabilities also extend to working efficiently with aluminum and brass.</p>",
-                        "text_style": "body"
-                    }
-                }
-            },
-            "block_order": [
-                "heading",
-                "text"
-            ],
-            "settings": {
-                "height": "medium",
-                "desktop_image_width": "medium",
-                "layout": "text_first",
-                "desktop_content_position": "middle",
-                "desktop_content_alignment": "left",
-                "content_layout": "no_overlap",
-                "color_scheme": "scheme-2"
-            }
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
         },
-        "software_section": {
-            "type": "image-with-text",
-            "blocks": {
-                "heading": {
-                    "type": "heading",
-                    "settings": {
-                        "heading": "Intuitive CAM Software",
-                        "heading_size": "h2"
-                    }
-                },
-                "text": {
-                    "type": "text",
-                    "settings": {
-                        "text": "<p>Introducing Makera CAM: a comprehensive CAM solution designed specifically for the Carvera series machines. Compatible with Fusion360, VCarve Pro, Aspire, etc.</p>",
-                        "text_style": "body"
-                    }
-                }
-            },
-            "block_order": [
-                "heading",
-                "text"
-            ],
-            "settings": {
-                "height": "medium",
-                "desktop_image_width": "medium",
-                "layout": "image_first",
-                "desktop_content_position": "middle",
-                "desktop_content_alignment": "left",
-                "content_layout": "no_overlap",
-                "color_scheme": "scheme-1"
-            }
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
         },
-        "specs_section": {
-            "type": "carvera-specs",
-            "blocks": {
-                "spec_1": {
-                    "type": "spec_row",
-                    "settings": {
-                        "label": "Work Area",
-                        "value": "<p>30cm(X) * 20cm(Y) * 13cm(Z)</p>"
-                    }
-                },
-                "spec_2": {
-                    "type": "spec_row",
-                    "settings": {
-                        "label": "4th Axis Work Area (optional)",
-                        "value": "<p>9.2cm(Diameter) * 20cm(Length)</p>"
-                    }
-                },
-                "spec_3": {
-                    "type": "spec_row",
-                    "settings": {
-                        "label": "Max Travel Speed",
-                        "value": "<p>4000mm / 157in per minute</p>"
-                    }
-                },
-                "spec_4": {
-                    "type": "spec_row",
-                    "settings": {
-                        "label": "Spindle Speed",
-                        "value": "<p>0 - 13000 RPM with closed-loop control</p>"
-                    }
-                },
-                "spec_5": {
-                    "type": "spec_row",
-                    "settings": {
-                        "label": "Connectivity",
-                        "value": "<p>USB / WIFI</p>"
-                    }
-                }
-            },
-            "block_order": [
-                "spec_1",
-                "spec_2",
-                "spec_3",
-                "spec_4",
-                "spec_5"
-            ],
-            "settings": {
-                "heading": "Specs"
-            }
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
         },
-        "faq_section": {
-            "type": "collapsible-content",
-            "blocks": {
-                "faq_1": {
-                    "type": "collapsible_row",
-                    "settings": {
-                        "heading": "What is the difference between Carvera and Carvera Air?",
-                        "row_content": "<p>Carvera has an Auto Tool Changer and bigger bed size. Air uses a Quick Tool Changer and is more affordable.</p>"
-                    }
-                },
-                "faq_2": {
-                    "type": "collapsible_row",
-                    "settings": {
-                        "heading": "What software is compatible?",
-                        "row_content": "<p>Makera CAM, Fusion360, SolidWorks, VCarve Pro, Aspire, Illustrator, etc.</p>"
-                    }
-                },
-                "faq_3": {
-                    "type": "collapsible_row",
-                    "settings": {
-                        "heading": "What is included in the box?",
-                        "row_content": "<p>The machine, phone/tablet holder, dust collection hose, dust boot, air tube, and air blower head.</p>"
-                    }
-                }
-            },
-            "block_order": [
-                "faq_1",
-                "faq_2",
-                "faq_3"
-            ],
-            "settings": {
-                "heading": "FAQ",
-                "heading_alignment": "center",
-                "layout": "none",
-                "color_scheme": "scheme-1"
-            }
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
         }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "rating_twJ7qr",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "mobile_thumbnails": "hide",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
     },
-    "order": [
-        "main",
-        "hero_banner",
-        "features_grid",
-        "quality_section",
-        "materials_section",
-        "software_section",
-        "specs_section",
-        "faq_section"
-    ]
+    "hero_banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Carvera Air: Carve Your Vision",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "A Smart, Precise, Versatile, and Affordable CNC, Right on Your Desktop",
+            "text_style": "body"
+          }
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Shop Now",
+            "button_link_1": "#",
+            "button_style_secondary_1": false,
+            "button_label_2": "Button label",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text",
+        "buttons"
+      ],
+      "settings": {
+        "image_overlay_opacity": 0,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": true,
+        "desktop_content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": true
+      }
+    },
+    "features_grid": {
+      "type": "multicolumn",
+      "blocks": {
+        "feature_1": {
+          "type": "column",
+          "settings": {
+            "title": "Quick Tool Change",
+            "text": "<p>Just 10 Seconds. Reduces idle time, enabling smoother and faster transitions.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "feature_2": {
+          "type": "column",
+          "settings": {
+            "title": "Auto Probing & Leveling",
+            "text": "<p>Accuracy and Efficiency by Automation. Automatically calibrate tools precisely.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "feature_3": {
+          "type": "column",
+          "settings": {
+            "title": "4th Axis",
+            "text": "<p>One More Axis, Many More Possibilities. Machine cylindrical items and complex 3D shapes.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "feature_4": {
+          "type": "column",
+          "settings": {
+            "title": "Laser Module",
+            "text": "<p>Unlock New Creative Dimensions. Precise laser engraving and cutting.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "feature_5": {
+          "type": "column",
+          "settings": {
+            "title": "Dust Collection",
+            "text": "<p>A Clean Machine Is A Happy Machine. Effectively control debris and dust.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "feature_6": {
+          "type": "column",
+          "settings": {
+            "title": "Remote Control",
+            "text": "<p>Control at Your Fingertips. Cross-platform controller software for seamless operation.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4",
+        "feature_5",
+        "feature_6"
+      ],
+      "settings": {
+        "title": "Why Carvera Air?",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 3,
+        "column_alignment": "center",
+        "background_style": "none",
+        "button_label": "Button label",
+        "button_link": "",
+        "color_scheme": "scheme-1",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "quality_section": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Crafted with Quality, Delivered with Precision",
+            "heading_size": "h2"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Robust die-cast frame ensures outstanding sturdiness and reliability. Fully enclosed frame provides a sleek design and user safety.</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "settings": {
+        "height": "medium",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no_overlap",
+        "section_color_scheme": "",
+        "color_scheme": "scheme-1",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "materials_section": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Endless Materials",
+            "heading_size": "h2"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Carvera Air™ isn’t limited to just wood and plastic; its powerful capabilities also extend to working efficiently with aluminum and brass.</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "settings": {
+        "height": "medium",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no_overlap",
+        "section_color_scheme": "",
+        "color_scheme": "scheme-2",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "software_section": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Intuitive CAM Software",
+            "heading_size": "h2"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Introducing Makera CAM: a comprehensive CAM solution designed specifically for the Carvera series machines. Compatible with Fusion360, VCarve Pro, Aspire, etc.</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "settings": {
+        "height": "medium",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no_overlap",
+        "section_color_scheme": "",
+        "color_scheme": "scheme-1",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "specs_section": {
+      "type": "carvera-specs",
+      "blocks": {
+        "spec_1": {
+          "type": "spec_row",
+          "settings": {
+            "label": "Work Area",
+            "value": "<p>30cm(X) * 20cm(Y) * 13cm(Z)</p>"
+          }
+        },
+        "spec_2": {
+          "type": "spec_row",
+          "settings": {
+            "label": "4th Axis Work Area (optional)",
+            "value": "<p>9.2cm(Diameter) * 20cm(Length)</p>"
+          }
+        },
+        "spec_3": {
+          "type": "spec_row",
+          "settings": {
+            "label": "Max Travel Speed",
+            "value": "<p>4000mm / 157in per minute</p>"
+          }
+        },
+        "spec_4": {
+          "type": "spec_row",
+          "settings": {
+            "label": "Spindle Speed",
+            "value": "<p>0 - 13000 RPM with closed-loop control</p>"
+          }
+        },
+        "spec_5": {
+          "type": "spec_row",
+          "settings": {
+            "label": "Connectivity",
+            "value": "<p>USB / WIFI</p>"
+          }
+        }
+      },
+      "block_order": [
+        "spec_1",
+        "spec_2",
+        "spec_3",
+        "spec_4",
+        "spec_5"
+      ],
+      "settings": {
+        "heading": "Specs",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "faq_section": {
+      "type": "collapsible-content",
+      "blocks": {
+        "faq_1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What is the difference between Carvera and Carvera Air?",
+            "icon": "check_mark",
+            "row_content": "<p>Carvera has an Auto Tool Changer and bigger bed size. Air uses a Quick Tool Changer and is more affordable.</p>",
+            "page": ""
+          }
+        },
+        "faq_2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What software is compatible?",
+            "icon": "check_mark",
+            "row_content": "<p>Makera CAM, Fusion360, SolidWorks, VCarve Pro, Aspire, Illustrator, etc.</p>",
+            "page": ""
+          }
+        },
+        "faq_3": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What is included in the box?",
+            "icon": "check_mark",
+            "row_content": "<p>The machine, phone/tablet holder, dust collection hose, dust boot, air tube, and air blower head.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "FAQ",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "color_scheme": "scheme-1",
+        "container_color_scheme": "",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "hero_banner",
+    "features_grid",
+    "quality_section",
+    "materials_section",
+    "software_section",
+    "specs_section",
+    "faq_section"
+  ]
 }
