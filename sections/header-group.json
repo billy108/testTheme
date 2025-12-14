@@ -25,6 +25,7 @@
       "block_order": [
         "announcement-bar-0"
       ],
+      "disabled": true,
       "settings": {
         "color_scheme": "scheme-1",
         "show_line_separator": true,
@@ -37,6 +38,7 @@
     },
     "header": {
       "type": "header",
+      "disabled": true,
       "settings": {
         "logo_position": "top-center",
         "menu": "",
@@ -78,6 +80,43 @@
     "text_notification_kh3r8d": {
       "type": "text-notification",
       "blocks": {
+        "notification_rKG8tr": {
+          "type": "notification",
+          "settings": {
+            "text": "<p>欢迎光临我们的商店!</p>",
+            "background_repeat": "no-repeat",
+            "background_position": "center",
+            "text_alignment": "center",
+            "custom_text_color": "#ffffff",
+            "custom_font_weight": "normal",
+            "custom_text_transform": "none",
+            "highlight_text": false,
+            "effect_type": "none",
+            "icon_position": "none",
+            "icon_type": "star",
+            "icon_color": "#000000",
+            "icon_size": 16,
+            "icon_spacing": 8,
+            "link": "",
+            "link_target": "_self",
+            "show_timer": false,
+            "timer_end_date": "2025-12-31T23:59:59",
+            "countdown_text_color": "#000000",
+            "show_button": true,
+            "button_text": "Try Now >",
+            "button_url": "shopify://pages/contact",
+            "button_target": "_self",
+            "button_background_color": "#ffffff",
+            "button_text_color": "#ff6900",
+            "button_border_style": "none",
+            "button_border_color": "#ffffff",
+            "button_border_radius": 4,
+            "button_padding_top": 2,
+            "button_padding_right": 12,
+            "button_padding_bottom": 2,
+            "button_padding_left": 12
+          }
+        },
         "notification_93yjpJ": {
           "type": "notification",
           "settings": {
@@ -85,7 +124,7 @@
             "background_repeat": "no-repeat",
             "background_position": "center",
             "text_alignment": "center",
-            "custom_text_color": "#ffffffff",
+            "custom_text_color": "#ffffff",
             "custom_font_weight": "normal",
             "custom_text_transform": "none",
             "highlight_text": false,
@@ -117,6 +156,7 @@
         }
       },
       "block_order": [
+        "notification_rKG8tr",
         "notification_93yjpJ"
       ],
       "name": "Notification",
@@ -130,12 +170,37 @@
         "arrow_color": "#333333",
         "enable_language_selector": true
       }
+    },
+    "ip_geolocation_banner_7EiYnk": {
+      "type": "ip-geolocation-banner",
+      "blocks": {
+        "region_dDrXyr": {
+          "type": "region",
+          "settings": {
+            "country_code": "CN",
+            "text": "<p>We noticed you're visiting from CN. Would you like to visit our CN site?</p>",
+            "button_text": "Visit CN Site",
+            "url": "/"
+          }
+        }
+      },
+      "block_order": [
+        "region_dDrXyr"
+      ],
+      "name": "IP Geolocation Banner",
+      "settings": {
+        "color_scheme": "",
+        "enabled": true,
+        "site_country": "US",
+        "api_key": ""
+      }
     }
   },
   "order": [
     "announcement-bar",
     "header",
     "17372931364f090939",
-    "text_notification_kh3r8d"
+    "text_notification_kh3r8d",
+    "ip_geolocation_banner_7EiYnk"
   ]
 }
