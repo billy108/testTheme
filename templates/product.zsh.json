@@ -1,7 +1,7 @@
 {
     "sections": {
         "main": {
-            "type": "main-product",
+            "type": "main-product-zsh",
             "blocks": {
                 "vendor": {
                     "type": "text",
