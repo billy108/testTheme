@@ -37,10 +37,387 @@
         padding-bottom: {{ section.settings.padding_bottom }}px;
       }
     }
+
+    /* Typography */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+    .product {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    h1, h2, h3, h4, .h1, .h2, .h3, .h4 {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* Product Rewards */
+    .product__rewards {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #555;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    .product__rewards a {
+        text-decoration: underline;
+        color: #d32f2f;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* Add to cart Button Polish */
+    .product-form__submit {
+        background-color: #111 !important; /* Force Black */
+        color: white !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease !important;
+        padding: 1rem 2rem !important;
+    }
+    .product-form__submit:hover {
+        background-color: #333 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Typography */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+    .product {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    h1, h2, h3, h4, .h1, .h2, .h3, .h4 {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* Product Rewards */
+    .product__rewards {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #555;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    .product__rewards a {
+        text-decoration: underline;
+        color: #d32f2f;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* Add to cart Button Polish */
+    .product-form__submit {
+        background-color: #111 !important; /* Force Black */
+        color: white !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease !important;
+        padding: 1rem 2rem !important;
+    }
+    .product-form__submit:hover {
+        background-color: #333 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Breadcrumb styles */
+    .breadcrumb {
+      margin-bottom: 1.5rem;
+    }
+
+    .breadcrumb__list {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .breadcrumb__item:not(:last-child)::after {
+      content: "/";
+      margin: 0 0.5rem;
+      color: #999;
+    }
+
+    .breadcrumb__link {
+      color: #555;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb__link:hover {
+        color: #000;
+    }
+
+    .breadcrumb__link--current {
+      font-weight: 600;
+      color: #222;
+    }
+
+    /* Sale Banner */
+    .sale-banner {
+        background: #004d3d; /* Darker Green */
+        color: white;
+        padding: 0;
+        border-radius: 16px;
+        margin: 1.5rem 0;
+        display: flex;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 77, 61, 0.15);
+    }
+    .sale-banner__left {
+        flex: 1;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .sale-banner__title {
+        font-weight: 800;
+        font-size: 1.3rem;
+        line-height: 1.2;
+        margin-bottom: 0.25rem;
+    }
+    .sale-banner__subtitle {
+        font-weight: 500;
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+    .sale-banner__right {
+        background: #fff;
+        padding: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-left: 1px solid rgba(0,0,0,0.05);
+    }
+    .banner-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 0.4rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        width: 100px;
+        transform: rotate(2deg);
+    }
+    .banner-card img {
+        width: 100%;
+        border-radius: 4px;
+        margin-bottom: 0.2rem;
+    }
+    .banner-card__text {
+        color: #d32f2f;
+        font-size: 0.65rem;
+        font-weight: 800;
+        line-height: 1.1;
+    }
+
+    /* Package selector styles */
+    .package-selector {
+      margin: 2rem 0;
+    }
+
+    .package-selector__title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .package-selector__current {
+      color: #f57c00;
+      font-weight: 700;
+    }
+
+    .package-selector__options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .package-option {
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .package-option:hover {
+        border-color: #ffb74d;
+    }
+
+    .package-option--selected {
+      border-color: #f57c00;
+      background-color: #fff8f0;
+      box-shadow: 0 4px 12px rgba(245, 124, 0, 0.1);
+    }
+
+    .package-option__input {
+      display: none;
+    }
+
+    .package-option__label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .package-option__image {
+      flex-shrink: 0;
+    }
+
+    .package-option__image img {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      background: #f5f5f5;
+    }
+
+    .package-option__info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .package-option__title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 0.35rem 0;
+      color: #222;
+    }
+
+    .package-option__price {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .package-option__current-price {
+      font-weight: 800;
+      color: #d32f2f;
+      font-size: 1.1rem;
+    }
+
+    .package-option__original-price {
+      text-decoration: line-through;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .package-option__save {
+      background-color: #d32f2f;
+      color: white;
+      padding: 0.15rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 2px;
+    }
+
+    /* Media navigation buttons */
+    .media-nav-buttons {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      justify-content: center;
+    }
+
+    .media-nav-button {
+      background-color: #f0f0f0;
+      color: #333;
+      border: none;
+      border-radius: 100px;
+      padding: 0.7rem 1.75rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .media-nav-button:hover {
+      background-color: #e0e0e0;
+      transform: scale(1.02);
+    }
+
+    .media-nav-button--active {
+      background-color: #1a1a1a;
+      color: white;
+    }
+
+    .media-nav-button--active:hover {
+      background-color: #000;
+    }
+
+    /* Product brand styling */
+    .product__brand {
+      font-size: 0.8rem;
+      color: rgba(0, 0, 0, 0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .product__title h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+    }
+
+    /* Product reviews styling */
+    .product__reviews {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .product__rating {
+      display: flex;
+      gap: 0.15rem;
+      color: #ff9800;
+    }
+
+    .icon-star {
+      width: 18px;
+      height: 18px;
+    }
+
+    .product__reviews-count {
+      color: rgba(0, 0, 0, 0.5);
+      font-size: 0.85rem;
+      text-decoration: underline;
+      font-weight: 500;
+    }
   {%- endstyle -%}
 
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
   {%- if product.quantity_price_breaks_configured? -%}
     <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
@@ -74,9 +451,25 @@
 
   {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
   <div class="page-width">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol class="breadcrumb__list">
+        <li class="breadcrumb__item">
+          <a href="{{ routes.root_url }}" class="breadcrumb__link">Home</a>
+        </li>
+        <li class="breadcrumb__item">
+          <span class="breadcrumb__link breadcrumb__link--current">{{ product.title }}</span>
+        </li>
+      </ol>
+    </nav>
     <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
       <div class="grid__item product__media-wrapper">
-        {% render 'product-media-gallery', variant_images: variant_images %}
+        {% render 'product-media-gallery-zsh', product: product, variant_images: variant_images, section: section %}
+        <!-- Navigation buttons -->
+        <div class="media-nav-buttons">
+          <button class="media-nav-button">Features</button>
+          <button class="media-nav-button">Videos</button>
+          <button class="media-nav-button media-nav-button--active">Packages</button>
+        </div>
       </div>
       <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         <section
@@ -98,12 +491,19 @@
                 </p>
               {%- when 'title' -%}
                 <div class="product__title" {{ block.shopify_attributes }}>
+                  <div class="product__brand">MAKERA</div>
                   <h1>{{ product.title | escape }}</h1>
-                  <a href="{{ product.url }}" class="product__title">
-                    <h2 class="h1">
-                      {{ product.title | escape }}
-                    </h2>
-                  </a>
+                </div>
+                <!-- Product reviews -->
+                <div class="product__reviews">
+                  <div class="product__rating">
+                    {% for i in (1..5) %}
+                      <svg class="icon-star" viewBox="0 0 24 24" fill="#FF9800">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      </svg>
+                    {% endfor %}
+                  </div>
+                  <span class="product__reviews-count">51 reviews</span>
                 </div>
               {%- when 'price' -%}
                 <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
@@ -139,6 +539,11 @@
                     <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
                     {{ form | payment_terms }}
                   {%- endform -%}
+                </div>
+                <!-- Rewards -->
+                <div class="product__rewards">
+                  Earn <span style="font-weight: 700;">{{ product.price | divided_by: 100 }}</span> points for this
+                  product. <a href="#">Log in or sign up</a>
                 </div>
               {%- when 'inventory' -%}
                 <p
@@ -462,7 +867,172 @@
                 %}
 
               {%- when 'variant_picker' -%}
-                {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+                <!-- Green sale banner -->
+                <div class="sale-banner">
+                  <div class="sale-banner__left">
+                    <div class="sale-banner__title">Last Great Sale of the Year</div>
+                    <div class="sale-banner__subtitle">Free Gift + Instant Savings</div>
+                  </div>
+                  <div class="sale-banner__right">
+                    <div class="banner-card">
+                      <img
+                        src="{{ product.featured_image | image_url: width: 200 }}"
+                        alt="Holiday Sale"
+                        width="80"
+                        height="60"
+                      >
+                      <div class="banner-card__text">
+                        Buy Early for<br>
+                        More Discounts
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="package-selector" {{ block.shopify_attributes }}>
+                  <h3 class="package-selector__title">
+                    Package:
+                    <span class="package-selector__current" id="PackageSelectorCurrent">
+                      {{- product.selected_or_first_available_variant.title -}}
+                    </span>
+                  </h3>
+                  <div class="package-selector__options">
+                    {% assign variants = product.variants %}
+                    {% for variant in variants %}
+                      {% if forloop.index <= 3 %}
+                        {% assign savings = variant.compare_at_price | minus: variant.price %}
+                        {% assign is_selected = false %}
+                        {% if variant.id == product.selected_or_first_available_variant.id %}
+                          {% assign is_selected = true %}
+                        {% endif %}
+                        <div
+                          class="package-option{% if is_selected %} package-option--selected{% endif %}"
+                          onclick="selectPackage(this)"
+                        >
+                          <input
+                            type="radio"
+                            id="package-{{ variant.id }}"
+                            name="id"
+                            value="{{ variant.id }}"
+                            {% if is_selected %}
+                              checked
+                            {% endif %}
+                            class="package-option__input"
+                            form="{{ product_form_id }}"
+                            data-title="{{ variant.title | escape }}"
+                          >
+                          <label for="package-{{ variant.id }}" class="package-option__label">
+                            <div class="package-option__image">
+                              {% if variant.image %}
+                                {{ variant.image | image_url: width: 80 | image_tag }}
+                              {% else %}
+                                {{ product.featured_image | image_url: width: 80 | image_tag }}
+                              {% endif %}
+                            </div>
+                            <div class="package-option__info">
+                              <h4 class="package-option__title">{{ variant.title }}</h4>
+                              <div class="package-option__price">
+                                <span class="package-option__current-price">
+                                  {{- variant.price | money_with_currency -}}
+                                </span>
+                                {% if variant.compare_at_price > variant.price %}
+                                  <span class="package-option__original-price">
+                                    {{- variant.compare_at_price | money_with_currency -}}
+                                  </span>
+                                {% endif %}
+                              </div>
+                              {% if variant.compare_at_price > variant.price %}
+                                <div class="package-option__save">Save {{ savings | money_with_currency }}</div>
+                              {% endif %}
+                            </div>
+                          </label>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+                <script>
+                  document.addEventListener('DOMContentLoaded', function() {
+                    const productVariants = {{ product.variants | json }};
+                    const sectionId = '{{ section.id }}';
+                    const productFormId = '{{ product_form_id }}';
+
+                    function updatePrice(variant) {
+                        const sectionsUrl = `${window.location.pathname}?variant=${variant.id}&section_id=${sectionId}`;
+                        
+                        fetch(sectionsUrl)
+                            .then(response => response.text())
+                            .then(responseText => {
+                                const html = new DOMParser().parseFromString(responseText, 'text/html');
+                                const priceSource = html.getElementById(`price-${sectionId}`);
+                                const priceTarget = document.getElementById(`price-${sectionId}`);
+                                if (priceSource && priceTarget) {
+                                    priceTarget.innerHTML = priceSource.innerHTML;
+                                }
+
+                                const inventorySource = html.getElementById(`Inventory-${sectionId}`);
+                                const inventoryTarget = document.getElementById(`Inventory-${sectionId}`);
+                                if (inventorySource && inventoryTarget) {
+                                    inventoryTarget.innerHTML = inventorySource.innerHTML;
+                                }
+                                
+                                // Update hidden input in main form if exists
+                                const mainFormInput = document.querySelector(`form[id="${productFormId}"] input[name="id"]`);
+                                if (mainFormInput) {
+                                    mainFormInput.value = variant.id;
+                                    mainFormInput.dispatchEvent(new Event('change', { bubbles: true }));
+                                }
+                            });
+                    }
+
+                    // Existing selectPackage function updates the radio.
+                    // We need to listen to the radio change.
+                    const radios = document.querySelectorAll('.package-option__input');
+                    radios.forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            const variantId = this.value;
+                            const variant = productVariants.find(v => v.id == variantId);
+                            
+                            if (variant) {
+                                // Update URL
+                                window.history.replaceState({ }, '', `${window.location.pathname}?variant=${variant.id}`);
+                                
+                                // Update Price & other section parts
+                                updatePrice(variant);
+                                
+                                // Update current package text
+                                const titleEl = document.getElementById('PackageSelectorCurrent');
+                                if (titleEl) titleEl.textContent = variant.name || variant.title; // variant.name usually includes title + options
+                            }
+                        });
+                    });
+                  });
+                  
+                  function selectPackage(element) {
+                    // Update visual selection
+                    document.querySelectorAll('.package-option').forEach(el => el.classList.remove('package-option--selected'));
+                    element.classList.add('package-option--selected');
+                    
+                    // Trigger input checking if not already handled by label click
+                    const input = element.querySelector('input[type="radio"]');
+                    if (input) {
+                        if (!input.checked) {
+                            input.checked = true;
+                            input.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    }
+                  }
+
+                  // Media Nav Buttons Interaction
+                  const mediaButtons = document.querySelectorAll('.media-nav-button');
+                  mediaButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        mediaButtons.forEach(b => b.classList.remove('media-nav-button--active'));
+                        this.classList.add('media-nav-button--active');
+                        // Future: Add logic effectively switching media here
+                    });
+                  });
+                </script>
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
                   block: block,
@@ -570,7 +1140,6 @@
                                 <ul class="list-unstyled" role="list">
                                   {%- for product in recommendations.products
                                     limit: block.settings.products_per_page
-                                    offset: continue
                                   -%}
                                     <li>
                                       {%- if block.settings.enable_quick_add -%}
@@ -709,14 +1278,6 @@
       </script>
       <script src="{{ 'product-model.js' | asset_url }}" defer></script>
     {%- endif -%}
-
-    {%- liquid
-      if product.selected_or_first_available_variant.featured_media
-        assign seo_media = product.selected_or_first_available_variant.featured_media
-      else
-        assign seo_media = product.featured_media
-      endif
-    -%}
 
     <script type="application/ld+json">
       {{ product | structured_data }}

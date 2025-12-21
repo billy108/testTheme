@@ -1,0 +1,198 @@
+{% comment %}
+  Custom Carousel for Product Media (Images + Videos) for ZSH Product Template
+{% endcomment %}
+{%- assign media_count = product.media.size -%}
+
+<div class="product-media-zsh-wrapper" id="ProductMediaGallery-{{ section.id }}">
+  <div class="product-media-zsh-carousel" id="MediaCarousel-{{ section.id }}">
+    {%- if product.selected_or_first_available_variant.featured_media != null -%}
+      {%- assign featured_media = product.selected_or_first_available_variant.featured_media -%}
+      <div class="carousel-slide" data-media-id="{{ featured_media.id }}">
+        {% render 'product-thumbnail',
+          media: featured_media,
+          media_count: media_count,
+          position: 1,
+          desktop_layout: 'carousel',
+          mobile_layout: 'hide',
+          loop: section.settings.enable_video_looping,
+          modal_id: section.id,
+          xr_button: true,
+          media_width: 1.0,
+          lazy_load: false
+        %}
+      </div>
+    {%- endif -%}
+
+    {%- for media in product.media -%}
+      {%- unless media.id == product.selected_or_first_available_variant.featured_media.id -%}
+        <div class="carousel-slide" data-media-id="{{ media.id }}">
+          {% render 'product-thumbnail',
+            media: media,
+            media_count: media_count,
+            position: forloop.index,
+            desktop_layout: 'carousel',
+            mobile_layout: 'hide',
+            loop: section.settings.enable_video_looping,
+            modal_id: section.id,
+            xr_button: true,
+            media_width: 1.0,
+            lazy_load: true
+          %}
+        </div>
+      {%- endunless -%}
+    {%- endfor -%}
+  </div>
+
+  {% if media_count > 1 %}
+    <button class="carousel-nav prev" aria-label="Previous slide">❮</button>
+    <button class="carousel-nav next" aria-label="Next slide">❯</button>
+    <div class="carousel-dots-container">
+      {%- if product.selected_or_first_available_variant.featured_media != null -%}
+        <span class="carousel-dot active" data-index="0"></span>
+      {%- endif -%}
+      {%- for media in product.media -%}
+        {%- unless media.id == product.selected_or_first_available_variant.featured_media.id -%}
+          {% assign dot_index = forloop.index %}
+          {% if product.selected_or_first_available_variant.featured_media == null %}
+            {% assign dot_index = forloop.index0 %}
+          {% endif %}
+          <span class="carousel-dot" data-index="{{ dot_index }}"></span>
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .product-media-zsh-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .product-media-zsh-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .product-media-zsh-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    scroll-snap-align: start;
+    position: relative;
+  }
+
+  /* Ensure images/videos take up space */
+  .carousel-slide .product-media-container {
+    width: 100%;
+  }
+
+  /* Navigation Buttons */
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
+    border: 1px solid #ddd;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .carousel-nav:hover {
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .carousel-nav.prev {
+    left: 10px;
+  }
+
+  .carousel-nav.next {
+    right: 10px;
+  }
+
+  /* Dots */
+  .carousel-dots-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .carousel-dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    background-color: #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .carousel-dot.active {
+    background-color: #333;
+  }
+</style>
+
+<script>
+  (function () {
+    const container = document.getElementById('MediaCarousel-{{ section.id }}');
+    if (!container) return;
+
+    const wrapper = container.parentElement;
+    const prevBtn = wrapper.querySelector('.carousel-nav.prev');
+    const nextBtn = wrapper.querySelector('.carousel-nav.next');
+    const dots = wrapper.querySelectorAll('.carousel-dot');
+
+    const updateDots = () => {
+      const slideWidth = container.offsetWidth;
+      const scrollLeft = container.scrollLeft;
+      const index = Math.round(scrollLeft / slideWidth);
+
+      dots.forEach((dot, i) => {
+        if (i === index) dot.classList.add('active');
+        else dot.classList.remove('active');
+      });
+    };
+
+    if (prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', function () {
+        container.scrollBy({ left: -container.offsetWidth, behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener('click', function () {
+        container.scrollBy({ left: container.offsetWidth, behavior: 'smooth' });
+      });
+    }
+
+    container.addEventListener('scroll', () => {
+      // Debounce or just run? Scroll snap makes it predictable
+      // Let's use requestAnimationFrame for performance
+      window.requestAnimationFrame(updateDots);
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        container.scrollTo({ left: i * container.offsetWidth, behavior: 'smooth' });
+      });
+    });
+  })();
+</script>
