@@ -162,7 +162,7 @@
       "name": "Notification",
       "settings": {
         "background_color": "#f95f18",
-        "height": 75,
+        "height": 60,
         "animation_speed": 3,
         "show_on_mobile": true,
         "show_in_editor": true,
