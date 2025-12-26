@@ -1,6 +1,6 @@
 {%- style -%}
-  /* 基础样式 */
-  .text-notification {
+  /* 基础样式，作用域限定在当前 section 实例 */
+  #shopify-section-{{ section.id }} .text-notification {
     background-color: {{ section.settings.background_color }};
     color: white;
     padding: 1rem 0;
@@ -15,21 +15,21 @@
 
   /* 当启用语言选择器时，允许下拉菜单溢出 */
   {% if section.settings.enable_language_selector %}
-    .text-notification {
+    #shopify-section-{{ section.id }} .text-notification {
       overflow: visible;
     }
-    
+
     /* 但保持轮播容器的 overflow hidden */
-    .text-notification__container {
+    #shopify-section-{{ section.id }} .text-notification__container {
       overflow: hidden;
     }
   {% endif %}
 
-  /* Shopify编辑器模式下的特殊处理 */
-  body.editor-preview .text-notification,
-  body.template-index .text-notification,
-  body.template-page .text-notification,
-  .shopify-policy__container .text-notification {
+  /* Shopify编辑器模式下的特殊处理（这里保持全局，因为是针对 body/template 的） */
+  body.editor-preview #shopify-section-{{ section.id }} .text-notification,
+  body.template-index #shopify-section-{{ section.id }} .text-notification,
+  body.template-page #shopify-section-{{ section.id }} .text-notification,
+  .shopify-policy__container #shopify-section-{{ section.id }} .text-notification {
     display: block;
     opacity: 1;
     visibility: visible;
@@ -39,17 +39,17 @@
 
   /* 编辑器中预览的额外样式 */
   @media screen and (max-width: 768px) {
-    .text-notification {
+    #shopify-section-{{ section.id }} .text-notification {
       min-height: 40px;
       height: auto !important;
     }
-    .text-notification__language-wrapper .disclosure__list-wrapper {
+    #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__list-wrapper {
       top: 40px !important;
     }
   }
 
   /* 预览元素样式 */
-  .text-notification__preview {
+  #shopify-section-{{ section.id }} .text-notification__preview {
     width: 100%;
     display: flex;
     align-items: center;
@@ -60,15 +60,15 @@
   /* 移动端显示控制 */
   {% if section.settings.show_on_mobile == false %}
     @media screen and (max-width: 768px) {
-      .text-notification {
+      #shopify-section-{{ section.id }} .text-notification {
         display: none !important;
       }
     }
   {% endif %}
 
-  
 
-  .text-notification__container {
+
+  #shopify-section-{{ section.id }} .text-notification__container {
     margin: 0 auto;
     overflow: hidden; /* 保持 hidden 用于轮播效果 */
     position: relative;
@@ -80,13 +80,13 @@
 
   /* 当启用语言选择器时，调整容器布局 */
   {% if section.settings.enable_language_selector %}
-    .text-notification__container {
+    #shopify-section-{{ section.id }} .text-notification__container {
       padding-left: 100px; /* 为语言选择器留出空间 */
     }
   {% endif %}
 
   /* 语言选择器容器样式 */
-  .text-notification__language-wrapper {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper {
     position: absolute;
     left: 20px;
     top: 50%;
@@ -98,27 +98,27 @@
     gap: 0;
   }
 
-  .text-notification__language-wrapper .localization-form {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .localization-form {
     display: flex;
     align-items: center;
   }
 
   /* 地图图标样式 */
-  .text-notification__language-icon {
+  #shopify-section-{{ section.id }} .text-notification__language-icon {
     display: flex;
     align-items: center;
     margin-right: 10px;
     flex-shrink: 0;
   }
 
-  .text-notification__language-icon svg {
+  #shopify-section-{{ section.id }} .text-notification__language-icon svg {
     width: 16px;
     height: 16px;
     fill: white;
   }
 
   /* 语言选择器按钮样式 - 无边框 */
-  .text-notification__language-wrapper .disclosure__button {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__button {
     color: white;
     background: transparent;
     border: none;
@@ -135,23 +135,23 @@
     z-index: 1001;
   }
 
-  .text-notification__language-wrapper .disclosure__button:hover {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__button:hover {
     opacity: 0.8;
   }
 
   /* 确保按钮可点击 */
-  .text-notification__language-wrapper .disclosure__button,
-  .text-notification__language-wrapper .localization-form__select {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__button,
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .localization-form__select {
     pointer-events: auto !important;
   }
 
   /* 下拉菜单样式 */
-  .text-notification__language-wrapper .disclosure {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure {
     position: relative;
     display: inline-block;
   }
 
-  .text-notification__language-wrapper .disclosure__list-wrapper {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__list-wrapper {
     background-color: {{ section.settings.background_color }};
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -169,18 +169,18 @@
   }
 
   /* 确保下拉菜单在隐藏时不可见 */
-  .text-notification__language-wrapper .disclosure__list-wrapper[hidden] {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__list-wrapper[hidden] {
     display: none !important;
   }
 
   /* 确保下拉菜单在显示时可见 */
-  .text-notification__language-wrapper .disclosure__list-wrapper:not([hidden]) {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__list-wrapper:not([hidden]) {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
   }
 
-  .text-notification__language-wrapper .disclosure__list {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__list {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -191,17 +191,17 @@
     background-color: {{ section.settings.background_color }};
   }
 
-  .text-notification__language-wrapper .disclosure__item {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__item {
     margin: 0;
     padding: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .text-notification__language-wrapper .disclosure__item:last-child {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__item:last-child {
     border-bottom: none;
   }
 
-  .text-notification__language-wrapper .disclosure__link {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__link {
     color: white;
     padding: 10px 12px;
     display: flex;
@@ -213,38 +213,38 @@
     transition: background-color 0.2s ease;
   }
 
-  .text-notification__language-wrapper .disclosure__link:hover {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__link:hover {
     background: rgba(255, 255, 255, 0.1);
   }
 
   /* 确保下拉菜单内的所有文字都是白色 */
-  .text-notification__language-wrapper .disclosure__list-wrapper {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__list-wrapper {
     color: white;
   }
 
-  .text-notification__language-wrapper .disclosure__list-wrapper * {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__list-wrapper * {
     color: white;
   }
 
   /* 选中标记图标颜色 */
-  .text-notification__language-wrapper .disclosure__link svg {
+  #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__link svg {
     fill: white;
   }
 
   @media (max-width: 1024px) {
-    .text-notification__container {
+    #shopify-section-{{ section.id }} .text-notification__container {
       max-width: 100%;
       padding: 0;
     }
 
-    .text-notification__slide {
+    #shopify-section-{{ section.id }} .text-notification__slide {
       padding-left: 40px;
       padding-right: 40px;
     }
   }
 
   /* 箭头按钮样式 */
-  .text-notification__arrow {
+  #shopify-section-{{ section.id }} .text-notification__arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -260,66 +260,66 @@
     opacity: 1;
   }
 
-  .text-notification__arrow svg {
+  #shopify-section-{{ section.id }} .text-notification__arrow svg {
     width: 30px;
     height: 30px;
     fill: white;
   }
 
-  .text-notification__arrow--left {
+  #shopify-section-{{ section.id }} .text-notification__arrow--left {
     left: 10px;
   }
 
-  .text-notification__arrow--right {
+  #shopify-section-{{ section.id }} .text-notification__arrow--right {
     right: 10px;
   }
 
   /* 合并移动端适配 */
   @media (max-width: 767px) {
     /* 移动端箭头按钮适配 */
-    .text-notification__arrow {
+    #shopify-section-{{ section.id }} .text-notification__arrow {
       width: 24px;
       height: 24px;
     }
 
-    .text-notification__arrow--left {
+    #shopify-section-{{ section.id }} .text-notification__arrow--left {
       left: 5px;
     }
 
-    .text-notification__arrow--right {
+    #shopify-section-{{ section.id }} .text-notification__arrow--right {
       right: 5px;
     }
 
-    .text-notification__arrow svg {
+    #shopify-section-{{ section.id }} .text-notification__arrow svg {
       width: 16px;
       height: 16px;
       fill: white;
     }
 
     /* 移动端容器适配 */
-    .text-notification__container {
+    #shopify-section-{{ section.id }} .text-notification__container {
       max-width: 100%;
       padding: 0;
     }
 
     /* 移动端语言选择器适配 */
-    .text-notification__language-wrapper {
+    #shopify-section-{{ section.id }} .text-notification__language-wrapper {
       left: 10px;
       position: absolute;
       transform: translateY(-50%);
       top: 50%;
     }
 
-    .text-notification__language-icon {
+    #shopify-section-{{ section.id }} .text-notification__language-icon {
       margin-right: 8px;
     }
 
-    .text-notification__language-icon svg {
+    #shopify-section-{{ section.id }} .text-notification__language-icon svg {
       width: 14px;
       height: 14px;
     }
 
-    .text-notification__language-wrapper .disclosure__button {
+    #shopify-section-{{ section.id }} .text-notification__language-wrapper .disclosure__button {
       font-size: 11px;
       padding: 0;
       min-height: auto;
@@ -328,7 +328,7 @@
 
     /* 移动端启用语言选择器时调整容器 */
     {% if section.settings.enable_language_selector %}
-      .text-notification__container {
+      #shopify-section-{{ section.id }} .text-notification__container {
         padding-left: 80px;
       }
     {% endif %}
@@ -336,24 +336,24 @@
 
   /* 小屏幕适配 */
   @media (max-width: 480px) {
-    .text-notification__container {
+    #shopify-section-{{ section.id }} .text-notification__container {
       padding: 0;
     }
   }
 
   /* 移动端隐藏语言选择器 */
   @media (max-width: 767px) {
-    .text-notification__language-wrapper {
+    #shopify-section-{{ section.id }} .text-notification__language-wrapper {
       display: none !important;
     }
-    
+
     /* 移除语言选择器占用的左侧内边距 */
-    .text-notification__container {
+    #shopify-section-{{ section.id }} .text-notification__container {
       padding-left: 0 !important;
     }
   }
 
-  .text-notification__slides {
+  #shopify-section-{{ section.id }} .text-notification__slides {
     transition: transform 0.5s ease;
     width: 100%;
     position: absolute;
@@ -363,7 +363,7 @@
   }
 
   /* 为幻灯片添加初始CSS样式，确保页面加载时只显示第一张 */
-  .text-notification__slide {
+  #shopify-section-{{ section.id }} .text-notification__slide {
     position: absolute;
     top: 0;
     left: 0;
@@ -376,13 +376,11 @@
   }
 
   /* 只显示第一张幻灯片 */
-  .text-notification__slide:first-child {
+  #shopify-section-{{ section.id }} .text-notification__slide:first-child {
     transform: translateY(0);
   }
 
-  /* 移除重复的slide样式定义，已在后续代码中统一设置 */
-
-  .text-notification__link {
+  #shopify-section-{{ section.id }} .text-notification__link {
     color: inherit;
     text-decoration: none;
     display: flex;
@@ -392,11 +390,11 @@
     width: 100%;
   }
 
-  .text-notification__link:hover {
+  #shopify-section-{{ section.id }} .text-notification__link:hover {
     text-decoration: underline;
   }
 
-  .text-notification__text {
+  #shopify-section-{{ section.id }} .text-notification__text {
     white-space: normal;
     overflow: visible;
     text-overflow: clip;
@@ -411,12 +409,12 @@
     align-items: center;
   }
 
-  .text-notification__text p {
+  #shopify-section-{{ section.id }} .text-notification__text p {
     margin: 0;
   }
 
   /* 按钮样式 */
-  .text-notification__button {
+  #shopify-section-{{ section.id }} .text-notification__button {
     background-color: {{ section.settings.button_background_color }};
     color: white;
     border: none;
@@ -431,60 +429,56 @@
     text-decoration: none;
   }
 
-  .text-notification__button:hover {
+  #shopify-section-{{ section.id }} .text-notification__button:hover {
     background-color: #FF8C33;
     text-decoration: none;
   }
 
   /* 图标样式 */
-  .text-notification__icon {
+  #shopify-section-{{ section.id }} .text-notification__icon {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
 
-  .text-notification__icon svg {
+  #shopify-section-{{ section.id }} .text-notification__icon svg {
     width: 16px;
     height: 16px;
     fill: currentColor;
   }
 
-  .text-notification__timer {
+  #shopify-section-{{ section.id }} .text-notification__timer {
     margin-left: 10px;
     font-weight: bold;
   }
 
   /* 文字特殊效果 */
-  .text-notification__text--highlight {
+  #shopify-section-{{ section.id }} .text-notification__text--highlight {
     color: {{ section.settings.highlight_color }};
     font-weight: {{ section.settings.highlight_font_weight }};
     text-transform: {{ section.settings.highlight_text_transform }};
   }
 
-  .text-notification__text--blink {
+  #shopify-section-{{ section.id }} .text-notification__text--blink {
     animation: blink 1.5s infinite;
   }
 
-  .text-notification__text--pulse {
+  #shopify-section-{{ section.id }} .text-notification__text--pulse {
     animation: pulse 2s infinite;
   }
 
-  .text-notification__text--slide {
+  #shopify-section-{{ section.id }} .text-notification__text--slide {
     animation: slide 8s infinite linear;
     display: inline-block;
     white-space: nowrap;
   }
 
-  .text-notification__text--shake {
+  #shopify-section-{{ section.id }} .text-notification__text--shake {
     animation: shake 0.5s infinite;
   }
 
-  .text-notification__slide {
-    height: auto;
-  }
-
-  .text-notification__content {
+  #shopify-section-{{ section.id }} .text-notification__content {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -516,12 +510,12 @@
 
   /* 响应式设计 */
   @media (max-width: 767px) {
-    .text-notification {
+    #shopify-section-{{ section.id }} .text-notification {
       font-size: calc({{ section.settings.font_size }} * 0.9)px;
       padding: calc({{ section.settings.padding }} * 0.8);
     }
 
-    .text-notification__text {
+    #shopify-section-{{ section.id }} .text-notification__text {
       font-size: inherit;
       white-space: normal;
       overflow: visible;
@@ -529,20 +523,20 @@
       line-height: 1.4;
     }
 
-    .text-notification__container {
+    #shopify-section-{{ section.id }} .text-notification__container {
       height: auto;
       min-height: {{ section.settings.height }}px;
       padding: 0;
       max-width: 100% !important; /* 移动端全宽显示 */
     }
 
-    .text-notification__slide__container {
+    #shopify-section-{{ section.id }} .text-notification__slide__container {
       padding: 0 30px; /* 移动端为箭头留出空间 */
     }
 
     /* 确保在小屏幕上内容不会溢出 */
-    .text-notification__link,
-    .text-notification__content {
+    #shopify-section-{{ section.id }} .text-notification__link,
+    #shopify-section-{{ section.id }} .text-notification__content {
       padding: 5px 0;
       height: auto;
       min-height: {{ section.settings.height }}px;
@@ -550,18 +544,18 @@
   }
 
   @media (max-width: 480px) {
-    .text-notification {
+    #shopify-section-{{ section.id }} .text-notification {
       font-size: calc({{ section.settings.font_size }} * 0.8)px;
       padding: calc({{ section.settings.padding }} * 0.6);
     }
 
-    .text-notification__text--slide {
+    #shopify-section-{{ section.id }} .text-notification__text--slide {
       animation: none;
       white-space: normal;
       transform: none;
     }
 
-    .text-notification__timer {
+    #shopify-section-{{ section.id }} .text-notification__timer {
       display: inline-block;
       margin-left: 0;
       margin-top: 8px;
@@ -573,7 +567,7 @@
     }
 
     /* 按钮样式 */
-    .text-notification__button {
+    #shopify-section-{{ section.id }} .text-notification__button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -591,13 +585,13 @@
     }
 
     /* 移动端允许内容换行，确保显示完整 */
-    .text-notification__content {
+    #shopify-section-{{ section.id }} .text-notification__content {
       flex-direction: column;
       gap: 0;
     }
 
     /* 移动端文字样式优化 */
-    .text-notification__text {
+    #shopify-section-{{ section.id }} .text-notification__text {
       font-size: calc({{ section.settings.font_size }} * 0.9)px;
       text-align: center;
       white-space: normal;
@@ -605,14 +599,14 @@
       text-overflow: unset;
     }
 
-    .text-notification__button:hover {
+    #shopify-section-{{ section.id }} .text-notification__button:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     /* 使通知内容和按钮垂直排列 */
-    .text-notification__content,
-    .text-notification__link {
+    #shopify-section-{{ section.id }} .text-notification__content,
+    #shopify-section-{{ section.id }} .text-notification__link {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -620,127 +614,129 @@
     }
 
     /* 确保通知文本具有适当的灵活性 */
-    .text-notification__text {
+    #shopify-section-{{ section.id }} .text-notification__text {
       flex: 1;
       min-width: 0; /* 允许文本在空间不足时换行 */
     }
   }
 
   @media (max-width: 360px) {
-    .countdown__timer {
+    #shopify-section-{{ section.id }} .countdown__timer {
       flex-wrap: wrap;
       justify-content: flex-start;
       gap: 4px;
       padding-top: 0 !important;
     }
 
-    .countdown__item {
+    #shopify-section-{{ section.id }} .countdown__item {
       flex: 1 1 45%;
       min-width: 120px;
     }
 
-    .countdown__item p {
+    #shopify-section-{{ section.id }} .countdown__item p {
       gap: 0.1rem;
     }
 
-    .countdown__item p span.number {
+    #shopify-section-{{ section.id }} .countdown__item p span.number {
       width: 22px;
       font-size: 16px;
     }
   }
 
-    /* 在移动设备上优化显示 */
-    @media (max-width: 767px) {
-      .text-notification__content,
-      .text-notification__link {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .text-notification__text {
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        text-align: center;
-      }
-
-      /* 确保倒计时组件在移动端也垂直排列 */
-      .countdown__timer {
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-        padding-top: 0 !important;
-      }
-
-      /* 确保倒计时项也垂直排列 */
-      .countdown__item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      /* 确保按钮在移动端居中显示 */
-      .text-notification__button {
-        margin-left: 0;
-        margin-top: 8px;
-      }
+  /* 在移动设备上优化显示 */
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} .text-notification__content,
+    #shopify-section-{{ section.id }} .text-notification__link {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    .countdown__timer {
-        display: flex;
-        /* 橙色背景 */
-        align-items: center;
-        gap: 3px;
-        padding-top: 1.6rem;
+    #shopify-section-{{ section.id }} .text-notification__text {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      text-align: center;
     }
 
-    .countdown__item span:last-child {
-        display: flex;
-        justify-content: center;
-        color: #fff;
+    /* 确保倒计时组件在移动端也垂直排列 */
+    #shopify-section-{{ section.id }} .countdown__timer {
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      padding-top: 0 !important;
     }
 
-    .countdown-condensed .countdown__item {
-        position: relative;
-        gap: 0.25rem;
+    /* 确保倒计时项也垂直排列 */
+    #shopify-section-{{ section.id }} .countdown__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .countdown__item p {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        line-height: 1;
-        white-space: nowrap;
-        gap: 0.25rem;
-        color: #ffffff;
-        margin: 0;
+    /* 确保按钮在移动端居中显示 */
+    #shopify-section-{{ section.id }} .text-notification__button {
+      margin-left: 0;
+      margin-top: 8px;
     }
+  }
 
-    .countdown__item p span.number {
-        width: 26px;
-        height: 34px;
-        font-size: 22px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #ffffff;
-        border-radius: 5px;
-    }
+  #shopify-section-{{ section.id }} .countdown__timer {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding-top: 1.6rem;
+  }
 
-    .countdown__item p span svg {
-        position: absolute;
-        width: 25px;
-    }
+  #shopify-section-{{ section.id }} .countdown__item span:last-child {
+    display: flex;
+    justify-content: center;
+    color: #fff;
+  }
 
-    .countdown__item:last-child::before {
-        display: none;
-    }
+  #shopify-section-{{ section.id }} .countdown-condensed .countdown__item {
+    position: relative;
+    gap: 0.25rem;
+  }
+
+  #shopify-section-{{ section.id }} .countdown__item p {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    white-space: nowrap;
+    gap: 0.25rem;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .countdown__item p span.number {
+    width: 26px;
+    height: 34px;
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 5px;
+  }
+
+  #shopify-section-{{ section.id }} .countdown__item p span svg {
+    position: absolute;
+    width: 25px;
+  }
+
+  #shopify-section-{{ section.id }} .countdown__item:last-child::before {
+    display: none;
+  }
 {%- endstyle -%}
-
-<!-- 文字通知栏组件 - 优化版 -->
-<section class="text-notification" data-section-type="text-notification">
+<!-- 文字通知栏组件 - 多实例安全版 -->
+<section
+  class="text-notification"
+  data-section-type="text-notification"
+  data-section-id="{{ section.id }}"
+>
   <!-- 语言选择器 - 左侧 -->
   {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
     <div class="text-notification__language-wrapper">
@@ -749,15 +745,18 @@
         {{ 'icon-map-pin.svg' | inline_asset_content }}
       </span>
       <localization-form>
-        {%- form 'localization', id: 'TextNotificationLanguageForm', class: 'localization-form' -%}
+        {%- form 'localization', class: 'localization-form' -%}
           <div>
-            <h2 class="visually-hidden" id="TextNotificationLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+            <h2 class="visually-hidden">
+              {{ 'localization.language_label' | t }}
+            </h2>
             {%- render 'language-localization', localPosition: 'TextNotificationLanguage' -%}
           </div>
         {%- endform -%}
       </localization-form>
     </div>
   {%- endif -%}
+
   <!-- 正常显示内容 -->
   <div class="text-notification__container" data-notification-slide>
     <!-- 仅当有多个通知项时显示箭头按钮 -->
@@ -783,6 +782,7 @@
         </svg>
       </button>
     {% endif %}
+
     <div
       class="text-notification__slides"
       data-notification-slides
@@ -790,7 +790,7 @@
       data-animation-speed="{{ section.settings.animation_speed }}"
     >
       {% for block in section.blocks %}
-        <div class="text-notification__slide">
+        <div class="text-notification__slide" {{ block.shopify_attributes }}>
           {% if block.settings.link != blank %}
             <a
               href="{{ block.settings.link }}"
@@ -843,7 +843,6 @@
                     </svg>
                   </span>
                   <span>:</span>
-                  <!-- 添加冒号 -->
                 </p>
                 <span>DAYS</span>
               </div>
@@ -866,7 +865,6 @@
                     </svg>
                   </span>
                   <span>:</span>
-                  <!-- 添加冒号 -->
                 </p>
                 <span>HOURS</span>
               </div>
@@ -889,7 +887,6 @@
                     </svg>
                   </span>
                   <span>:</span>
-                  <!-- 添加冒号 -->
                 </p>
                 <span>MINS</span>
               </div>
@@ -963,60 +960,48 @@
 </section>
 
 {%- javascript -%}
-  document.addEventListener('DOMContentLoaded', function () {
-    // 创建清理函数集合，用于统一管理和清理所有资源
+  // 初始化单个通知 Section
+  function initTextNotificationSection(sectionEl) {
+    if (!sectionEl) return;
+
     const cleanupFunctions = [];
 
-    // 垂直滚动功能
-    // 获取包含箭头和轮播内容的容器
-    const slideContainer = document.querySelector('[data-notification-slide]');
-    // 获取轮播内容容器
-    const slidesContainer = slideContainer ? slideContainer.querySelector('.text-notification__slides') : null;
+    const slideContainer = sectionEl.querySelector('[data-notification-slide]');
+    const slidesContainer = slideContainer
+      ? slideContainer.querySelector('.text-notification__slides')
+      : null;
+
+    // ---------------------
+    // 轮播初始化（按实例）
+    // ---------------------
     if (slidesContainer) {
-      const slides = Array.from(slidesContainer.querySelectorAll('.text-notification__slide'));
-      // 确保至少有一个slide
+      const slides = Array.from(
+        slidesContainer.querySelectorAll('.text-notification__slide')
+      );
+
       if (slides.length > 0) {
-        // 使用自适应高度，不再设置固定高度
-        let slideHeight = 0;
-
-        // 使用配置的动画速度
-        const animationSpeed = parseInt(slidesContainer.dataset.animationSpeed || '3', 10) * 1000;
         let currentSlide = 0;
-        let autoScrollInterval;
-        let leftArrowClickHandler;
-        let rightArrowClickHandler;
+        let autoScrollInterval = null;
+        let isElementVisible = true;
+        const animationSpeed =
+          parseInt(slidesContainer.dataset.animationSpeed || '3', 10) * 1000;
 
-        // 重要：设置容器的基础样式
+        // 布局基础样式
         slidesContainer.style.position = 'relative';
         slidesContainer.style.height = 'auto';
         slidesContainer.style.overflow = 'hidden';
         slidesContainer.style.display = 'block';
 
-        // 重置所有slide的样式，确保它们正确叠加
         slides.forEach((slide, index) => {
-          // 保留重要的内联样式
-          const preservedStyles = {
-            backgroundColor: slide.style.backgroundColor,
-            backgroundImage: slide.style.backgroundImage,
-            backgroundRepeat: slide.style.backgroundRepeat,
-            backgroundPosition: slide.style.backgroundPosition,
-          };
-
-          // 不要完全清除所有内联样式，只设置必要的布局样式
-
-          // 设置必要的布局样式，但保留用户定义的其他样式
           slide.style.position = 'absolute';
           slide.style.top = '0';
           slide.style.left = '0';
           slide.style.width = '100%';
-          // 使用auto高度让内容决定高度
           slide.style.height = 'auto';
           slide.style.boxSizing = 'border-box';
-          // 保留现有的display设置
           if (!slide.style.display || slide.style.display === 'none') {
             slide.style.display = 'flex';
           }
-          // 保留现有的对齐设置
           if (!slide.style.justifyContent) {
             slide.style.justifyContent = 'center';
           }
@@ -1024,315 +1009,272 @@
             slide.style.alignItems = 'center';
           }
 
-          // 初始位置：第一个显示，其余在下方
-          slide.style.transform = `translateY(${index === 0 ? 0 : '100%'}px)`;
+          slide.style.transform = `translateY(${index === 0 ? '0' : '100%'})`;
         });
 
-        // 计算所有幻灯片的高度，找出最高的幻灯片高度
-          function calculateMaxSlideHeight() {
-            let maxHeight = 0;
-            
-            // 移除所有幻灯片的transform，以便正确测量高度
-            const tempTransforms = slides.map(slide => slide.style.transform);
-            slides.forEach(slide => {
-              slide.style.transform = 'none';
-              slide.style.position = 'static';
-            });
-            
-            // 测量每个幻灯片的实际高度
-            slides.forEach(slide => {
-              const slideHeight = slide.offsetHeight;
-              if (slideHeight > maxHeight) {
-                maxHeight = slideHeight;
-              }
-            });
-            
-            // 恢复所有幻灯片的transform和position
-            slides.forEach((slide, index) => {
-              slide.style.position = 'absolute';
-              slide.style.transform = tempTransforms[index];
-            });
-            
-            return maxHeight;
-          }
+        // 计算当前 section 的最大 slide 高度
+        function calculateMaxSlideHeight() {
+          let maxHeight = 0;
+          const tempTransforms = slides.map((slide) => slide.style.transform);
+          const tempPositions = slides.map((slide) => slide.style.position);
 
-          // 初始化时计算最高幻灯片高度并固定容器高度
-          const maxSlideHeight = calculateMaxSlideHeight();
-          
-          // 设置容器高度为最高幻灯片高度
-          slidesContainer.style.height = maxSlideHeight + 'px';
-          
-          // 更新所有幻灯片的min-height，确保内容居中显示
-          slides.forEach(slide => {
-            slide.style.minHeight = maxSlideHeight + 'px';
+          slides.forEach((slide) => {
+            slide.style.transform = 'none';
+            slide.style.position = 'static';
           });
 
-          // 更新容器高度的函数 - 现在只在初始化时调用一次
-          function updateContainerHeight() {
-            // 容器高度已经固定为最高幻灯片高度，不再动态改变
-            // 这里保留函数，确保现有代码逻辑继续工作
-          }
+          slides.forEach((slide) => {
+            const h = slide.offsetHeight;
+            if (h > maxHeight) {
+              maxHeight = h;
+            }
+          });
 
-          // 初始化时调用一次，设置最高高度
-          updateContainerHeight();
+          slides.forEach((slide, index) => {
+            slide.style.position = tempPositions[index];
+            slide.style.transform = tempTransforms[index];
+          });
 
-        // 滚动到指定slide的函数 - 优化版
+          return maxHeight;
+        }
+
+        const maxSlideHeight = calculateMaxSlideHeight();
+        slidesContainer.style.height = maxSlideHeight + 'px';
+        slides.forEach((slide) => {
+          slide.style.minHeight = maxSlideHeight + 'px';
+        });
+
         function goToSlide(index) {
-          console.log('goToSlide', index);
-          // 隐藏当前slide
-          slides[currentSlide].style.transition = 'transform 0.5s ease-in-out';
-          slides[currentSlide].style.transform = 'translateY(-100%)';
+          if (index === currentSlide) return;
+          const oldSlide = slides[currentSlide];
+          const newSlide = slides[index];
 
-          // 设置新的当前slide索引
+          oldSlide.style.transition = 'transform 0.5s ease-in-out';
+          oldSlide.style.transform = 'translateY(-100%)';
+
           currentSlide = index;
 
-          // 显示目标slide
-          slides[currentSlide].style.transition = 'none'; // 先无过渡定位
-          slides[currentSlide].style.transform = 'translateY(100%)';
-
-          // 强制重排
-          void slides[currentSlide].offsetWidth;
-
-          // 添加过渡并移动到位
-          slides[currentSlide].style.transition = 'transform 0.5s ease-in-out';
-          slides[currentSlide].style.transform = 'translateY(0)';
-
-          // 当用户通过箭头按钮切换slide时重置计时器
-          // 但避免在自动滚动调用时重置，防止循环重置
+          newSlide.style.transition = 'none';
+          newSlide.style.transform = 'translateY(100%)';
+          void newSlide.offsetWidth; // 强制重排
+          newSlide.style.transition = 'transform 0.5s ease-in-out';
+          newSlide.style.transform = 'translateY(0)';
         }
 
-        // 自动滚动函数 - 确保在多条通知时正常工作
         function autoScroll() {
-          // 确保在DOM中仍然存在slides且有至少两条通知
-          if (slides.length > 1 && document.body.contains(slidesContainer)) {
-            // 使用requestAnimationFrame确保平滑滚动
-            requestAnimationFrame(() => {
-              goToSlide((currentSlide + 1) % slides.length);
-            });
-          }
+          if (slides.length <= 1) return;
+          if (!document.body.contains(slidesContainer)) return;
+          const next = (currentSlide + 1) % slides.length;
+          goToSlide(next);
         }
 
-        // 优化的重置自动滚动函数
         function resetAutoScroll() {
-          // 只有在有多个幻灯片时才设置自动滚动
-          if (slides.length <= 1) {
-            return;
-          }
-
-          // 清除现有的定时器
+          if (slides.length <= 1) return;
           if (autoScrollInterval) {
             clearInterval(autoScrollInterval);
             autoScrollInterval = null;
           }
-
-          // 只有在元素仍在DOM中时才启动自动滚动
-          if (document.body.contains(slidesContainer)) {
-            // 创建新的定时器
-            autoScrollInterval = setInterval(() => {
-              // 检查元素是否可见，只有可见时才执行滚动
-              if (isElementVisible) {
-                // 使用requestAnimationFrame确保平滑滚动
-                requestAnimationFrame(autoScroll);
-              }
-            }, animationSpeed);
+          if (document.body.contains(slidesContainer) && isElementVisible) {
+            autoScrollInterval = setInterval(autoScroll, animationSpeed);
           }
         }
 
-        // 确保只添加一次清理函数到数组
+        // 初始自动滚动
+        if (slides.length > 1) {
+          setTimeout(() => {
+            if (document.body.contains(slidesContainer)) {
+              resetAutoScroll();
+            }
+          }, 200);
+        }
+
         cleanupFunctions.push(() => {
           if (autoScrollInterval) {
             clearInterval(autoScrollInterval);
-            autoScrollInterval = null;
           }
         });
-        // 初始化当前slide索引
-        // 立即初始化自动滚动（在DOMContentLoaded中）
-        if (slides.length > 1) {
-          // 确保DOM完全渲染
-          setTimeout(() => {
-            if (document.body.contains(slidesContainer)) {
-              // 自动滚动初始化
-              resetAutoScroll();
-            }
-          }, 200); // 增加延迟以确保DOM完全渲染
-        }
 
-        // 箭头按钮功能 - 从slideContainer中查找
-        const leftArrow = slideContainer ? slideContainer.querySelector('.text-notification__arrow--left') : null;
-        const rightArrow = slideContainer ? slideContainer.querySelector('.text-notification__arrow--right') : null;
+        // 箭头按钮（只在当前 section 内查找）
+        const leftArrow = slideContainer
+          ? slideContainer.querySelector('.text-notification__arrow--left')
+          : null;
+        const rightArrow = slideContainer
+          ? slideContainer.querySelector('.text-notification__arrow--right')
+          : null;
 
         if (leftArrow && rightArrow) {
-          // 左箭头点击事件 - 上一个通知
-          leftArrowClickHandler = function () {
-            const prevSlide = (currentSlide - 1 + slides.length) % slides.length;
-            goToSlide(prevSlide);
-            // 用户交互后重置自动滚动计时器
+          const onLeftClick = () => {
+            const prev = (currentSlide - 1 + slides.length) % slides.length;
+            goToSlide(prev);
             resetAutoScroll();
           };
-          leftArrow.addEventListener('click', leftArrowClickHandler);
-
-          // 右箭头点击事件 - 下一个通知
-          rightArrowClickHandler = function () {
-            const nextSlide = (currentSlide + 1) % slides.length;
-            goToSlide(nextSlide);
-            // 用户交互后重置自动滚动计时器
+          const onRightClick = () => {
+            const next = (currentSlide + 1) % slides.length;
+            goToSlide(next);
             resetAutoScroll();
           };
-          rightArrow.addEventListener('click', rightArrowClickHandler);
 
-          // 添加事件监听器清理函数
+          leftArrow.addEventListener('click', onLeftClick);
+          rightArrow.addEventListener('click', onRightClick);
+
           cleanupFunctions.push(() => {
-            leftArrow.removeEventListener('click', leftArrowClickHandler);
-            rightArrow.removeEventListener('click', rightArrowClickHandler);
+            leftArrow.removeEventListener('click', onLeftClick);
+            rightArrow.removeEventListener('click', onRightClick);
           });
         }
 
-        // 触摸滑动支持，便于移动端操作
+        // 触摸滑动（当前 section）
         if ('ontouchstart' in window && slides.length > 1 && slideContainer) {
           let touchStartY = null;
           let touchDeltaY = 0;
-          const touchThreshold = 30;
+          const threshold = 30;
 
-          const handleTouchStart = (event) => {
-            if (!event.touches || event.touches.length === 0) {
-              return;
-            }
+          const onTouchStart = (event) => {
+            if (!event.touches || event.touches.length === 0) return;
             touchStartY = event.touches[0].clientY;
             touchDeltaY = 0;
           };
-
-          const handleTouchMove = (event) => {
-            if (touchStartY === null || !event.touches || event.touches.length === 0) {
-              return;
-            }
+          const onTouchMove = (event) => {
+            if (touchStartY === null || !event.touches || event.touches.length === 0) return;
             touchDeltaY = event.touches[0].clientY - touchStartY;
           };
-
-          const handleTouchEnd = () => {
-            if (touchStartY === null) {
-              return;
-            }
-
-            if (Math.abs(touchDeltaY) > touchThreshold) {
+          const onTouchEnd = () => {
+            if (touchStartY === null) return;
+            if (Math.abs(touchDeltaY) > threshold) {
               if (touchDeltaY > 0) {
-                const prevSlide = (currentSlide - 1 + slides.length) % slides.length;
-                goToSlide(prevSlide);
+                const prev = (currentSlide - 1 + slides.length) % slides.length;
+                goToSlide(prev);
               } else {
-                const nextSlide = (currentSlide + 1) % slides.length;
-                goToSlide(nextSlide);
+                const next = (currentSlide + 1) % slides.length;
+                goToSlide(next);
               }
               resetAutoScroll();
             }
-
             touchStartY = null;
             touchDeltaY = 0;
           };
 
-          slideContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
-          slideContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-          slideContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+          slideContainer.addEventListener('touchstart', onTouchStart, { passive: true });
+          slideContainer.addEventListener('touchmove', onTouchMove, { passive: true });
+          slideContainer.addEventListener('touchend', onTouchEnd, { passive: true });
 
           cleanupFunctions.push(() => {
-            slideContainer.removeEventListener('touchstart', handleTouchStart);
-            slideContainer.removeEventListener('touchmove', handleTouchMove);
-            slideContainer.removeEventListener('touchend', handleTouchEnd);
+            slideContainer.removeEventListener('touchstart', onTouchStart);
+            slideContainer.removeEventListener('touchmove', onTouchMove);
+            slideContainer.removeEventListener('touchend', onTouchEnd);
           });
         }
 
-        // 添加自动滚动定时器清理函数
-        cleanupFunctions.push(() => {
-          if (autoScrollInterval) {
-            clearInterval(autoScrollInterval);
-            autoScrollInterval = null;
-          }
-        });
-
-        // 已经在DOMContentLoaded中初始化了自动滚动，这里不再重复初始化
-
-        // 添加IntersectionObserver检测元素可见性
-        let isElementVisible = false;
-        let visibilityObserver;
-
-        function setupVisibilityObserver() {
-          if ('IntersectionObserver' in window) {
-            visibilityObserver = new IntersectionObserver(
-              (entries) => {
-                entries.forEach((entry) => {
-                  isElementVisible = entry.isIntersecting;
-                  if (isElementVisible && slides.length > 1) {
-                    resetAutoScroll(); // 可见时启动自动滚动
-                  } else {
-                    // 不可见时暂停自动滚动
-                    if (autoScrollInterval) {
-                      clearInterval(autoScrollInterval);
-                      autoScrollInterval = null;
-                    }
-                  }
-                });
-              },
-              { threshold: 0.1 } // 当10%的元素可见时触发
-            );
-            visibilityObserver.observe(slideContainer);
-
-            // 添加观察者清理函数
-            cleanupFunctions.push(() => {
-              visibilityObserver.disconnect();
-            });
-          }
-        }
-
-        // 初始化可见性检测
-        setupVisibilityObserver();
-
-        // 添加Resize事件处理，重新计算最高幻灯片高度并固定容器高度
-          function handleResize() {
-            if (slides.length > 0) {
-              // 保存当前slide索引
-              const currentSlideIndex = currentSlide;
-
-              // 重新计算最高幻灯片高度
-              const newMaxHeight = calculateMaxSlideHeight();
-              
-              // 更新容器高度
-              slidesContainer.style.height = newMaxHeight + 'px';
-              
-              // 更新所有幻灯片的min-height
-              slides.forEach(slide => {
-                slide.style.minHeight = newMaxHeight + 'px';
-              });
-
-              // 重新定位所有slide
-              slides.forEach((slide, index) => {
-                if (index === currentSlideIndex) {
-                  slide.style.transform = 'translateY(0)';
+        // IntersectionObserver 控制当前 section 是否可见
+        if ('IntersectionObserver' in window && slideContainer) {
+          const visibilityObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                isElementVisible = entry.isIntersecting;
+                if (isElementVisible) {
+                  resetAutoScroll();
                 } else {
-                  slide.style.transform = 'translateY(100%)';
+                  if (autoScrollInterval) {
+                    clearInterval(autoScrollInterval);
+                    autoScrollInterval = null;
+                  }
                 }
               });
-            }
-          }
+            },
+            { threshold: 0.1 }
+          );
 
-        // 添加resize事件监听
-        window.addEventListener('resize', handleResize, { passive: true });
+          visibilityObserver.observe(slideContainer);
 
-        // 添加resize事件监听器清理函数
+          cleanupFunctions.push(() => {
+            visibilityObserver.disconnect();
+          });
+        }
+
+        // 宽度变化时重新计算高度（当前 section）
+        const onResize = () => {
+          if (!document.body.contains(slidesContainer)) return;
+          const newMax = calculateMaxSlideHeight();
+          slidesContainer.style.height = newMax + 'px';
+          slides.forEach((slide) => {
+            slide.style.minHeight = newMax + 'px';
+          });
+          slides.forEach((slide, index) => {
+            slide.style.transform = index === currentSlide ? 'translateY(0)' : 'translateY(100%)';
+          });
+        };
+
+        window.addEventListener('resize', onResize, { passive: true });
         cleanupFunctions.push(() => {
-          window.removeEventListener('resize', handleResize);
+          window.removeEventListener('resize', onResize);
+        });
+
+        // 当该 section 从 DOM 中移除时，自动清理
+        if (typeof MutationObserver !== 'undefined') {
+          const domObserver = new MutationObserver(() => {
+            if (!document.body.contains(sectionEl)) {
+              cleanupAllResources();
+              domObserver.disconnect();
+            }
+          });
+
+          domObserver.observe(document.body, {
+            childList: true,
+            subtree: true,
+          });
+
+          cleanupFunctions.push(() => domObserver.disconnect());
+        }
+
+        function cleanupAllResources() {
+          cleanupFunctions.forEach((fn) => {
+            try {
+              fn();
+            } catch (e) {}
+          });
+          cleanupFunctions.length = 0;
+        }
+
+        // designMode 下 section 卸载时清理
+        if (window.Shopify && window.Shopify.designMode) {
+          const onSectionUnload = (event) => {
+            if (event.detail && event.detail.sectionId === sectionEl.dataset.sectionId) {
+              cleanupAllResources();
+              document.removeEventListener('shopify:section:unload', onSectionUnload);
+            }
+          };
+          document.addEventListener('shopify:section:unload', onSectionUnload);
+
+          cleanupFunctions.push(() => {
+            document.removeEventListener('shopify:section:unload', onSectionUnload);
+          });
+        }
+
+        // 页面卸载时清理
+        const onBeforeUnload = () => {
+          cleanupAllResources();
+          window.removeEventListener('beforeunload', onBeforeUnload);
+        };
+        window.addEventListener('beforeunload', onBeforeUnload);
+        cleanupFunctions.push(() => {
+          window.removeEventListener('beforeunload', onBeforeUnload);
         });
       }
     }
 
-    // 根据 data-expires 属性动态更新倒计时（不改动原有样式）
+    // ---------------------
+    // 倒计时初始化（按实例）
+    // ---------------------
     function initializeExpiresCountdowns() {
-      const timers = document.querySelectorAll('countdown-timer[data-expires]');
+      const timers = sectionEl.querySelectorAll('countdown-timer[data-expires]');
+      const TEXT_NODE = typeof Node !== 'undefined' ? Node.TEXT_NODE : 3;
 
       timers.forEach((timer) => {
-        if (timer.dataset.countdownInitialized === 'true') {
-          return;
-        }
+        if (timer.dataset.countdownInitialized === 'true') return;
         timer.dataset.countdownInitialized = 'true';
 
-        const expiresAttr = timer.dataset.expires || timer.getAttribute('data-expires');
+        const expiresAttr =
+          timer.dataset.expires || timer.getAttribute('data-expires');
         let expiresAt = Date.parse(expiresAttr);
 
         if (Number.isNaN(expiresAt)) {
@@ -1342,26 +1284,20 @@
         }
 
         const unitDigitsMap = {};
-        timer.querySelectorAll('.countdown__item[data-countdown-unit]').forEach((item) => {
-          const unit = item.dataset.countdownUnit;
-          if (!unit) {
-            return;
-          }
-          const digits = Array.from(item.querySelectorAll('.number'));
-          if (digits.length === 0) {
-            return;
-          }
-          unitDigitsMap[unit] = digits;
-        });
-
-        const TEXT_NODE = typeof Node !== 'undefined' ? Node.TEXT_NODE : 3;
+        timer
+          .querySelectorAll('.countdown__item[data-countdown-unit]')
+          .forEach((item) => {
+            const unit = item.dataset.countdownUnit;
+            if (!unit) return;
+            const digits = Array.from(item.querySelectorAll('.number'));
+            if (!digits.length) return;
+            unitDigitsMap[unit] = digits;
+          });
 
         const ensureTextNode = (element) => {
           const nodes = Array.from(element.childNodes);
           const textNode = nodes.find((child) => child.nodeType === TEXT_NODE);
-          if (textNode) {
-            return textNode;
-          }
+          if (textNode) return textNode;
           const created = document.createTextNode('');
           element.insertBefore(created, element.firstChild);
           return created;
@@ -1369,15 +1305,13 @@
 
         const updateDigits = (unit, value) => {
           const digitNodes = unitDigitsMap[unit];
-          if (!digitNodes || digitNodes.length === 0) {
-            return;
-          }
-          const paddedValue = value
+          if (!digitNodes || !digitNodes.length) return;
+          const padded = value
             .toString()
             .padStart(digitNodes.length, '0')
             .slice(-digitNodes.length);
           digitNodes.forEach((digitNode, index) => {
-            const char = paddedValue.charAt(index) || '0';
+            const char = padded.charAt(index) || '0';
             ensureTextNode(digitNode).textContent = char;
           });
         };
@@ -1390,7 +1324,6 @@
         const updateCountdown = () => {
           const now = Date.now();
           let distance = expiresAt - now;
-
           if (distance <= 0) {
             distance = 0;
           }
@@ -1414,190 +1347,149 @@
         intervalId = setInterval(updateCountdown, 1000);
 
         cleanupFunctions.push(() => {
-          if (intervalId) {
-            clearInterval(intervalId);
-          }
+          if (intervalId) clearInterval(intervalId);
           delete timer.dataset.countdownInitialized;
         });
       });
     }
 
-    // 初始化倒计时
     initializeExpiresCountdowns();
 
-    // 确保语言选择器正常工作
+    // ---------------------
+    // 语言选择器定位（按实例）
+    // ---------------------
     function ensureLanguageSelectorWorks() {
-      const languageForm = document.querySelector('#TextNotificationLanguageForm');
-      if (languageForm) {
-        const localizationForm = languageForm.closest('localization-form');
-        if (localizationForm) {
-          const button = localizationForm.querySelector('button.localization-form__select');
-          if (button) {
-            // 确保按钮可点击
-            button.style.pointerEvents = 'auto';
-            button.style.cursor = 'pointer';
-            
-            // 确保下拉菜单的定位正确
-            const panel = localizationForm.querySelector('.disclosure__list-wrapper');
-            if (panel) {
-              // 计算语言选择器容器位置并设置下拉菜单位置
-              function updatePanelPosition() {
-                if (!panel.hasAttribute('hidden')) {
-                  // 获取整个语言选择器容器的位置（包括地图图标和文字）
-                  const languageWrapper = button.closest('.text-notification__language-wrapper');
-                  const wrapperRect = languageWrapper ? languageWrapper.getBoundingClientRect() : button.getBoundingClientRect();
-                  
-                  // 强制显示
-                  panel.removeAttribute('hidden');
-                  panel.style.position = 'absolute';
-                  // 在语言选择器容器正下方显示，紧贴底部，添加4px间距
-                  panel.style.top = wrapperRect.height + 'px';
-                  panel.style.left = wrapperRect.left + 'px';
-                  panel.style.zIndex = '10001';
-                  panel.style.setProperty('display', 'block', 'important');
-                  panel.style.visibility = 'visible';
-                  panel.style.opacity = '1';
-                  panel.style.height = 'auto';
-                  panel.style.minHeight = 'auto';
-                  panel.style.maxHeight = 'none';
-                  panel.style.width = 'auto';
-                  panel.style.overflow = 'visible';
-                  
-                  // 确保内容可见
-                  const list = panel.querySelector('.disclosure__list');
-                  if (list) {
-                    list.style.display = 'block';
-                    list.style.visibility = 'visible';
-                  }
-                }
-              }
-              
-              // 监听 hidden 属性变化
-              const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                  if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
-                    if (panel.hasAttribute('hidden')) {
-                      panel.style.display = 'none';
-                      panel.style.visibility = 'hidden';
-                    } else {
-                      // 延迟更新位置，确保按钮位置已更新
-                      setTimeout(function() {
-                        updatePanelPosition();
-                        // 再次确保显示
-                        requestAnimationFrame(function() {
-                          updatePanelPosition();
-                        });
-                      }, 10);
-                    }
-                  }
-                });
-              });
-              observer.observe(panel, {
-                attributes: true,
-                attributeFilter: ['hidden']
-              });
-              
-              // 也监听按钮的点击事件，确保下拉菜单显示
-              button.addEventListener('click', function() {
-                setTimeout(function() {
-                  if (!panel.hasAttribute('hidden')) {
-                    updatePanelPosition();
-                  }
-                }, 50);
-              });
-              
-              // 监听窗口滚动和调整大小
-              const updateOnScroll = function() {
-                if (!panel.hasAttribute('hidden')) {
-                  updatePanelPosition();
-                }
-              };
-              window.addEventListener('scroll', updateOnScroll, { passive: true });
-              window.addEventListener('resize', updateOnScroll, { passive: true });
-              
-              cleanupFunctions.push(() => {
-                observer.disconnect();
-                window.removeEventListener('scroll', updateOnScroll);
-                window.removeEventListener('resize', updateOnScroll);
-              });
-            }
+      const languageWrapper = sectionEl.querySelector(
+        '.text-notification__language-wrapper'
+      );
+      if (!languageWrapper) return;
 
-            // 添加点击事件监听器（如果组件还没有初始化）
-            if (!button.hasAttribute('data-listener-added')) {
-              button.addEventListener('click', function(e) {
-                // 确保事件不被阻止
-                e.stopPropagation();
-              });
-              button.setAttribute('data-listener-added', 'true');
-            }
-          }
+      const languageForm = languageWrapper.querySelector('.localization-form');
+      if (!languageForm) return;
+
+      const localizationForm = languageForm.closest('localization-form');
+      if (!localizationForm) return;
+
+      const button = localizationForm.querySelector(
+        'button.localization-form__select'
+      );
+      const panel = localizationForm.querySelector('.disclosure__list-wrapper');
+
+      if (!button || !panel) return;
+
+      button.style.pointerEvents = 'auto';
+      button.style.cursor = 'pointer';
+
+      function updatePanelPosition() {
+        if (panel.hasAttribute('hidden')) return;
+
+        const wrapperRect = languageWrapper.getBoundingClientRect();
+
+        panel.style.position = 'absolute';
+        panel.style.top = wrapperRect.height + 'px';
+        panel.style.left = '0px';
+        panel.style.zIndex = '10001';
+        panel.style.display = 'block';
+        panel.style.visibility = 'visible';
+        panel.style.opacity = '1';
+        panel.style.height = 'auto';
+        panel.style.minHeight = 'auto';
+        panel.style.maxHeight = 'none';
+        panel.style.width = 'auto';
+        panel.style.overflow = 'visible';
+
+        const list = panel.querySelector('.disclosure__list');
+        if (list) {
+          list.style.display = 'block';
+          list.style.visibility = 'visible';
         }
       }
+
+      if (typeof MutationObserver !== 'undefined') {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (
+              mutation.type === 'attributes' &&
+              mutation.attributeName === 'hidden'
+            ) {
+              if (panel.hasAttribute('hidden')) {
+                panel.style.display = 'none';
+                panel.style.visibility = 'hidden';
+              } else {
+                setTimeout(() => {
+                  updatePanelPosition();
+                }, 10);
+              }
+            }
+          });
+        });
+
+        observer.observe(panel, {
+          attributes: true,
+          attributeFilter: ['hidden'],
+        });
+
+        cleanupFunctions.push(() => observer.disconnect());
+      }
+
+      const onButtonClick = () => {
+        setTimeout(() => {
+          if (!panel.hasAttribute('hidden')) {
+            updatePanelPosition();
+          }
+        }, 50);
+      };
+      button.addEventListener('click', onButtonClick);
+      cleanupFunctions.push(() => {
+        button.removeEventListener('click', onButtonClick);
+      });
+
+      const onScrollOrResize = () => {
+        if (!panel.hasAttribute('hidden')) {
+          updatePanelPosition();
+        }
+      };
+      window.addEventListener('scroll', onScrollOrResize, { passive: true });
+      window.addEventListener('resize', onScrollOrResize, { passive: true });
+      cleanupFunctions.push(() => {
+        window.removeEventListener('scroll', onScrollOrResize);
+        window.removeEventListener('resize', onScrollOrResize);
+      });
     }
 
-    // 延迟执行以确保组件已加载
+    // 延迟执行语言选择器定位，确保 DOM 就绪
     setTimeout(ensureLanguageSelectorWorks, 100);
     setTimeout(ensureLanguageSelectorWorks, 500);
-    
-    // 监听 DOM 变化，确保在动态加载时也能工作
+
     if (typeof MutationObserver !== 'undefined') {
-      const observer = new MutationObserver(function(mutations) {
+      const langObserver = new MutationObserver(() => {
         ensureLanguageSelectorWorks();
       });
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-      cleanupFunctions.push(() => observer.disconnect());
-    }
-
-    // 添加页面卸载清理，防止内存泄漏
-    function cleanupAllResources() {
-      // 执行所有注册的清理函数
-      cleanupFunctions.forEach((cleanup) => {
-        try {
-          cleanup();
-        } catch (error) {
-          // 静默处理错误
-        }
-      });
-
-      // 清空清理函数数组
-      cleanupFunctions.length = 0;
-    }
-
-    // 页面卸载时清理所有资源
-    window.addEventListener('beforeunload', cleanupAllResources);
-
-    // 在Shopify主题编辑器环境中，添加额外的清理机制
-    if (window.Shopify && window.Shopify.designMode) {
-      // 监听section卸载事件
-      document.addEventListener('shopify:section:unload', function (e) {
-        if (e.detail && e.detail.sectionId && document.querySelector(`[data-section-id="${e.detail.sectionId}"]`)) {
-          cleanupAllResources();
-        }
-      });
-    }
-
-    // 添加MutationObserver以检测DOM变化，当容器被移除时清理资源
-    if (slidesContainer) {
-      const observer = new MutationObserver(function (mutations) {
-        // 检查容器是否仍然在DOM中
-        if (!document.body.contains(slidesContainer)) {
-          cleanupAllResources();
-          observer.disconnect();
-        }
-      });
-
-      // 监视整个文档的变化
-      observer.observe(document.body, {
+      langObserver.observe(sectionEl, {
         childList: true,
         subtree: true,
       });
+      cleanupFunctions.push(() => langObserver.disconnect());
+    }
+  }
 
-      // 添加观察者清理函数
-      cleanupFunctions.push(() => {
-        observer.disconnect();
+  document.addEventListener('DOMContentLoaded', function () {
+    const sections = document.querySelectorAll(
+      '[data-section-type="text-notification"]'
+    );
+    sections.forEach((sectionEl) => {
+      initTextNotificationSection(sectionEl);
+    });
+
+    // designMode 下，当 section 被重新加载时重新初始化
+    if (window.Shopify && window.Shopify.designMode) {
+      document.addEventListener('shopify:section:load', function (event) {
+        const sectionEl = document.querySelector(
+          '[data-section-id="' + event.detail.sectionId + '"]'
+        );
+        if (sectionEl) {
+          initTextNotificationSection(sectionEl);
+        }
       });
     }
   });

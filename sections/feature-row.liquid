@@ -1,0 +1,86 @@
+{% schema %}
+{
+  "name": "zsh-Feature Row",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.feature_row.settings.layout.label",
+      "options": [
+        { "value": "image-left", "label": "t:sections.feature_row.settings.layout.options.image_left" },
+        { "value": "image-right", "label": "t:sections.feature_row.settings.layout.options.image_right" }
+      ],
+      "default": "image-left"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.feature_row.settings.image.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.feature_row.settings.heading.label",
+      "default": "Feature heading"
+    },
+    {
+      "type": "radio",
+      "id": "size",
+      "label": "test",
+      "options": [
+        { "value": "xs", "label": "xs" },
+        { "value": "s", "label": "s" }
+      ],
+      "default": "xs"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "t:sections.feature_row.blocks.text.name",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "t:sections.feature_row.blocks.text.settings.body.label",
+          "default": "Explain your feature here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "image_left",
+      "category": "zsh",
+      "settings": {
+        "layout": "image-left",
+        "heading": "Image on the left"
+      },
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "body": "Describe your feature with the image on the left and text on the right."
+          }
+        }
+      ]
+    },
+    {
+      "name": "image_right1",
+      "category": "zsh",
+      "settings": {
+        "layout": "image-right",
+        "heading": "Image on the right"
+      },
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "body": "Describe your feature with the image on the right and text on the left."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
