@@ -205,6 +205,32 @@
         "padding_top": 44,
         "padding_bottom": 36
       }
+    },
+    "176814019993b4b77c": {
+      "type": "apps",
+      "blocks": {
+        "linkly_discount_form_Pcph6U": {
+          "type": "shopify://apps/linkly/blocks/discount-form/a9b715c7-3cfc-4113-a206-e19dff3fa9fb",
+          "settings": {
+            "max_width": 1000,
+            "layout_direction": "horizontal",
+            "checkout_title": "026-1234567-1234560",
+            "checkout_description": "Reconnect Amazon Customers with loyalty discount, unlock future sales.",
+            "checkout_info_text": "Please do not share discount codes with others, each code can only be used once.",
+            "get_discount_pop_up_title": "Verified, please enter your email to obtain the discount code",
+            "discount_strength_text": "<p>Please specify the discount amount, scope of application, and validity period, such as</p>",
+            "privacy_policy_link": "",
+            "terms_of_use_link": "",
+            "redirect_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "linkly_discount_form_Pcph6U"
+      ],
+      "settings": {
+        "include_margins": true
+      }
     }
   },
   "order": [
@@ -213,6 +239,7 @@
     "featured_products_display_qPr7Cb",
     "hot_selling_addons_bk8FLd",
     "image_banner",
-    "featured_collection"
+    "featured_collection",
+    "176814019993b4b77c"
   ]
 }
