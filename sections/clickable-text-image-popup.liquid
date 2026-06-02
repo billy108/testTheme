@@ -2,10 +2,12 @@
   Section: 句子中某个单词点击弹出图片
   - 每个 block 表示一句话：前半句 + 可点击词 + 后半句
   - 只让中间的「关键词」可以点击，点击后弹出对应图片
-  - 可配置：上下内边距、字体、字号
+  - 每个句子支持：PC 图片 + 移动端图片
+  - 只上传其中一张时，PC 和移动端都用这一张
+  - Section 可配置：上下内边距、字体、字号
 {% endcomment %}
 
-{% liquid
+{%- liquid
   assign font_family_token = section.settings.font_family | default: 'theme_default'
 
   assign font_family_value = ''
@@ -19,7 +21,7 @@
     else
       assign font_family_value = ''
   endcase
-%}
+-%}
 
 <section
   id="inline-word-image-popup-{{ section.id }}"
@@ -45,12 +47,17 @@
         {% for block in section.blocks %}
           {% assign block_id = block.id | prepend: 'inline-word-popup-' %}
 
+          {%- assign has_any_image = false -%}
+          {%- if block.settings.image_desktop != blank or block.settings.image_mobile != blank -%}
+            {%- assign has_any_image = true -%}
+          {%- endif -%}
+
           <p class="inline-word-image-popup__sentence" {{ block.shopify_attributes }}>
             <span class="inline-word-image-popup__text inline-word-image-popup__text--before">
               {{ block.settings.text_before }}
             </span>
 
-            {% if block.settings.image != blank %}
+            {% if has_any_image %}
               <button
                 type="button"
                 class="inline-word-image-popup__keyword"
@@ -69,7 +76,7 @@
             </span>
           </p>
 
-          {% if block.settings.image != blank %}
+          {% if has_any_image %}
             <div
               id="{{ block_id }}"
               class="inline-word-image-popup__overlay"
@@ -92,12 +99,32 @@
                 ></button>
 
                 <div class="inline-word-image-popup__image-wrapper">
-                  {{
-                    block.settings.image
-                    | image_url: width: 900
-                    | image_tag: loading: 'lazy', class: 'inline-word-image-popup__image', alt: block.settings.alt_text
-                    | escape
-                  }}
+                  <picture class="inline-word-image-popup__picture">
+                    {%- if block.settings.image_mobile != blank -%}
+                      <source
+                        media="(max-width: 767px)"
+                        srcset="{{ block.settings.image_mobile | image_url: width: 900 }}"
+                      >
+                    {%- endif -%}
+
+                    {%- if block.settings.image_desktop != blank -%}
+                      <source
+                        media="(min-width: 768px)"
+                        srcset="{{ block.settings.image_desktop | image_url: width: 1200 }}"
+                      >
+                    {%- endif -%}
+
+                    {%- assign fallback_image = block.settings.image_desktop | default: block.settings.image_mobile -%}
+
+                    <img
+                      src="{{ fallback_image | image_url: width: 1000 }}"
+                      alt="{{ block.settings.alt_text | escape }}"
+                      loading="lazy"
+                      class="inline-word-image-popup__image"
+                      width="{{ fallback_image.width }}"
+                      height="{{ fallback_image.height }}"
+                    >
+                  </picture>
                 </div>
 
                 {% if block.settings.caption != blank %}
@@ -165,6 +192,7 @@
       display: flex;
     }
 
+    /* 透明灰色背景蒙层；注意内部有 span 避免 div:empty 被隐藏 */
     .inline-word-image-popup__overlay-backdrop {
       position: absolute;
       inset: 0;
@@ -203,6 +231,7 @@
       text-align: center;
     }
 
+    /* 美化右上角关闭按钮：小圆形 + 精细 X */
     .inline-word-image-popup__close {
       position: absolute;
       top: 4px;
@@ -210,24 +239,25 @@
       width: 12px;
       height: 12px;
       border: none;
-      border-radius: 999px; /* 圆形 */
-      background: rgba(0, 0, 0, 0.06); /* 淡灰背景 */
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.06);
       cursor: pointer;
       padding: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: background-color 0.15s ease, transform 0.12s ease;
+      transition:
+        background-color 0.15s ease,
+        transform 0.12s ease;
     }
 
-    /* 通过伪元素画一个更细、更精致的 X */
     .inline-word-image-popup__close::before,
     .inline-word-image-popup__close::after {
-      content: '';
+      content: "";
       position: absolute;
       width: 14px;
       height: 2px;
-      background-color: #222; /* X 的颜色 */
+      background-color: #222;
       border-radius: 999px;
     }
 
@@ -239,7 +269,6 @@
       transform: rotate(-45deg);
     }
 
-    /* 悬停和聚焦效果（桌面端更明显） */
     .inline-word-image-popup__close:hover,
     .inline-word-image-popup__close:focus-visible {
       background: rgba(0, 0, 0, 0.12);
@@ -247,7 +276,6 @@
       outline: none;
     }
 
-    /* 移动端点按时稍微变暗 */
     .inline-word-image-popup__close:active {
       background: rgba(0, 0, 0, 0.18);
       transform: scale(0.97);
@@ -265,34 +293,34 @@
   </style>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       var section = document.getElementById('inline-word-image-popup-{{ section.id }}');
       if (!section) return;
 
       var buttons = section.querySelectorAll('[data-popup-target]');
 
-      var openOverlay = function (targetId) {
+      var openOverlay = function(targetId) {
         var overlay = document.getElementById(targetId);
         if (!overlay) return;
         overlay.classList.add('is-active');
         overlay.setAttribute('aria-hidden', 'false');
       };
 
-      var closeOverlay = function (overlay) {
+      var closeOverlay = function(overlay) {
         overlay.classList.remove('is-active');
         overlay.setAttribute('aria-hidden', 'true');
       };
 
       // 打开弹窗：点击“可点击单词”
-      buttons.forEach(function (button) {
-        button.addEventListener('click', function () {
+      buttons.forEach(function(button) {
+        button.addEventListener('click', function() {
           var targetId = this.getAttribute('data-popup-target');
           if (targetId) openOverlay(targetId);
         });
       });
 
       // 关闭弹窗：点击关闭按钮、点击弹窗外区域（灰色背景）
-      section.addEventListener('click', function (event) {
+      section.addEventListener('click', function(event) {
         var target = event.target;
 
         // 1) 点的是关闭按钮（带 data-popup-close）
@@ -317,10 +345,10 @@
       });
 
       // 按下 ESC 关闭所有弹窗
-      document.addEventListener('keyup', function (event) {
+      document.addEventListener('keyup', function(event) {
         if (event.key === 'Escape' || event.key === 'Esc') {
           var activeOverlays = document.querySelectorAll('.inline-word-image-popup__overlay.is-active');
-          activeOverlays.forEach(function (overlay) {
+          activeOverlays.forEach(function(overlay) {
             closeOverlay(overlay);
           });
         }
@@ -329,116 +357,120 @@
   </script>
 
   {% schema %}
-{
-  "name": "单词点击弹出图片",
-  "settings": [
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "标题",
-      "default": "句子中某个词可以点击查看图片"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "label": "上内边距（px）",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "下内边距（px）",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "default": 0
-    },
-    {
-      "type": "select",
-      "id": "font_family",
-      "label": "字体",
-      "default": "theme_default",
-      "options": [
-        {
-          "value": "theme_default",
-          "label": "跟随主题默认字体"
-        },
-        {
-          "value": "system_sans",
-          "label": "系统无衬线字体"
-        },
-        {
-          "value": "helvetica",
-          "label": "无衬线：Helvetica / Arial"
-        },
-        {
-          "value": "georgia",
-          "label": "衬线：Georgia / Times"
-        }
-      ]
-    },
-    {
-      "type": "range",
-      "id": "font_size",
-      "label": "字号（px）",
-      "min": 12,
-      "max": 24,
-      "step": 1,
-      "default": 16
-    }
-  ],
-  "blocks": [
-    {
-      "type": "sentence",
-      "name": "句子 + 单词 + 图片",
-      "settings": [
-        {
-          "type": "text",
-          "id": "text_before",
-          "label": "单词前面的文字",
-          "default": "这是一句示例，点击"
-        },
-        {
-          "type": "text",
-          "id": "keyword",
-          "label": "可点击单词/短语",
-          "default": "这里"
-        },
-        {
-          "type": "text",
-          "id": "text_after",
-          "label": "单词后面的文字",
-          "default": "可以查看图片。"
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "弹出图片"
-        },
-        {
-          "type": "text",
-          "id": "alt_text",
-          "label": "图片替代文本"
-        },
-        {
-          "type": "text",
-          "id": "caption",
-          "label": "图片说明（可选）"
-        }
-      ]
-    }
-  ],
-  "max_blocks": 30,
-  "presets": [
-    {
-      "name": "单词点击弹出图片",
-      "category": "自定义"
-    }
-  ]
-}
+  {
+    "name": "可点击文本图片",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "标题",
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "上内边距（px）",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "下内边距（px）",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "font_family",
+        "label": "字体",
+        "default": "theme_default",
+        "options": [
+          {
+            "value": "theme_default",
+            "label": "跟随主题默认字体"
+          },
+          {
+            "value": "system_sans",
+            "label": "系统无衬线字体"
+          },
+          {
+            "value": "helvetica",
+            "label": "无衬线：Helvetica / Arial"
+          },
+          {
+            "value": "georgia",
+            "label": "衬线：Georgia / Times"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "font_size",
+        "label": "字号（px）",
+        "min": 12,
+        "max": 24,
+        "step": 1,
+        "default": 14
+      }
+    ],
+    "blocks": [
+      {
+        "type": "sentence",
+        "name": "添加设置",
+        "settings": [
+          {
+            "type": "text",
+            "id": "text_before",
+            "label": "可点击文本前的文字",
+            "default": "这是一句示例，点击"
+          },
+          {
+            "type": "text",
+            "id": "keyword",
+            "label": "可点击单词/短语",
+            "default": "这里"
+          },
+          {
+            "type": "text",
+            "id": "text_after",
+            "label": "可点击文本后的文字",
+            "default": "可以查看图片。"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_desktop",
+            "label": "PC 端弹出图片（横图）"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_mobile",
+            "label": "移动端弹出图片（竖图）"
+          },
+          {
+            "type": "text",
+            "id": "alt_text",
+            "label": "图片替代文本"
+          },
+          {
+            "type": "text",
+            "id": "caption",
+            "label": "图片说明（可选）"
+          }
+        ]
+      }
+    ],
+    "max_blocks": 30,
+    "presets": [
+      {
+        "name": "单词点击弹出图片",
+        "category": "自定义"
+      }
+    ]
+  }
   {% endschema %}
 
   {% stylesheet %}
