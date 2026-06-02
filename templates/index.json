@@ -24,7 +24,8 @@
             "text_before": "Z1 vs. Z1 Pro: What's the Difference?",
             "keyword": "Click to Learn.",
             "text_after": "",
-            "image": "shopify://shop_images/banner1.webp",
+            "image_desktop": "shopify://shop_images/banner1.webp",
+            "image_mobile": "shopify://shop_images/banner2_1.webp",
             "alt_text": "",
             "caption": ""
           }
@@ -39,7 +40,9 @@
         "padding_top": 0,
         "padding_bottom": 0,
         "font_family": "theme_default",
-        "font_size": 16
+        "font_size": 16,
+        "text_color": "#ff7a00",
+        "text_style": "bold"
       }
     },
     "banner_carousel_NRjkpR": {
