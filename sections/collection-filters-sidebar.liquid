@@ -1,0 +1,251 @@
+{%- comment -%}
+  侧边栏多条件筛选（适用于 collection 模板）
+
+  依赖：
+  - Shopify admin 中已经通过「搜索与发现」应用配置好过滤项
+  - 当前模板为集合页，有可用的 collection 对象
+{%- endcomment -%}
+
+{%- if collection.filters.size > 0 -%}
+  <aside class="collection-filters-sidebar">
+
+    {%- comment -%}
+      1. 已选条件区域（chips/pills + 清除按钮）
+    {%- endcomment -%}
+    <div class="collection-filters-active">
+      {%- assign has_active_filters = false -%}
+
+      {%- for filter in collection.filters -%}
+        {%- if filter.active_values.size > 0 -%}
+          {%- assign has_active_filters = true -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if has_active_filters -%}
+        <h3>已选条件</h3>
+        <ul class="active-filters-list">
+          {%- for filter in collection.filters -%}
+            {%- for filter_value in filter.active_values -%}
+              <li class="active-filter-pill">
+                <a href="{{ filter_value.url_to_remove }}">
+                  {{ filter.label }}: {{ filter_value.label }}
+                  <span aria-hidden="true">×</span>
+                </a>
+              </li>
+            {%- endfor -%}
+          {%- endfor -%}
+        </ul>
+
+        {%- comment -%}
+          清除所有过滤条件：使用 collection.url 去掉所有 filter 相关参数
+        {%- endcomment -%}
+        <a href="{{ collection.url }}" class="active-filters-clear-all">
+          清除全部筛选
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%}
+      2. 筛选表单
+      - method="get" 保证最终是通过 URL 参数来过滤
+      - action 使用 collection.url，保持在当前集合下
+    {%- endcomment -%}
+    <form
+      class="collection-filters-form"
+      method="get"
+      action="{{ collection.url }}"
+    >
+      {%- comment -%}
+        如果你在 URL 上有其他 query（例如 sort_by），可以在这里保留：
+        <input type="hidden" name="sort_by" value="{{ collection.sort_by | default: collection.default_sort_by }}">
+      {%- endcomment -%}
+
+      {%- for filter in collection.filters -%}
+        <details class="filter-group" open>
+          <summary class="filter-group__summary">
+            <div class="filter-group__summary-inner">
+              <span class="filter-group__label">{{ filter.label }}</span>
+              {%- if filter.active_values.size > 0 -%}
+                <span class="filter-group__badge">
+                  已选 {{ filter.active_values.size }}
+                </span>
+              {%- endif -%}
+            </div>
+          </summary>
+
+          <div class="filter-group__body">
+            <div class="filter-group__header">
+              <p class="filter-group__count">
+                {{ filter.active_values.size }} 条已选择
+              </p>
+
+              {%- if filter.active_values.size > 0 -%}
+                <a
+                  href="{{ filter.url_to_remove }}"
+                  class="filter-group__reset"
+                >
+                  重置 {{ filter.label }}
+                </a>
+              {%- endif -%}
+            </div>
+
+            {%- case filter.type -%%}
+              {%- when 'boolean' -%}
+                {%- comment -%}
+                  Boolean 类型通常只有一个 true/false 控制，比如 “仅显示有货”
+                  此处采用两个 checkbox：一个表示 true，一个表示 false（根据需要可只用 true）
+                {%- endcomment -%}
+                <ul class="filter-group__list filter-group__list--boolean">
+                  {%- if filter.true_value -%}
+                    <li>
+                      <label
+                        for="Filter-{{ filter.param_name }}-true"
+                        class="filter-item"
+                      >
+                        <input
+                          type="checkbox"
+                          name="{{ filter.param_name }}"
+                          value="{{ filter.true_value.value }}"
+                          id="Filter-{{ filter.param_name }}-true"
+                          {% if filter.true_value.active %}checked{% endif %}
+                          {% if filter.true_value.count == 0 and filter.true_value.active == false %}disabled{% endif %}
+                        >
+                        <span class="filter-item__label">
+                          {{ filter.true_value.label }}
+                          <span class="filter-item__count">
+                            ({{ filter.true_value.count }})
+                          </span>
+                        </span>
+                      </label>
+                    </li>
+                  {%- endif -%}
+
+                  {%- if filter.false_value -%}
+                    <li>
+                      <label
+                        for="Filter-{{ filter.param_name }}-false"
+                        class="filter-item"
+                      >
+                        <input
+                          type="checkbox"
+                          name="{{ filter.param_name }}"
+                          value="{{ filter.false_value.value }}"
+                          id="Filter-{{ filter.param_name }}-false"
+                          {% if filter.false_value.active %}checked{% endif %}
+                          {% if filter.false_value.count == 0 and filter.false_value.active == false %}disabled{% endif %}
+                        >
+                        <span class="filter-item__label">
+                          {{ filter.false_value.label }}
+                          <span class="filter-item__count">
+                            ({{ filter.false_value.count }})
+                          </span>
+                        </span>
+                      </label>
+                    </li>
+                  {%- endif -%}
+                </ul>
+
+              {%- when 'list' -%}
+                {%- comment -%}
+                  List 类型：颜色、尺寸、Vendor、Tag 等
+                  一个 filter group 里可以多选；多选值之间是 OR
+                {%- endcomment -%}
+                <ul class="filter-group__list filter-group__list--list">
+                  {%- for filter_value in filter.values -%}
+                    <li>
+                      <label
+                        for="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                        class="filter-item"
+                      >
+                        <input
+                          type="checkbox"
+                          name="{{ filter.param_name }}"
+                          value="{{ filter_value.value }}"
+                          id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                          {% if filter_value.active %}checked{% endif %}
+                          {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}
+                        >
+                        <span class="filter-item__label">
+                          {{ filter_value.label }}
+                          <span class="filter-item__count">
+                            ({{ filter_value.count }})
+                          </span>
+                        </span>
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+
+              {%- when 'price_range' -%}
+                {%- comment -%}
+                  Price range 类型：使用最小值和最大值输入
+                  - filter.min_value / filter.max_value 是当前已选区间
+                  - filter.range_max 是集合内最高价格
+                  注意：价格单位是店铺默认货币
+                {%- endcomment -%}
+
+                <div class="filter-group__price-range">
+                  <div class="price-range__inputs">
+                    <div class="price-range__field">
+                      <label for="Filter-{{ filter.param_name }}-gte">
+                        最低价
+                      </label>
+                      <div class="price-range__input-wrapper">
+                        <span class="price-range__currency">
+                          {{ cart.currency.symbol }}
+                        </span>
+                        <input
+                          type="number"
+                          name="{{ filter.param_name }}.gte"
+                          id="Filter-{{ filter.param_name }}-gte"
+                          {% if filter.min_value.value %}
+                            value="{{ filter.min_value.value | divided_by: 100.0 }}"
+                          {% endif %}
+                          min="0"
+                          max="{{ filter.range_max | divided_by: 100.0 }}"
+                          step="1"
+                          inputmode="numeric"
+                        >
+                      </div>
+                    </div>
+
+                    <div class="price-range__field">
+                      <label for="Filter-{{ filter.param_name }}-lte">
+                        最高价
+                      </label>
+                      <div class="price-range__input-wrapper">
+                        <span class="price-range__currency">
+                          {{ cart.currency.symbol }}
+                        </span>
+                        <input
+                          type="number"
+                          name="{{ filter.param_name }}.lte"
+                          id="Filter-{{ filter.param_name }}-lte"
+                          {% if filter.max_value.value %}
+                            value="{{ filter.max_value.value | divided_by: 100.0 }}"
+                          {% endif %}
+                          min="0"
+                          max="{{ filter.range_max | divided_by: 100.0 }}"
+                          step="1"
+                          inputmode="numeric"
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="price-range__hint">
+                    当前价格范围：{{ filter.min_value.value | default: 0 | divided_by: 100.0 }} – {{ filter.range_max | divided_by: 100.0 }} {{ cart.currency.iso_code }}
+                  </p>
+                </div>
+
+            {%- endcase -%}
+          </div>
+        </details>
+      {%- endfor -%}
+
+      <button type="submit" class="collection-filters-submit">
+        应用筛选
+      </button>
+    </form>
+  </aside>
+{%- endif -%}
