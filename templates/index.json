@@ -15,6 +15,33 @@
         "include_margins": true
       }
     },
+    "clickable_text_image_popup_7XbJAY": {
+      "type": "clickable-text-image-popup",
+      "blocks": {
+        "sentence_eqdVLm": {
+          "type": "sentence",
+          "settings": {
+            "text_before": "Z1 vs. Z1 Pro: What's the Difference?",
+            "keyword": "Click to Learn.",
+            "text_after": "",
+            "image": "shopify://shop_images/banner1.webp",
+            "alt_text": "",
+            "caption": ""
+          }
+        }
+      },
+      "block_order": [
+        "sentence_eqdVLm"
+      ],
+      "name": "单词点击弹出图片",
+      "settings": {
+        "heading": "",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "font_family": "theme_default",
+        "font_size": 16
+      }
+    },
     "banner_carousel_NRjkpR": {
       "type": "banner-carousel",
       "blocks": {
@@ -217,6 +244,7 @@
             "checkout_title": "026-1234567-1234560",
             "checkout_description": "Reconnect Amazon Customers with loyalty discount, unlock future sales.",
             "checkout_info_text": "Please do not share discount codes with others, each code can only be used once.",
+            "checkout_button_text": "Check",
             "get_discount_pop_up_title": "Verified, please enter your email to obtain the discount code",
             "discount_strength_text": "<p>Please specify the discount amount, scope of application, and validity period, such as</p>",
             "privacy_policy_link": "",
@@ -235,6 +263,7 @@
   },
   "order": [
     "1737341983b28dcd2c",
+    "clickable_text_image_popup_7XbJAY",
     "banner_carousel_NRjkpR",
     "featured_products_display_qPr7Cb",
     "hot_selling_addons_bk8FLd",
