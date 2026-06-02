@@ -13,17 +13,6 @@
   "sections": {
     "text-notification": {
       "type": "text-notification",
-      "settings": {
-        "background_color": "#000000",
-        "text_color": "#ffffff",
-        "highlight_color": "#ff0000",
-        "highlight_font_weight": "bold",
-        "highlight_text_transform": "none",
-        "font_size": "14px",
-        "padding": "12px 0",
-        "height": 40,
-        "animation_speed": 3
-      },
       "blocks": {
         "block-1": {
           "type": "notification",
@@ -36,6 +25,11 @@
             "show_timer": false
           }
         }
+      },
+      "settings": {
+        "background_color": "#000000",
+        "height": 40,
+        "animation_speed": 3
       }
     }
   },

@@ -60,7 +60,7 @@
       "type": "apps",
       "blocks": {
         "1clickpopup_form_HdcELE": {
-          "type": "shopify://apps/1click-popups/blocks/form/233742b9-16cb-4f75-9de7-3fe92c29fdff",
+          "type": "shopify://apps/1clickpopup/blocks/form/233742b9-16cb-4f75-9de7-3fe92c29fdff",
           "settings": {
             "form_id": "",
             "padding_top": 32,
