@@ -89,7 +89,7 @@
               {%- endif -%}
             </div>
 
-            {%- case filter.type -%%}
+            {%- case filter.type %}
               {%- when 'boolean' -%}
                 {%- comment -%}
                   Boolean 类型通常只有一个 true/false 控制，比如 “仅显示有货”
@@ -248,4 +248,13 @@
       </button>
     </form>
   </aside>
-{%- endif -%}
+{%- endif -%}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- case filter.type -%%}"
+  to: "{%- case filter.type %}"
+  position: 2873..2896
+{%- endcomment -%}
